@@ -1,0 +1,4238 @@
+{
+  "schema_version": 2,
+  "timestamp_utc": "2026-10-03T12:14:00Z",
+  "hardware": {
+    "system": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
+    "python": "3.14.7",
+    "logical_cpus": 12,
+    "memory_bytes": "103079215104",
+    "cpu": "Apple M2 Max"
+  },
+  "runner_sha256": "10ee1a11671252530f19ce1b2cdabd8e82413f80531fce27694e0e92791c38de",
+  "manifest_sha256": "24ca7122f2e428dc5a7437d8ec1e06076e0cccdf3af35f7181f3513d6b0de89c",
+  "corpus_manifest_sha256": "9f3abca6ae710c0ac7377ba9b5fbfc01c03af26ec343d8b92a3c6635b0375712",
+  "method": {
+    "scoring_version": 2,
+    "corpus_role": "regression",
+    "quality_interpretation": "Synthetic regression/diagnostic corpus, not an independent holdout; real-source datasets remain unlabelled.",
+    "offline": true,
+    "repeats": 1,
+    "timeout_seconds": 120,
+    "cache": "OS cache uncontrolled; warmup before repeats",
+    "scoring": "v2 unique location matches; missing/invalid/ambiguous coordinates unlocalized; precision conditional on localized unique findings"
+  },
+  "tools": [
+    {
+      "id": "secret-scan-before",
+      "status": "available",
+      "version": "0.1.0 / v3 frozen candidate",
+      "source_url": "local independent implementation",
+      "commit_or_digest": "2f8029c58d3ad2ce1525cc2b3ab81e5799013057d9854a6b7e2e1cc6a51c0555",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v4-2f8029c5",
+      "offline": true,
+      "parser": "secret_scan",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v4-2f8029c5",
+          "scan",
+          "{input}",
+          "--format",
+          "json"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v4-2f8029c5",
+          "history",
+          "{input}",
+          "--format",
+          "json"
+        ],
+        "staged": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v4-2f8029c5",
+          "staged",
+          "{input}",
+          "--format",
+          "json"
+        ]
+      },
+      "notes": "v4 baseline"
+    },
+    {
+      "id": "secret-scan",
+      "status": "available",
+      "version": "0.1.0 / v3 frozen candidate",
+      "source_url": "local independent implementation",
+      "commit_or_digest": "aca1a038f1faaf485e054dc7e208ce49027624fd63542019afe8b29e8a3412e5",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+      "offline": true,
+      "parser": "secret_scan",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+          "scan",
+          "{input}",
+          "--format",
+          "json"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+          "history",
+          "{input}",
+          "--format",
+          "json"
+        ],
+        "staged": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+          "staged",
+          "{input}",
+          "--format",
+          "json"
+        ]
+      },
+      "notes": "Lazy HIR-derived mandatory fixed-offset keyword suffix gate; unchanged detection semantics"
+    }
+  ],
+  "datasets": {
+    "quality": {
+      "path": "quality",
+      "mode": "fs"
+    },
+    "capabilities": {
+      "path": "capabilities",
+      "mode": "fs",
+      "archives": [
+        {
+          "path": "capabilities/archive.zip",
+          "member": "nested/config.conf",
+          "provider": "github-pat",
+          "candidate_sha256": "b398812423072225b313600dd692dad498f4086cf13a7cb84fca3d6131f992a8"
+        },
+        {
+          "path": "capabilities/archive.tar.gz",
+          "member": "nested/config.conf",
+          "provider": "github-pat",
+          "candidate_sha256": "b398812423072225b313600dd692dad498f4086cf13a7cb84fca3d6131f992a8"
+        }
+      ]
+    },
+    "throughput-1mib": {
+      "path": "throughput/1mib",
+      "mode": "fs",
+      "bytes": 1048576,
+      "content": "deterministic-repetitive-source-like-text",
+      "warm_cache_expected": true,
+      "files": 4
+    },
+    "throughput-16mib": {
+      "path": "throughput/16mib",
+      "mode": "fs",
+      "bytes": 16777216,
+      "content": "deterministic-repetitive-source-like-text",
+      "warm_cache_expected": true,
+      "files": 64
+    },
+    "throughput-128mib": {
+      "path": "throughput/128mib",
+      "mode": "fs",
+      "bytes": 134217728,
+      "content": "deterministic-repetitive-source-like-text",
+      "warm_cache_expected": true,
+      "files": 512
+    },
+    "git_history": {
+      "path": "git-repo",
+      "mode": "git",
+      "commits": 3
+    },
+    "staged": {
+      "path": "git-repo",
+      "mode": "staged"
+    },
+    "git_worktree": {
+      "path": "git-repo",
+      "mode": "fs"
+    },
+    "real-regex": {
+      "path": "real-regex",
+      "mode": "fs",
+      "labelled": false,
+      "source_url": "https://github.com/rust-lang/regex",
+      "requested_ref": "master",
+      "commit": "72d650cb0a880a01ab6dc2137c0888e8f89740f7",
+      "archive_url": "https://codeload.github.com/rust-lang/regex/tar.gz/72d650cb0a880a01ab6dc2137c0888e8f89740f7",
+      "archive_sha256": "dfcbe868c5d58eef95c7cb6a2ccc137a02724023484cf28601c57249fd40951a",
+      "bytes": 8434814,
+      "quality_note": "Unlabelled public source: report detection counts only, never precision or false-positive rates."
+    }
+  },
+  "results": [
+    {
+      "tool": "secret-scan-before",
+      "dataset": "quality",
+      "mode": "fs",
+      "input_bytes": 2721,
+      "input_files": 44,
+      "worktree_content_sha256": "d06745d4356819c905f5556f9247505c4d02194125d65392e4ee119b0355125b",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.03984074993059039,
+          "user_seconds": 0.037266,
+          "system_seconds": 0.0067859999999999995,
+          "peak_rss_bytes": 25231360,
+          "stdout_bytes": 17797,
+          "stderr_bytes": 0,
+          "stdout_sha256": "303b5ee5ffe25cfc35858080faf7362efec5c3bff3a13085843ff26bca86cd6a",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 17797,
+          "parsed_output_sha256": "303b5ee5ffe25cfc35858080faf7362efec5c3bff3a13085843ff26bca86cd6a",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "detection_passes": 44,
+            "files": 44,
+            "bytes": 2721,
+            "skipped": 0,
+            "elapsed_ms": 31
+          },
+          "complete": true,
+          "findings_count": 34,
+          "normalized_findings": [
+            {
+              "path": "quality/common/aws-access-key-crlf.conf",
+              "start": 31,
+              "end": 51,
+              "line": 2,
+              "rule_id": "generic-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/aws-access-key-quoted.conf",
+              "start": 14,
+              "end": 34,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/aws-access-key-unicode.conf",
+              "start": 34,
+              "end": 54,
+              "line": 2,
+              "rule_id": "generic-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/github-pat-crlf.conf",
+              "start": 31,
+              "end": 71,
+              "line": 2,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/github-pat-quoted.conf",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/github-pat-unicode.conf",
+              "start": 34,
+              "end": 74,
+              "line": 2,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/gitlab-pat-crlf.conf",
+              "start": 31,
+              "end": 57,
+              "line": 2,
+              "rule_id": "gitlab-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/gitlab-pat-quoted.conf",
+              "start": 14,
+              "end": 40,
+              "line": 1,
+              "rule_id": "gitlab-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/gitlab-pat-unicode.conf",
+              "start": 34,
+              "end": 60,
+              "line": 2,
+              "rule_id": "gitlab-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/google-api-crlf.conf",
+              "start": 31,
+              "end": 70,
+              "line": 2,
+              "rule_id": "gcp-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/google-api-quoted.conf",
+              "start": 14,
+              "end": 53,
+              "line": 1,
+              "rule_id": "gcp-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/google-api-unicode.conf",
+              "start": 34,
+              "end": 73,
+              "line": 2,
+              "rule_id": "gcp-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/npm-token-crlf.conf",
+              "start": 31,
+              "end": 71,
+              "line": 2,
+              "rule_id": "npm-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/npm-token-quoted.conf",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "npm-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/npm-token-unicode.conf",
+              "start": 34,
+              "end": 74,
+              "line": 2,
+              "rule_id": "npm-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/sendgrid-api-crlf.conf",
+              "start": 31,
+              "end": 100,
+              "line": 2,
+              "rule_id": "sendgrid-api-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/sendgrid-api-quoted.conf",
+              "start": 14,
+              "end": 83,
+              "line": 1,
+              "rule_id": "sendgrid-api-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/sendgrid-api-unicode.conf",
+              "start": 34,
+              "end": 103,
+              "line": 2,
+              "rule_id": "sendgrid-api-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/slack-bot-crlf.conf",
+              "start": 31,
+              "end": 86,
+              "line": 2,
+              "rule_id": "slack-bot-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/slack-bot-quoted.conf",
+              "start": 14,
+              "end": 69,
+              "line": 1,
+              "rule_id": "slack-bot-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/slack-bot-unicode.conf",
+              "start": 34,
+              "end": 89,
+              "line": 2,
+              "rule_id": "slack-bot-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/stripe-secret-crlf.conf",
+              "start": 31,
+              "end": 63,
+              "line": 2,
+              "rule_id": "stripe-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/stripe-secret-quoted.conf",
+              "start": 14,
+              "end": 46,
+              "line": 1,
+              "rule_id": "stripe-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/stripe-secret-unicode.conf",
+              "start": 34,
+              "end": 66,
+              "line": 2,
+              "rule_id": "stripe-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/twilio-api-crlf.conf",
+              "start": 31,
+              "end": 65,
+              "line": 2,
+              "rule_id": "twilio-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/twilio-api-quoted.conf",
+              "start": 14,
+              "end": 48,
+              "line": 1,
+              "rule_id": "twilio-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/twilio-api-unicode.conf",
+              "start": 34,
+              "end": 68,
+              "line": 2,
+              "rule_id": "twilio-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/api-key-json.conf",
+              "start": 12,
+              "end": 52,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 12,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/multiline-assignment.conf",
+              "start": 15,
+              "end": 55,
+              "line": 2,
+              "rule_id": "generic-credential-double",
+              "column": 5,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/password-assignment.conf",
+              "start": 21,
+              "end": 51,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 21,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/password-uri.conf",
+              "start": 27,
+              "end": 51,
+              "line": 1,
+              "rule_id": "uri-userinfo-password",
+              "column": 27,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/secret-yaml.conf",
+              "start": 16,
+              "end": 48,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 16,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/unicode-value.conf",
+              "start": 21,
+              "end": 55,
+              "line": 1,
+              "rule_id": "generic-credential-double",
+              "column": 21,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/unquoted-env.conf",
+              "start": 18,
+              "end": 50,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 18,
+              "coordinate_space": "source_bytes"
+            }
+          ],
+          "locations_sha256": "8e4272e374c157f1dbfa2a3e6f16511d25e0344c733c31e41258ca55993ac8b0",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.03994191694073379,
+          "user_seconds": 0.037188,
+          "system_seconds": 0.007252,
+          "peak_rss_bytes": 24805376,
+          "stdout_bytes": 17797,
+          "stderr_bytes": 0,
+          "stdout_sha256": "8becee1d8201e8d493dba0016ed362943888d06fe35d5211f0f930219f88591f",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 17797,
+          "parsed_output_sha256": "8becee1d8201e8d493dba0016ed362943888d06fe35d5211f0f930219f88591f",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "detection_passes": 44,
+            "files": 44,
+            "bytes": 2721,
+            "skipped": 0,
+            "elapsed_ms": 32
+          },
+          "complete": true,
+          "findings_count": 34,
+          "normalized_findings": [
+            {
+              "path": "quality/common/aws-access-key-crlf.conf",
+              "start": 31,
+              "end": 51,
+              "line": 2,
+              "rule_id": "generic-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/aws-access-key-quoted.conf",
+              "start": 14,
+              "end": 34,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/aws-access-key-unicode.conf",
+              "start": 34,
+              "end": 54,
+              "line": 2,
+              "rule_id": "generic-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/github-pat-crlf.conf",
+              "start": 31,
+              "end": 71,
+              "line": 2,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/github-pat-quoted.conf",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/github-pat-unicode.conf",
+              "start": 34,
+              "end": 74,
+              "line": 2,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/gitlab-pat-crlf.conf",
+              "start": 31,
+              "end": 57,
+              "line": 2,
+              "rule_id": "gitlab-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/gitlab-pat-quoted.conf",
+              "start": 14,
+              "end": 40,
+              "line": 1,
+              "rule_id": "gitlab-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/gitlab-pat-unicode.conf",
+              "start": 34,
+              "end": 60,
+              "line": 2,
+              "rule_id": "gitlab-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/google-api-crlf.conf",
+              "start": 31,
+              "end": 70,
+              "line": 2,
+              "rule_id": "gcp-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/google-api-quoted.conf",
+              "start": 14,
+              "end": 53,
+              "line": 1,
+              "rule_id": "gcp-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/google-api-unicode.conf",
+              "start": 34,
+              "end": 73,
+              "line": 2,
+              "rule_id": "gcp-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/npm-token-crlf.conf",
+              "start": 31,
+              "end": 71,
+              "line": 2,
+              "rule_id": "npm-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/npm-token-quoted.conf",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "npm-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/npm-token-unicode.conf",
+              "start": 34,
+              "end": 74,
+              "line": 2,
+              "rule_id": "npm-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/sendgrid-api-crlf.conf",
+              "start": 31,
+              "end": 100,
+              "line": 2,
+              "rule_id": "sendgrid-api-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/sendgrid-api-quoted.conf",
+              "start": 14,
+              "end": 83,
+              "line": 1,
+              "rule_id": "sendgrid-api-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/sendgrid-api-unicode.conf",
+              "start": 34,
+              "end": 103,
+              "line": 2,
+              "rule_id": "sendgrid-api-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/slack-bot-crlf.conf",
+              "start": 31,
+              "end": 86,
+              "line": 2,
+              "rule_id": "slack-bot-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/slack-bot-quoted.conf",
+              "start": 14,
+              "end": 69,
+              "line": 1,
+              "rule_id": "slack-bot-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/slack-bot-unicode.conf",
+              "start": 34,
+              "end": 89,
+              "line": 2,
+              "rule_id": "slack-bot-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/stripe-secret-crlf.conf",
+              "start": 31,
+              "end": 63,
+              "line": 2,
+              "rule_id": "stripe-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/stripe-secret-quoted.conf",
+              "start": 14,
+              "end": 46,
+              "line": 1,
+              "rule_id": "stripe-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/stripe-secret-unicode.conf",
+              "start": 34,
+              "end": 66,
+              "line": 2,
+              "rule_id": "stripe-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/twilio-api-crlf.conf",
+              "start": 31,
+              "end": 65,
+              "line": 2,
+              "rule_id": "twilio-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/twilio-api-quoted.conf",
+              "start": 14,
+              "end": 48,
+              "line": 1,
+              "rule_id": "twilio-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/twilio-api-unicode.conf",
+              "start": 34,
+              "end": 68,
+              "line": 2,
+              "rule_id": "twilio-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/api-key-json.conf",
+              "start": 12,
+              "end": 52,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 12,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/multiline-assignment.conf",
+              "start": 15,
+              "end": 55,
+              "line": 2,
+              "rule_id": "generic-credential-double",
+              "column": 5,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/password-assignment.conf",
+              "start": 21,
+              "end": 51,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 21,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/password-uri.conf",
+              "start": 27,
+              "end": 51,
+              "line": 1,
+              "rule_id": "uri-userinfo-password",
+              "column": 27,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/secret-yaml.conf",
+              "start": 16,
+              "end": 48,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 16,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/unicode-value.conf",
+              "start": 21,
+              "end": 55,
+              "line": 1,
+              "rule_id": "generic-credential-double",
+              "column": 21,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/unquoted-env.conf",
+              "start": 18,
+              "end": 50,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 18,
+              "coordinate_space": "source_bytes"
+            }
+          ],
+          "locations_sha256": "8e4272e374c157f1dbfa2a3e6f16511d25e0344c733c31e41258ca55993ac8b0",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.038364707957953215,
+          "user_seconds": 0.037135,
+          "system_seconds": 0.006993999999999999,
+          "peak_rss_bytes": 25100288,
+          "stdout_bytes": 17797,
+          "stderr_bytes": 0,
+          "stdout_sha256": "11dec41bee3e80871916ab6a390fd8e8b7229f22d0ec8171b3f3c3a2378bba6c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 17797,
+          "parsed_output_sha256": "11dec41bee3e80871916ab6a390fd8e8b7229f22d0ec8171b3f3c3a2378bba6c",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "detection_passes": 44,
+            "files": 44,
+            "bytes": 2721,
+            "skipped": 0,
+            "elapsed_ms": 30
+          },
+          "complete": true,
+          "findings_count": 34,
+          "normalized_findings": [
+            {
+              "path": "quality/common/aws-access-key-crlf.conf",
+              "start": 31,
+              "end": 51,
+              "line": 2,
+              "rule_id": "generic-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/aws-access-key-quoted.conf",
+              "start": 14,
+              "end": 34,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/aws-access-key-unicode.conf",
+              "start": 34,
+              "end": 54,
+              "line": 2,
+              "rule_id": "generic-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/github-pat-crlf.conf",
+              "start": 31,
+              "end": 71,
+              "line": 2,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/github-pat-quoted.conf",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/github-pat-unicode.conf",
+              "start": 34,
+              "end": 74,
+              "line": 2,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/gitlab-pat-crlf.conf",
+              "start": 31,
+              "end": 57,
+              "line": 2,
+              "rule_id": "gitlab-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/gitlab-pat-quoted.conf",
+              "start": 14,
+              "end": 40,
+              "line": 1,
+              "rule_id": "gitlab-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/gitlab-pat-unicode.conf",
+              "start": 34,
+              "end": 60,
+              "line": 2,
+              "rule_id": "gitlab-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/google-api-crlf.conf",
+              "start": 31,
+              "end": 70,
+              "line": 2,
+              "rule_id": "gcp-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/google-api-quoted.conf",
+              "start": 14,
+              "end": 53,
+              "line": 1,
+              "rule_id": "gcp-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/google-api-unicode.conf",
+              "start": 34,
+              "end": 73,
+              "line": 2,
+              "rule_id": "gcp-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/npm-token-crlf.conf",
+              "start": 31,
+              "end": 71,
+              "line": 2,
+              "rule_id": "npm-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/npm-token-quoted.conf",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "npm-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/npm-token-unicode.conf",
+              "start": 34,
+              "end": 74,
+              "line": 2,
+              "rule_id": "npm-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/sendgrid-api-crlf.conf",
+              "start": 31,
+              "end": 100,
+              "line": 2,
+              "rule_id": "sendgrid-api-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/sendgrid-api-quoted.conf",
+              "start": 14,
+              "end": 83,
+              "line": 1,
+              "rule_id": "sendgrid-api-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/sendgrid-api-unicode.conf",
+              "start": 34,
+              "end": 103,
+              "line": 2,
+              "rule_id": "sendgrid-api-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/slack-bot-crlf.conf",
+              "start": 31,
+              "end": 86,
+              "line": 2,
+              "rule_id": "slack-bot-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/slack-bot-quoted.conf",
+              "start": 14,
+              "end": 69,
+              "line": 1,
+              "rule_id": "slack-bot-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/slack-bot-unicode.conf",
+              "start": 34,
+              "end": 89,
+              "line": 2,
+              "rule_id": "slack-bot-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/stripe-secret-crlf.conf",
+              "start": 31,
+              "end": 63,
+              "line": 2,
+              "rule_id": "stripe-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/stripe-secret-quoted.conf",
+              "start": 14,
+              "end": 46,
+              "line": 1,
+              "rule_id": "stripe-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/stripe-secret-unicode.conf",
+              "start": 34,
+              "end": 66,
+              "line": 2,
+              "rule_id": "stripe-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/twilio-api-crlf.conf",
+              "start": 31,
+              "end": 65,
+              "line": 2,
+              "rule_id": "twilio-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/twilio-api-quoted.conf",
+              "start": 14,
+              "end": 48,
+              "line": 1,
+              "rule_id": "twilio-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/twilio-api-unicode.conf",
+              "start": 34,
+              "end": 68,
+              "line": 2,
+              "rule_id": "twilio-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/api-key-json.conf",
+              "start": 12,
+              "end": 52,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 12,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/multiline-assignment.conf",
+              "start": 15,
+              "end": 55,
+              "line": 2,
+              "rule_id": "generic-credential-double",
+              "column": 5,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/password-assignment.conf",
+              "start": 21,
+              "end": 51,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 21,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/password-uri.conf",
+              "start": 27,
+              "end": 51,
+              "line": 1,
+              "rule_id": "uri-userinfo-password",
+              "column": 27,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/secret-yaml.conf",
+              "start": 16,
+              "end": 48,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 16,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/unicode-value.conf",
+              "start": 21,
+              "end": 55,
+              "line": 1,
+              "rule_id": "generic-credential-double",
+              "column": 21,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/unquoted-env.conf",
+              "start": 18,
+              "end": 50,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 18,
+              "coordinate_space": "source_bytes"
+            }
+          ],
+          "locations_sha256": "8e4272e374c157f1dbfa2a3e6f16511d25e0344c733c31e41258ca55993ac8b0",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v4-2f8029c5",
+        "scan",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/quality",
+        "--format",
+        "json"
+      ],
+      "scan_complete": true,
+      "summary": {
+        "cold_process_seconds": 0.03984074993059039,
+        "median_seconds": 0.038364707957953215,
+        "min_seconds": 0.038364707957953215,
+        "max_seconds": 0.038364707957953215,
+        "mib_per_second": 0.06763893049271757,
+        "max_peak_rss_bytes": 25100288
+      },
+      "quality": {
+        "scoring_version": 2,
+        "tp": 34,
+        "fp": 0,
+        "fn": 0,
+        "unlocalized": 0,
+        "negative_labels_flagged": 0,
+        "negative_labels_unresolved": 0,
+        "tn": 10,
+        "positive_labels": 34,
+        "negative_labels": 10,
+        "precision": 1.0,
+        "precision_scope": "localized_unique_findings_only",
+        "recall": 1.0,
+        "recall_scope": "confirmed_location_lower_bound",
+        "f1": 1.0,
+        "localization_rate": 1.0,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 34,
+          "overlap_span": 0,
+          "line_only": 0
+        },
+        "by_group": {
+          "common": {
+            "tp": 27,
+            "total": 27,
+            "recall": 1.0
+          },
+          "generic": {
+            "tp": 7,
+            "total": 7,
+            "recall": 1.0
+          }
+        },
+        "by_provider": {
+          "aws-access-key": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "github-pat": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "gitlab-pat": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "slack-bot": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "stripe-secret": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "google-api": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "sendgrid-api": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "npm-token": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "twilio-api": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "generic": {
+            "tp": 7,
+            "total": 7,
+            "recall": 1.0
+          }
+        },
+        "missed_label_ids": [],
+        "evidence": [
+          {
+            "path": "quality/common/aws-access-key-crlf.conf",
+            "start": 31,
+            "end": 51,
+            "line": 2,
+            "rule_id": "generic-api-key",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 0,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00002",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/aws-access-key-quoted.conf",
+            "start": 14,
+            "end": 34,
+            "line": 1,
+            "rule_id": "generic-api-key",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 1,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00000",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/aws-access-key-unicode.conf",
+            "start": 34,
+            "end": 54,
+            "line": 2,
+            "rule_id": "generic-api-key",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 2,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00001",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/github-pat-crlf.conf",
+            "start": 31,
+            "end": 71,
+            "line": 2,
+            "rule_id": "github-pat",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 3,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00005",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/github-pat-quoted.conf",
+            "start": 14,
+            "end": 54,
+            "line": 1,
+            "rule_id": "github-pat",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 4,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00003",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/github-pat-unicode.conf",
+            "start": 34,
+            "end": 74,
+            "line": 2,
+            "rule_id": "github-pat",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 5,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00004",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/gitlab-pat-crlf.conf",
+            "start": 31,
+            "end": 57,
+            "line": 2,
+            "rule_id": "gitlab-pat",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 6,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00008",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/gitlab-pat-quoted.conf",
+            "start": 14,
+            "end": 40,
+            "line": 1,
+            "rule_id": "gitlab-pat",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 7,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00006",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/gitlab-pat-unicode.conf",
+            "start": 34,
+            "end": 60,
+            "line": 2,
+            "rule_id": "gitlab-pat",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 8,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00007",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/google-api-crlf.conf",
+            "start": 31,
+            "end": 70,
+            "line": 2,
+            "rule_id": "gcp-api-key",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 9,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00017",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/google-api-quoted.conf",
+            "start": 14,
+            "end": 53,
+            "line": 1,
+            "rule_id": "gcp-api-key",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 10,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00015",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/google-api-unicode.conf",
+            "start": 34,
+            "end": 73,
+            "line": 2,
+            "rule_id": "gcp-api-key",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 11,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00016",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/npm-token-crlf.conf",
+            "start": 31,
+            "end": 71,
+            "line": 2,
+            "rule_id": "npm-access-token",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 12,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00023",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/npm-token-quoted.conf",
+            "start": 14,
+            "end": 54,
+            "line": 1,
+            "rule_id": "npm-access-token",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 13,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00021",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/npm-token-unicode.conf",
+            "start": 34,
+            "end": 74,
+            "line": 2,
+            "rule_id": "npm-access-token",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 14,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00022",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/sendgrid-api-crlf.conf",
+            "start": 31,
+            "end": 100,
+            "line": 2,
+            "rule_id": "sendgrid-api-token",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 15,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00020",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/sendgrid-api-quoted.conf",
+            "start": 14,
+            "end": 83,
+            "line": 1,
+            "rule_id": "sendgrid-api-token",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 16,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00018",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/sendgrid-api-unicode.conf",
+            "start": 34,
+            "end": 103,
+            "line": 2,
+            "rule_id": "sendgrid-api-token",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 17,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00019",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/slack-bot-crlf.conf",
+            "start": 31,
+            "end": 86,
+            "line": 2,
+            "rule_id": "slack-bot-token",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 18,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00011",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/slack-bot-quoted.conf",
+            "start": 14,
+            "end": 69,
+            "line": 1,
+            "rule_id": "slack-bot-token",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 19,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00009",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/slack-bot-unicode.conf",
+            "start": 34,
+            "end": 89,
+            "line": 2,
+            "rule_id": "slack-bot-token",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 20,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00010",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/stripe-secret-crlf.conf",
+            "start": 31,
+            "end": 63,
+            "line": 2,
+            "rule_id": "stripe-access-token",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 21,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00014",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/stripe-secret-quoted.conf",
+            "start": 14,
+            "end": 46,
+            "line": 1,
+            "rule_id": "stripe-access-token",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 22,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00012",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/stripe-secret-unicode.conf",
+            "start": 34,
+            "end": 66,
+            "line": 2,
+            "rule_id": "stripe-access-token",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 23,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00013",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/twilio-api-crlf.conf",
+            "start": 31,
+            "end": 65,
+            "line": 2,
+            "rule_id": "twilio-api-key",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 24,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00026",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/twilio-api-quoted.conf",
+            "start": 14,
+            "end": 48,
+            "line": 1,
+            "rule_id": "twilio-api-key",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 25,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00024",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/twilio-api-unicode.conf",
+            "start": 34,
+            "end": 68,
+            "line": 2,
+            "rule_id": "twilio-api-key",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 26,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00025",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/generic/api-key-json.conf",
+            "start": 12,
+            "end": 52,
+            "line": 1,
+            "rule_id": "generic-api-key",
+            "column": 12,
+            "coordinate_space": "source_bytes",
+            "finding_index": 27,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00028",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/generic/multiline-assignment.conf",
+            "start": 15,
+            "end": 55,
+            "line": 2,
+            "rule_id": "generic-credential-double",
+            "column": 5,
+            "coordinate_space": "source_bytes",
+            "finding_index": 28,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00030",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/generic/password-assignment.conf",
+            "start": 21,
+            "end": 51,
+            "line": 1,
+            "rule_id": "generic-api-key",
+            "column": 21,
+            "coordinate_space": "source_bytes",
+            "finding_index": 29,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00027",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/generic/password-uri.conf",
+            "start": 27,
+            "end": 51,
+            "line": 1,
+            "rule_id": "uri-userinfo-password",
+            "column": 27,
+            "coordinate_space": "source_bytes",
+            "finding_index": 30,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00033",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/generic/secret-yaml.conf",
+            "start": 16,
+            "end": 48,
+            "line": 1,
+            "rule_id": "generic-api-key",
+            "column": 16,
+            "coordinate_space": "source_bytes",
+            "finding_index": 31,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00029",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/generic/unicode-value.conf",
+            "start": 21,
+            "end": 55,
+            "line": 1,
+            "rule_id": "generic-credential-double",
+            "column": 21,
+            "coordinate_space": "source_bytes",
+            "finding_index": 32,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00031",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/generic/unquoted-env.conf",
+            "start": 18,
+            "end": 50,
+            "line": 1,
+            "rule_id": "generic-api-key",
+            "column": 18,
+            "coordinate_space": "source_bytes",
+            "finding_index": 33,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00032",
+            "classification": "tp"
+          }
+        ]
+      }
+    },
+    {
+      "tool": "secret-scan-before",
+      "dataset": "capabilities",
+      "mode": "fs",
+      "input_bytes": 66417,
+      "input_files": 8,
+      "worktree_content_sha256": "068943d0f4d0c1c47713e9c8c054ccbff2714f8123cf3d60919b8d6ddf293bd5",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.03650858299806714,
+          "user_seconds": 0.031661999999999996,
+          "system_seconds": 0.004578,
+          "peak_rss_bytes": 21315584,
+          "stdout_bytes": 4624,
+          "stderr_bytes": 0,
+          "stdout_sha256": "5e635f5465819356a954b18b1dce66a39b34e9e2c52704e5a1457a2299b9a17a",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 4624,
+          "parsed_output_sha256": "5e635f5465819356a954b18b1dce66a39b34e9e2c52704e5a1457a2299b9a17a",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "detection_passes": 8,
+            "files": 8,
+            "bytes": 66167,
+            "skipped": 0,
+            "elapsed_ms": 28
+          },
+          "complete": true,
+          "findings_count": 8,
+          "normalized_findings": [
+            {
+              "path": "capabilities/archive.tar.gz!archive.tar!nested/config.conf",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "archive_member_bytes"
+            },
+            {
+              "path": "capabilities/archive.zip!nested/config.conf",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "archive_member_bytes"
+            },
+            {
+              "path": "capabilities/base64.dat",
+              "start": 0,
+              "end": 76,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 0,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/no-final-newline.dat",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/nul-prefix.dat",
+              "start": 16,
+              "end": 56,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 16,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/private-key.pem",
+              "start": 0,
+              "end": 182,
+              "line": 1,
+              "rule_id": "private-key",
+              "column": 0,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/read-boundary.dat",
+              "start": 65528,
+              "end": 65568,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 65528,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/utf16le.dat",
+              "start": 30,
+              "end": 110,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 30,
+              "coordinate_space": "source_bytes"
+            }
+          ],
+          "locations_sha256": "e3b708ad151d212e29df6e828bdd81753f2bd5f11c7a96ae8f7cd146f8d2bd85",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.037195750046521425,
+          "user_seconds": 0.032269,
+          "system_seconds": 0.004294,
+          "peak_rss_bytes": 22380544,
+          "stdout_bytes": 4624,
+          "stderr_bytes": 0,
+          "stdout_sha256": "9c8f89fe1e0b42665f24fd24e1d31f2b26cded64959be3df308ad2f833526eb6",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 4624,
+          "parsed_output_sha256": "9c8f89fe1e0b42665f24fd24e1d31f2b26cded64959be3df308ad2f833526eb6",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "detection_passes": 8,
+            "files": 8,
+            "bytes": 66167,
+            "skipped": 0,
+            "elapsed_ms": 30
+          },
+          "complete": true,
+          "findings_count": 8,
+          "normalized_findings": [
+            {
+              "path": "capabilities/archive.tar.gz!archive.tar!nested/config.conf",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "archive_member_bytes"
+            },
+            {
+              "path": "capabilities/archive.zip!nested/config.conf",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "archive_member_bytes"
+            },
+            {
+              "path": "capabilities/base64.dat",
+              "start": 0,
+              "end": 76,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 0,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/no-final-newline.dat",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/nul-prefix.dat",
+              "start": 16,
+              "end": 56,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 16,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/private-key.pem",
+              "start": 0,
+              "end": 182,
+              "line": 1,
+              "rule_id": "private-key",
+              "column": 0,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/read-boundary.dat",
+              "start": 65528,
+              "end": 65568,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 65528,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/utf16le.dat",
+              "start": 30,
+              "end": 110,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 30,
+              "coordinate_space": "source_bytes"
+            }
+          ],
+          "locations_sha256": "e3b708ad151d212e29df6e828bdd81753f2bd5f11c7a96ae8f7cd146f8d2bd85",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.037718750070780516,
+          "user_seconds": 0.032539,
+          "system_seconds": 0.004346,
+          "peak_rss_bytes": 21676032,
+          "stdout_bytes": 4624,
+          "stderr_bytes": 0,
+          "stdout_sha256": "9c8f89fe1e0b42665f24fd24e1d31f2b26cded64959be3df308ad2f833526eb6",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 4624,
+          "parsed_output_sha256": "9c8f89fe1e0b42665f24fd24e1d31f2b26cded64959be3df308ad2f833526eb6",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "detection_passes": 8,
+            "files": 8,
+            "bytes": 66167,
+            "skipped": 0,
+            "elapsed_ms": 30
+          },
+          "complete": true,
+          "findings_count": 8,
+          "normalized_findings": [
+            {
+              "path": "capabilities/archive.tar.gz!archive.tar!nested/config.conf",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "archive_member_bytes"
+            },
+            {
+              "path": "capabilities/archive.zip!nested/config.conf",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "archive_member_bytes"
+            },
+            {
+              "path": "capabilities/base64.dat",
+              "start": 0,
+              "end": 76,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 0,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/no-final-newline.dat",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/nul-prefix.dat",
+              "start": 16,
+              "end": 56,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 16,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/private-key.pem",
+              "start": 0,
+              "end": 182,
+              "line": 1,
+              "rule_id": "private-key",
+              "column": 0,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/read-boundary.dat",
+              "start": 65528,
+              "end": 65568,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 65528,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/utf16le.dat",
+              "start": 30,
+              "end": 110,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 30,
+              "coordinate_space": "source_bytes"
+            }
+          ],
+          "locations_sha256": "e3b708ad151d212e29df6e828bdd81753f2bd5f11c7a96ae8f7cd146f8d2bd85",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v4-2f8029c5",
+        "scan",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/capabilities",
+        "--format",
+        "json"
+      ],
+      "scan_complete": true,
+      "summary": {
+        "cold_process_seconds": 0.03650858299806714,
+        "median_seconds": 0.037718750070780516,
+        "min_seconds": 0.037718750070780516,
+        "max_seconds": 0.037718750070780516,
+        "mib_per_second": 1.679275876159573,
+        "max_peak_rss_bytes": 21676032
+      },
+      "archive_probes": [
+        {
+          "path": "capabilities/archive.zip",
+          "member": "nested/config.conf",
+          "reported_archive": true,
+          "reported_member": true,
+          "evidence": "location only; no decoded span or credential validity claim"
+        },
+        {
+          "path": "capabilities/archive.tar.gz",
+          "member": "nested/config.conf",
+          "reported_archive": true,
+          "reported_member": true,
+          "evidence": "location only; no decoded span or credential validity claim"
+        }
+      ],
+      "excluded_unscored_archive_findings": 2,
+      "quality": {
+        "scoring_version": 2,
+        "tp": 6,
+        "fp": 0,
+        "fn": 0,
+        "unlocalized": 0,
+        "negative_labels_flagged": 0,
+        "negative_labels_unresolved": 0,
+        "tn": 0,
+        "positive_labels": 6,
+        "negative_labels": 0,
+        "precision": 1.0,
+        "precision_scope": "localized_unique_findings_only",
+        "recall": 1.0,
+        "recall_scope": "confirmed_location_lower_bound",
+        "f1": 1.0,
+        "localization_rate": 1.0,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 6,
+          "overlap_span": 0,
+          "line_only": 0
+        },
+        "by_group": {
+          "capability": {
+            "tp": 6,
+            "total": 6,
+            "recall": 1.0
+          }
+        },
+        "by_provider": {
+          "github-pat": {
+            "tp": 5,
+            "total": 5,
+            "recall": 1.0
+          },
+          "private-key": {
+            "tp": 1,
+            "total": 1,
+            "recall": 1.0
+          }
+        },
+        "missed_label_ids": [],
+        "evidence": [
+          {
+            "path": "capabilities/base64.dat",
+            "start": 0,
+            "end": 76,
+            "line": 1,
+            "rule_id": "github-pat",
+            "column": 0,
+            "coordinate_space": "source_bytes",
+            "finding_index": 0,
+            "location_quality": "exact_span",
+            "matched_label_id": "capabilities-00044",
+            "classification": "tp"
+          },
+          {
+            "path": "capabilities/no-final-newline.dat",
+            "start": 14,
+            "end": 54,
+            "line": 1,
+            "rule_id": "github-pat",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 1,
+            "location_quality": "exact_span",
+            "matched_label_id": "capabilities-00048",
+            "classification": "tp"
+          },
+          {
+            "path": "capabilities/nul-prefix.dat",
+            "start": 16,
+            "end": 56,
+            "line": 1,
+            "rule_id": "github-pat",
+            "column": 16,
+            "coordinate_space": "source_bytes",
+            "finding_index": 2,
+            "location_quality": "exact_span",
+            "matched_label_id": "capabilities-00047",
+            "classification": "tp"
+          },
+          {
+            "path": "capabilities/private-key.pem",
+            "start": 0,
+            "end": 182,
+            "line": 1,
+            "rule_id": "private-key",
+            "column": 0,
+            "coordinate_space": "source_bytes",
+            "finding_index": 3,
+            "location_quality": "exact_span",
+            "matched_label_id": "capabilities-00049",
+            "classification": "tp"
+          },
+          {
+            "path": "capabilities/read-boundary.dat",
+            "start": 65528,
+            "end": 65568,
+            "line": 1,
+            "rule_id": "github-pat",
+            "column": 65528,
+            "coordinate_space": "source_bytes",
+            "finding_index": 4,
+            "location_quality": "exact_span",
+            "matched_label_id": "capabilities-00046",
+            "classification": "tp"
+          },
+          {
+            "path": "capabilities/utf16le.dat",
+            "start": 30,
+            "end": 110,
+            "line": 1,
+            "rule_id": "github-pat",
+            "column": 30,
+            "coordinate_space": "source_bytes",
+            "finding_index": 5,
+            "location_quality": "exact_span",
+            "matched_label_id": "capabilities-00045",
+            "classification": "tp"
+          }
+        ]
+      }
+    },
+    {
+      "tool": "secret-scan",
+      "dataset": "quality",
+      "mode": "fs",
+      "input_bytes": 2721,
+      "input_files": 44,
+      "worktree_content_sha256": "d06745d4356819c905f5556f9247505c4d02194125d65392e4ee119b0355125b",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.04881379206199199,
+          "user_seconds": 0.038664,
+          "system_seconds": 0.006888,
+          "peak_rss_bytes": 25018368,
+          "stdout_bytes": 17797,
+          "stderr_bytes": 0,
+          "stdout_sha256": "05d4ddbc404e18cd502e5b9700b8795ee0093bd806e4710f83c7750501352429",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 17797,
+          "parsed_output_sha256": "05d4ddbc404e18cd502e5b9700b8795ee0093bd806e4710f83c7750501352429",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "detection_passes": 44,
+            "files": 44,
+            "bytes": 2721,
+            "skipped": 0,
+            "elapsed_ms": 41
+          },
+          "complete": true,
+          "findings_count": 34,
+          "normalized_findings": [
+            {
+              "path": "quality/common/aws-access-key-crlf.conf",
+              "start": 31,
+              "end": 51,
+              "line": 2,
+              "rule_id": "generic-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/aws-access-key-quoted.conf",
+              "start": 14,
+              "end": 34,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/aws-access-key-unicode.conf",
+              "start": 34,
+              "end": 54,
+              "line": 2,
+              "rule_id": "generic-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/github-pat-crlf.conf",
+              "start": 31,
+              "end": 71,
+              "line": 2,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/github-pat-quoted.conf",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/github-pat-unicode.conf",
+              "start": 34,
+              "end": 74,
+              "line": 2,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/gitlab-pat-crlf.conf",
+              "start": 31,
+              "end": 57,
+              "line": 2,
+              "rule_id": "gitlab-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/gitlab-pat-quoted.conf",
+              "start": 14,
+              "end": 40,
+              "line": 1,
+              "rule_id": "gitlab-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/gitlab-pat-unicode.conf",
+              "start": 34,
+              "end": 60,
+              "line": 2,
+              "rule_id": "gitlab-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/google-api-crlf.conf",
+              "start": 31,
+              "end": 70,
+              "line": 2,
+              "rule_id": "gcp-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/google-api-quoted.conf",
+              "start": 14,
+              "end": 53,
+              "line": 1,
+              "rule_id": "gcp-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/google-api-unicode.conf",
+              "start": 34,
+              "end": 73,
+              "line": 2,
+              "rule_id": "gcp-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/npm-token-crlf.conf",
+              "start": 31,
+              "end": 71,
+              "line": 2,
+              "rule_id": "npm-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/npm-token-quoted.conf",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "npm-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/npm-token-unicode.conf",
+              "start": 34,
+              "end": 74,
+              "line": 2,
+              "rule_id": "npm-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/sendgrid-api-crlf.conf",
+              "start": 31,
+              "end": 100,
+              "line": 2,
+              "rule_id": "sendgrid-api-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/sendgrid-api-quoted.conf",
+              "start": 14,
+              "end": 83,
+              "line": 1,
+              "rule_id": "sendgrid-api-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/sendgrid-api-unicode.conf",
+              "start": 34,
+              "end": 103,
+              "line": 2,
+              "rule_id": "sendgrid-api-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/slack-bot-crlf.conf",
+              "start": 31,
+              "end": 86,
+              "line": 2,
+              "rule_id": "slack-bot-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/slack-bot-quoted.conf",
+              "start": 14,
+              "end": 69,
+              "line": 1,
+              "rule_id": "slack-bot-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/slack-bot-unicode.conf",
+              "start": 34,
+              "end": 89,
+              "line": 2,
+              "rule_id": "slack-bot-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/stripe-secret-crlf.conf",
+              "start": 31,
+              "end": 63,
+              "line": 2,
+              "rule_id": "stripe-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/stripe-secret-quoted.conf",
+              "start": 14,
+              "end": 46,
+              "line": 1,
+              "rule_id": "stripe-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/stripe-secret-unicode.conf",
+              "start": 34,
+              "end": 66,
+              "line": 2,
+              "rule_id": "stripe-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/twilio-api-crlf.conf",
+              "start": 31,
+              "end": 65,
+              "line": 2,
+              "rule_id": "twilio-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/twilio-api-quoted.conf",
+              "start": 14,
+              "end": 48,
+              "line": 1,
+              "rule_id": "twilio-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/twilio-api-unicode.conf",
+              "start": 34,
+              "end": 68,
+              "line": 2,
+              "rule_id": "twilio-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/api-key-json.conf",
+              "start": 12,
+              "end": 52,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 12,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/multiline-assignment.conf",
+              "start": 15,
+              "end": 55,
+              "line": 2,
+              "rule_id": "generic-credential-double",
+              "column": 5,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/password-assignment.conf",
+              "start": 21,
+              "end": 51,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 21,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/password-uri.conf",
+              "start": 27,
+              "end": 51,
+              "line": 1,
+              "rule_id": "uri-userinfo-password",
+              "column": 27,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/secret-yaml.conf",
+              "start": 16,
+              "end": 48,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 16,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/unicode-value.conf",
+              "start": 21,
+              "end": 55,
+              "line": 1,
+              "rule_id": "generic-credential-double",
+              "column": 21,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/unquoted-env.conf",
+              "start": 18,
+              "end": 50,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 18,
+              "coordinate_space": "source_bytes"
+            }
+          ],
+          "locations_sha256": "8e4272e374c157f1dbfa2a3e6f16511d25e0344c733c31e41258ca55993ac8b0",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.04006062506232411,
+          "user_seconds": 0.038690999999999996,
+          "system_seconds": 0.006808,
+          "peak_rss_bytes": 25067520,
+          "stdout_bytes": 17797,
+          "stderr_bytes": 0,
+          "stdout_sha256": "8becee1d8201e8d493dba0016ed362943888d06fe35d5211f0f930219f88591f",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 17797,
+          "parsed_output_sha256": "8becee1d8201e8d493dba0016ed362943888d06fe35d5211f0f930219f88591f",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "detection_passes": 44,
+            "files": 44,
+            "bytes": 2721,
+            "skipped": 0,
+            "elapsed_ms": 32
+          },
+          "complete": true,
+          "findings_count": 34,
+          "normalized_findings": [
+            {
+              "path": "quality/common/aws-access-key-crlf.conf",
+              "start": 31,
+              "end": 51,
+              "line": 2,
+              "rule_id": "generic-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/aws-access-key-quoted.conf",
+              "start": 14,
+              "end": 34,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/aws-access-key-unicode.conf",
+              "start": 34,
+              "end": 54,
+              "line": 2,
+              "rule_id": "generic-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/github-pat-crlf.conf",
+              "start": 31,
+              "end": 71,
+              "line": 2,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/github-pat-quoted.conf",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/github-pat-unicode.conf",
+              "start": 34,
+              "end": 74,
+              "line": 2,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/gitlab-pat-crlf.conf",
+              "start": 31,
+              "end": 57,
+              "line": 2,
+              "rule_id": "gitlab-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/gitlab-pat-quoted.conf",
+              "start": 14,
+              "end": 40,
+              "line": 1,
+              "rule_id": "gitlab-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/gitlab-pat-unicode.conf",
+              "start": 34,
+              "end": 60,
+              "line": 2,
+              "rule_id": "gitlab-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/google-api-crlf.conf",
+              "start": 31,
+              "end": 70,
+              "line": 2,
+              "rule_id": "gcp-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/google-api-quoted.conf",
+              "start": 14,
+              "end": 53,
+              "line": 1,
+              "rule_id": "gcp-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/google-api-unicode.conf",
+              "start": 34,
+              "end": 73,
+              "line": 2,
+              "rule_id": "gcp-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/npm-token-crlf.conf",
+              "start": 31,
+              "end": 71,
+              "line": 2,
+              "rule_id": "npm-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/npm-token-quoted.conf",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "npm-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/npm-token-unicode.conf",
+              "start": 34,
+              "end": 74,
+              "line": 2,
+              "rule_id": "npm-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/sendgrid-api-crlf.conf",
+              "start": 31,
+              "end": 100,
+              "line": 2,
+              "rule_id": "sendgrid-api-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/sendgrid-api-quoted.conf",
+              "start": 14,
+              "end": 83,
+              "line": 1,
+              "rule_id": "sendgrid-api-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/sendgrid-api-unicode.conf",
+              "start": 34,
+              "end": 103,
+              "line": 2,
+              "rule_id": "sendgrid-api-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/slack-bot-crlf.conf",
+              "start": 31,
+              "end": 86,
+              "line": 2,
+              "rule_id": "slack-bot-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/slack-bot-quoted.conf",
+              "start": 14,
+              "end": 69,
+              "line": 1,
+              "rule_id": "slack-bot-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/slack-bot-unicode.conf",
+              "start": 34,
+              "end": 89,
+              "line": 2,
+              "rule_id": "slack-bot-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/stripe-secret-crlf.conf",
+              "start": 31,
+              "end": 63,
+              "line": 2,
+              "rule_id": "stripe-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/stripe-secret-quoted.conf",
+              "start": 14,
+              "end": 46,
+              "line": 1,
+              "rule_id": "stripe-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/stripe-secret-unicode.conf",
+              "start": 34,
+              "end": 66,
+              "line": 2,
+              "rule_id": "stripe-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/twilio-api-crlf.conf",
+              "start": 31,
+              "end": 65,
+              "line": 2,
+              "rule_id": "twilio-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/twilio-api-quoted.conf",
+              "start": 14,
+              "end": 48,
+              "line": 1,
+              "rule_id": "twilio-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/twilio-api-unicode.conf",
+              "start": 34,
+              "end": 68,
+              "line": 2,
+              "rule_id": "twilio-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/api-key-json.conf",
+              "start": 12,
+              "end": 52,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 12,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/multiline-assignment.conf",
+              "start": 15,
+              "end": 55,
+              "line": 2,
+              "rule_id": "generic-credential-double",
+              "column": 5,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/password-assignment.conf",
+              "start": 21,
+              "end": 51,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 21,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/password-uri.conf",
+              "start": 27,
+              "end": 51,
+              "line": 1,
+              "rule_id": "uri-userinfo-password",
+              "column": 27,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/secret-yaml.conf",
+              "start": 16,
+              "end": 48,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 16,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/unicode-value.conf",
+              "start": 21,
+              "end": 55,
+              "line": 1,
+              "rule_id": "generic-credential-double",
+              "column": 21,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/unquoted-env.conf",
+              "start": 18,
+              "end": 50,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 18,
+              "coordinate_space": "source_bytes"
+            }
+          ],
+          "locations_sha256": "8e4272e374c157f1dbfa2a3e6f16511d25e0344c733c31e41258ca55993ac8b0",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.03884950000792742,
+          "user_seconds": 0.037793,
+          "system_seconds": 0.006565,
+          "peak_rss_bytes": 24920064,
+          "stdout_bytes": 17797,
+          "stderr_bytes": 0,
+          "stdout_sha256": "303b5ee5ffe25cfc35858080faf7362efec5c3bff3a13085843ff26bca86cd6a",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 17797,
+          "parsed_output_sha256": "303b5ee5ffe25cfc35858080faf7362efec5c3bff3a13085843ff26bca86cd6a",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "detection_passes": 44,
+            "files": 44,
+            "bytes": 2721,
+            "skipped": 0,
+            "elapsed_ms": 31
+          },
+          "complete": true,
+          "findings_count": 34,
+          "normalized_findings": [
+            {
+              "path": "quality/common/aws-access-key-crlf.conf",
+              "start": 31,
+              "end": 51,
+              "line": 2,
+              "rule_id": "generic-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/aws-access-key-quoted.conf",
+              "start": 14,
+              "end": 34,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/aws-access-key-unicode.conf",
+              "start": 34,
+              "end": 54,
+              "line": 2,
+              "rule_id": "generic-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/github-pat-crlf.conf",
+              "start": 31,
+              "end": 71,
+              "line": 2,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/github-pat-quoted.conf",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/github-pat-unicode.conf",
+              "start": 34,
+              "end": 74,
+              "line": 2,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/gitlab-pat-crlf.conf",
+              "start": 31,
+              "end": 57,
+              "line": 2,
+              "rule_id": "gitlab-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/gitlab-pat-quoted.conf",
+              "start": 14,
+              "end": 40,
+              "line": 1,
+              "rule_id": "gitlab-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/gitlab-pat-unicode.conf",
+              "start": 34,
+              "end": 60,
+              "line": 2,
+              "rule_id": "gitlab-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/google-api-crlf.conf",
+              "start": 31,
+              "end": 70,
+              "line": 2,
+              "rule_id": "gcp-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/google-api-quoted.conf",
+              "start": 14,
+              "end": 53,
+              "line": 1,
+              "rule_id": "gcp-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/google-api-unicode.conf",
+              "start": 34,
+              "end": 73,
+              "line": 2,
+              "rule_id": "gcp-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/npm-token-crlf.conf",
+              "start": 31,
+              "end": 71,
+              "line": 2,
+              "rule_id": "npm-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/npm-token-quoted.conf",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "npm-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/npm-token-unicode.conf",
+              "start": 34,
+              "end": 74,
+              "line": 2,
+              "rule_id": "npm-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/sendgrid-api-crlf.conf",
+              "start": 31,
+              "end": 100,
+              "line": 2,
+              "rule_id": "sendgrid-api-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/sendgrid-api-quoted.conf",
+              "start": 14,
+              "end": 83,
+              "line": 1,
+              "rule_id": "sendgrid-api-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/sendgrid-api-unicode.conf",
+              "start": 34,
+              "end": 103,
+              "line": 2,
+              "rule_id": "sendgrid-api-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/slack-bot-crlf.conf",
+              "start": 31,
+              "end": 86,
+              "line": 2,
+              "rule_id": "slack-bot-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/slack-bot-quoted.conf",
+              "start": 14,
+              "end": 69,
+              "line": 1,
+              "rule_id": "slack-bot-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/slack-bot-unicode.conf",
+              "start": 34,
+              "end": 89,
+              "line": 2,
+              "rule_id": "slack-bot-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/stripe-secret-crlf.conf",
+              "start": 31,
+              "end": 63,
+              "line": 2,
+              "rule_id": "stripe-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/stripe-secret-quoted.conf",
+              "start": 14,
+              "end": 46,
+              "line": 1,
+              "rule_id": "stripe-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/stripe-secret-unicode.conf",
+              "start": 34,
+              "end": 66,
+              "line": 2,
+              "rule_id": "stripe-access-token",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/twilio-api-crlf.conf",
+              "start": 31,
+              "end": 65,
+              "line": 2,
+              "rule_id": "twilio-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/twilio-api-quoted.conf",
+              "start": 14,
+              "end": 48,
+              "line": 1,
+              "rule_id": "twilio-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/common/twilio-api-unicode.conf",
+              "start": 34,
+              "end": 68,
+              "line": 2,
+              "rule_id": "twilio-api-key",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/api-key-json.conf",
+              "start": 12,
+              "end": 52,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 12,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/multiline-assignment.conf",
+              "start": 15,
+              "end": 55,
+              "line": 2,
+              "rule_id": "generic-credential-double",
+              "column": 5,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/password-assignment.conf",
+              "start": 21,
+              "end": 51,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 21,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/password-uri.conf",
+              "start": 27,
+              "end": 51,
+              "line": 1,
+              "rule_id": "uri-userinfo-password",
+              "column": 27,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/secret-yaml.conf",
+              "start": 16,
+              "end": 48,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 16,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/unicode-value.conf",
+              "start": 21,
+              "end": 55,
+              "line": 1,
+              "rule_id": "generic-credential-double",
+              "column": 21,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "quality/generic/unquoted-env.conf",
+              "start": 18,
+              "end": 50,
+              "line": 1,
+              "rule_id": "generic-api-key",
+              "column": 18,
+              "coordinate_space": "source_bytes"
+            }
+          ],
+          "locations_sha256": "8e4272e374c157f1dbfa2a3e6f16511d25e0344c733c31e41258ca55993ac8b0",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+        "scan",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/quality",
+        "--format",
+        "json"
+      ],
+      "scan_complete": true,
+      "summary": {
+        "cold_process_seconds": 0.04881379206199199,
+        "median_seconds": 0.03884950000792742,
+        "min_seconds": 0.03884950000792742,
+        "max_seconds": 0.03884950000792742,
+        "mib_per_second": 0.066794883187992,
+        "max_peak_rss_bytes": 24920064
+      },
+      "quality": {
+        "scoring_version": 2,
+        "tp": 34,
+        "fp": 0,
+        "fn": 0,
+        "unlocalized": 0,
+        "negative_labels_flagged": 0,
+        "negative_labels_unresolved": 0,
+        "tn": 10,
+        "positive_labels": 34,
+        "negative_labels": 10,
+        "precision": 1.0,
+        "precision_scope": "localized_unique_findings_only",
+        "recall": 1.0,
+        "recall_scope": "confirmed_location_lower_bound",
+        "f1": 1.0,
+        "localization_rate": 1.0,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 34,
+          "overlap_span": 0,
+          "line_only": 0
+        },
+        "by_group": {
+          "common": {
+            "tp": 27,
+            "total": 27,
+            "recall": 1.0
+          },
+          "generic": {
+            "tp": 7,
+            "total": 7,
+            "recall": 1.0
+          }
+        },
+        "by_provider": {
+          "aws-access-key": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "github-pat": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "gitlab-pat": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "slack-bot": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "stripe-secret": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "google-api": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "sendgrid-api": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "npm-token": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "twilio-api": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "generic": {
+            "tp": 7,
+            "total": 7,
+            "recall": 1.0
+          }
+        },
+        "missed_label_ids": [],
+        "evidence": [
+          {
+            "path": "quality/common/aws-access-key-crlf.conf",
+            "start": 31,
+            "end": 51,
+            "line": 2,
+            "rule_id": "generic-api-key",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 0,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00002",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/aws-access-key-quoted.conf",
+            "start": 14,
+            "end": 34,
+            "line": 1,
+            "rule_id": "generic-api-key",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 1,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00000",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/aws-access-key-unicode.conf",
+            "start": 34,
+            "end": 54,
+            "line": 2,
+            "rule_id": "generic-api-key",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 2,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00001",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/github-pat-crlf.conf",
+            "start": 31,
+            "end": 71,
+            "line": 2,
+            "rule_id": "github-pat",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 3,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00005",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/github-pat-quoted.conf",
+            "start": 14,
+            "end": 54,
+            "line": 1,
+            "rule_id": "github-pat",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 4,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00003",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/github-pat-unicode.conf",
+            "start": 34,
+            "end": 74,
+            "line": 2,
+            "rule_id": "github-pat",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 5,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00004",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/gitlab-pat-crlf.conf",
+            "start": 31,
+            "end": 57,
+            "line": 2,
+            "rule_id": "gitlab-pat",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 6,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00008",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/gitlab-pat-quoted.conf",
+            "start": 14,
+            "end": 40,
+            "line": 1,
+            "rule_id": "gitlab-pat",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 7,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00006",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/gitlab-pat-unicode.conf",
+            "start": 34,
+            "end": 60,
+            "line": 2,
+            "rule_id": "gitlab-pat",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 8,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00007",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/google-api-crlf.conf",
+            "start": 31,
+            "end": 70,
+            "line": 2,
+            "rule_id": "gcp-api-key",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 9,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00017",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/google-api-quoted.conf",
+            "start": 14,
+            "end": 53,
+            "line": 1,
+            "rule_id": "gcp-api-key",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 10,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00015",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/google-api-unicode.conf",
+            "start": 34,
+            "end": 73,
+            "line": 2,
+            "rule_id": "gcp-api-key",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 11,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00016",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/npm-token-crlf.conf",
+            "start": 31,
+            "end": 71,
+            "line": 2,
+            "rule_id": "npm-access-token",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 12,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00023",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/npm-token-quoted.conf",
+            "start": 14,
+            "end": 54,
+            "line": 1,
+            "rule_id": "npm-access-token",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 13,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00021",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/npm-token-unicode.conf",
+            "start": 34,
+            "end": 74,
+            "line": 2,
+            "rule_id": "npm-access-token",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 14,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00022",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/sendgrid-api-crlf.conf",
+            "start": 31,
+            "end": 100,
+            "line": 2,
+            "rule_id": "sendgrid-api-token",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 15,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00020",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/sendgrid-api-quoted.conf",
+            "start": 14,
+            "end": 83,
+            "line": 1,
+            "rule_id": "sendgrid-api-token",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 16,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00018",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/sendgrid-api-unicode.conf",
+            "start": 34,
+            "end": 103,
+            "line": 2,
+            "rule_id": "sendgrid-api-token",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 17,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00019",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/slack-bot-crlf.conf",
+            "start": 31,
+            "end": 86,
+            "line": 2,
+            "rule_id": "slack-bot-token",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 18,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00011",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/slack-bot-quoted.conf",
+            "start": 14,
+            "end": 69,
+            "line": 1,
+            "rule_id": "slack-bot-token",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 19,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00009",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/slack-bot-unicode.conf",
+            "start": 34,
+            "end": 89,
+            "line": 2,
+            "rule_id": "slack-bot-token",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 20,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00010",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/stripe-secret-crlf.conf",
+            "start": 31,
+            "end": 63,
+            "line": 2,
+            "rule_id": "stripe-access-token",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 21,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00014",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/stripe-secret-quoted.conf",
+            "start": 14,
+            "end": 46,
+            "line": 1,
+            "rule_id": "stripe-access-token",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 22,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00012",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/stripe-secret-unicode.conf",
+            "start": 34,
+            "end": 66,
+            "line": 2,
+            "rule_id": "stripe-access-token",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 23,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00013",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/twilio-api-crlf.conf",
+            "start": 31,
+            "end": 65,
+            "line": 2,
+            "rule_id": "twilio-api-key",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 24,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00026",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/twilio-api-quoted.conf",
+            "start": 14,
+            "end": 48,
+            "line": 1,
+            "rule_id": "twilio-api-key",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 25,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00024",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/common/twilio-api-unicode.conf",
+            "start": 34,
+            "end": 68,
+            "line": 2,
+            "rule_id": "twilio-api-key",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 26,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00025",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/generic/api-key-json.conf",
+            "start": 12,
+            "end": 52,
+            "line": 1,
+            "rule_id": "generic-api-key",
+            "column": 12,
+            "coordinate_space": "source_bytes",
+            "finding_index": 27,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00028",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/generic/multiline-assignment.conf",
+            "start": 15,
+            "end": 55,
+            "line": 2,
+            "rule_id": "generic-credential-double",
+            "column": 5,
+            "coordinate_space": "source_bytes",
+            "finding_index": 28,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00030",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/generic/password-assignment.conf",
+            "start": 21,
+            "end": 51,
+            "line": 1,
+            "rule_id": "generic-api-key",
+            "column": 21,
+            "coordinate_space": "source_bytes",
+            "finding_index": 29,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00027",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/generic/password-uri.conf",
+            "start": 27,
+            "end": 51,
+            "line": 1,
+            "rule_id": "uri-userinfo-password",
+            "column": 27,
+            "coordinate_space": "source_bytes",
+            "finding_index": 30,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00033",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/generic/secret-yaml.conf",
+            "start": 16,
+            "end": 48,
+            "line": 1,
+            "rule_id": "generic-api-key",
+            "column": 16,
+            "coordinate_space": "source_bytes",
+            "finding_index": 31,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00029",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/generic/unicode-value.conf",
+            "start": 21,
+            "end": 55,
+            "line": 1,
+            "rule_id": "generic-credential-double",
+            "column": 21,
+            "coordinate_space": "source_bytes",
+            "finding_index": 32,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00031",
+            "classification": "tp"
+          },
+          {
+            "path": "quality/generic/unquoted-env.conf",
+            "start": 18,
+            "end": 50,
+            "line": 1,
+            "rule_id": "generic-api-key",
+            "column": 18,
+            "coordinate_space": "source_bytes",
+            "finding_index": 33,
+            "location_quality": "exact_span",
+            "matched_label_id": "quality-00032",
+            "classification": "tp"
+          }
+        ]
+      }
+    },
+    {
+      "tool": "secret-scan",
+      "dataset": "capabilities",
+      "mode": "fs",
+      "input_bytes": 66417,
+      "input_files": 8,
+      "worktree_content_sha256": "068943d0f4d0c1c47713e9c8c054ccbff2714f8123cf3d60919b8d6ddf293bd5",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.03698812494985759,
+          "user_seconds": 0.032584,
+          "system_seconds": 0.004366,
+          "peak_rss_bytes": 21921792,
+          "stdout_bytes": 4624,
+          "stderr_bytes": 0,
+          "stdout_sha256": "1bf7097b0f194fe984dc1617b30d2708614375c99f1c6770fc17b2fdf523fe84",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 4624,
+          "parsed_output_sha256": "1bf7097b0f194fe984dc1617b30d2708614375c99f1c6770fc17b2fdf523fe84",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "detection_passes": 8,
+            "files": 8,
+            "bytes": 66167,
+            "skipped": 0,
+            "elapsed_ms": 29
+          },
+          "complete": true,
+          "findings_count": 8,
+          "normalized_findings": [
+            {
+              "path": "capabilities/archive.tar.gz!archive.tar!nested/config.conf",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "archive_member_bytes"
+            },
+            {
+              "path": "capabilities/archive.zip!nested/config.conf",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "archive_member_bytes"
+            },
+            {
+              "path": "capabilities/base64.dat",
+              "start": 0,
+              "end": 76,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 0,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/no-final-newline.dat",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/nul-prefix.dat",
+              "start": 16,
+              "end": 56,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 16,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/private-key.pem",
+              "start": 0,
+              "end": 182,
+              "line": 1,
+              "rule_id": "private-key",
+              "column": 0,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/read-boundary.dat",
+              "start": 65528,
+              "end": 65568,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 65528,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/utf16le.dat",
+              "start": 30,
+              "end": 110,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 30,
+              "coordinate_space": "source_bytes"
+            }
+          ],
+          "locations_sha256": "e3b708ad151d212e29df6e828bdd81753f2bd5f11c7a96ae8f7cd146f8d2bd85",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.036482625058852136,
+          "user_seconds": 0.031886,
+          "system_seconds": 0.004203,
+          "peak_rss_bytes": 21970944,
+          "stdout_bytes": 4624,
+          "stderr_bytes": 0,
+          "stdout_sha256": "1bf7097b0f194fe984dc1617b30d2708614375c99f1c6770fc17b2fdf523fe84",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 4624,
+          "parsed_output_sha256": "1bf7097b0f194fe984dc1617b30d2708614375c99f1c6770fc17b2fdf523fe84",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "detection_passes": 8,
+            "files": 8,
+            "bytes": 66167,
+            "skipped": 0,
+            "elapsed_ms": 29
+          },
+          "complete": true,
+          "findings_count": 8,
+          "normalized_findings": [
+            {
+              "path": "capabilities/archive.tar.gz!archive.tar!nested/config.conf",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "archive_member_bytes"
+            },
+            {
+              "path": "capabilities/archive.zip!nested/config.conf",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "archive_member_bytes"
+            },
+            {
+              "path": "capabilities/base64.dat",
+              "start": 0,
+              "end": 76,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 0,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/no-final-newline.dat",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/nul-prefix.dat",
+              "start": 16,
+              "end": 56,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 16,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/private-key.pem",
+              "start": 0,
+              "end": 182,
+              "line": 1,
+              "rule_id": "private-key",
+              "column": 0,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/read-boundary.dat",
+              "start": 65528,
+              "end": 65568,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 65528,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/utf16le.dat",
+              "start": 30,
+              "end": 110,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 30,
+              "coordinate_space": "source_bytes"
+            }
+          ],
+          "locations_sha256": "e3b708ad151d212e29df6e828bdd81753f2bd5f11c7a96ae8f7cd146f8d2bd85",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.03672741702757776,
+          "user_seconds": 0.031716,
+          "system_seconds": 0.004489,
+          "peak_rss_bytes": 21938176,
+          "stdout_bytes": 4624,
+          "stderr_bytes": 0,
+          "stdout_sha256": "1bf7097b0f194fe984dc1617b30d2708614375c99f1c6770fc17b2fdf523fe84",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 4624,
+          "parsed_output_sha256": "1bf7097b0f194fe984dc1617b30d2708614375c99f1c6770fc17b2fdf523fe84",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "detection_passes": 8,
+            "files": 8,
+            "bytes": 66167,
+            "skipped": 0,
+            "elapsed_ms": 29
+          },
+          "complete": true,
+          "findings_count": 8,
+          "normalized_findings": [
+            {
+              "path": "capabilities/archive.tar.gz!archive.tar!nested/config.conf",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "archive_member_bytes"
+            },
+            {
+              "path": "capabilities/archive.zip!nested/config.conf",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "archive_member_bytes"
+            },
+            {
+              "path": "capabilities/base64.dat",
+              "start": 0,
+              "end": 76,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 0,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/no-final-newline.dat",
+              "start": 14,
+              "end": 54,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 14,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/nul-prefix.dat",
+              "start": 16,
+              "end": 56,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 16,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/private-key.pem",
+              "start": 0,
+              "end": 182,
+              "line": 1,
+              "rule_id": "private-key",
+              "column": 0,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/read-boundary.dat",
+              "start": 65528,
+              "end": 65568,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 65528,
+              "coordinate_space": "source_bytes"
+            },
+            {
+              "path": "capabilities/utf16le.dat",
+              "start": 30,
+              "end": 110,
+              "line": 1,
+              "rule_id": "github-pat",
+              "column": 30,
+              "coordinate_space": "source_bytes"
+            }
+          ],
+          "locations_sha256": "e3b708ad151d212e29df6e828bdd81753f2bd5f11c7a96ae8f7cd146f8d2bd85",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+        "scan",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/capabilities",
+        "--format",
+        "json"
+      ],
+      "scan_complete": true,
+      "summary": {
+        "cold_process_seconds": 0.03698812494985759,
+        "median_seconds": 0.03672741702757776,
+        "min_seconds": 0.03672741702757776,
+        "max_seconds": 0.03672741702757776,
+        "mib_per_second": 1.7246022780527486,
+        "max_peak_rss_bytes": 21938176
+      },
+      "archive_probes": [
+        {
+          "path": "capabilities/archive.zip",
+          "member": "nested/config.conf",
+          "reported_archive": true,
+          "reported_member": true,
+          "evidence": "location only; no decoded span or credential validity claim"
+        },
+        {
+          "path": "capabilities/archive.tar.gz",
+          "member": "nested/config.conf",
+          "reported_archive": true,
+          "reported_member": true,
+          "evidence": "location only; no decoded span or credential validity claim"
+        }
+      ],
+      "excluded_unscored_archive_findings": 2,
+      "quality": {
+        "scoring_version": 2,
+        "tp": 6,
+        "fp": 0,
+        "fn": 0,
+        "unlocalized": 0,
+        "negative_labels_flagged": 0,
+        "negative_labels_unresolved": 0,
+        "tn": 0,
+        "positive_labels": 6,
+        "negative_labels": 0,
+        "precision": 1.0,
+        "precision_scope": "localized_unique_findings_only",
+        "recall": 1.0,
+        "recall_scope": "confirmed_location_lower_bound",
+        "f1": 1.0,
+        "localization_rate": 1.0,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 6,
+          "overlap_span": 0,
+          "line_only": 0
+        },
+        "by_group": {
+          "capability": {
+            "tp": 6,
+            "total": 6,
+            "recall": 1.0
+          }
+        },
+        "by_provider": {
+          "github-pat": {
+            "tp": 5,
+            "total": 5,
+            "recall": 1.0
+          },
+          "private-key": {
+            "tp": 1,
+            "total": 1,
+            "recall": 1.0
+          }
+        },
+        "missed_label_ids": [],
+        "evidence": [
+          {
+            "path": "capabilities/base64.dat",
+            "start": 0,
+            "end": 76,
+            "line": 1,
+            "rule_id": "github-pat",
+            "column": 0,
+            "coordinate_space": "source_bytes",
+            "finding_index": 0,
+            "location_quality": "exact_span",
+            "matched_label_id": "capabilities-00044",
+            "classification": "tp"
+          },
+          {
+            "path": "capabilities/no-final-newline.dat",
+            "start": 14,
+            "end": 54,
+            "line": 1,
+            "rule_id": "github-pat",
+            "column": 14,
+            "coordinate_space": "source_bytes",
+            "finding_index": 1,
+            "location_quality": "exact_span",
+            "matched_label_id": "capabilities-00048",
+            "classification": "tp"
+          },
+          {
+            "path": "capabilities/nul-prefix.dat",
+            "start": 16,
+            "end": 56,
+            "line": 1,
+            "rule_id": "github-pat",
+            "column": 16,
+            "coordinate_space": "source_bytes",
+            "finding_index": 2,
+            "location_quality": "exact_span",
+            "matched_label_id": "capabilities-00047",
+            "classification": "tp"
+          },
+          {
+            "path": "capabilities/private-key.pem",
+            "start": 0,
+            "end": 182,
+            "line": 1,
+            "rule_id": "private-key",
+            "column": 0,
+            "coordinate_space": "source_bytes",
+            "finding_index": 3,
+            "location_quality": "exact_span",
+            "matched_label_id": "capabilities-00049",
+            "classification": "tp"
+          },
+          {
+            "path": "capabilities/read-boundary.dat",
+            "start": 65528,
+            "end": 65568,
+            "line": 1,
+            "rule_id": "github-pat",
+            "column": 65528,
+            "coordinate_space": "source_bytes",
+            "finding_index": 4,
+            "location_quality": "exact_span",
+            "matched_label_id": "capabilities-00046",
+            "classification": "tp"
+          },
+          {
+            "path": "capabilities/utf16le.dat",
+            "start": 30,
+            "end": 110,
+            "line": 1,
+            "rule_id": "github-pat",
+            "column": 30,
+            "coordinate_space": "source_bytes",
+            "finding_index": 5,
+            "location_quality": "exact_span",
+            "matched_label_id": "capabilities-00045",
+            "classification": "tp"
+          }
+        ]
+      }
+    }
+  ]
+}

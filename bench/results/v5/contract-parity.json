@@ -1,0 +1,29 @@
+{
+  "method": "One additional scan per binary and corpus; compare complete Finding JSON objects (including fingerprints and matched rule IDs) and ScanContext; ignore timing stats. Raw output discarded.",
+  "binary_sha256": {
+    "secret-scan-before": "2f8029c58d3ad2ce1525cc2b3ab81e5799013057d9854a6b7e2e1cc6a51c0555",
+    "secret-scan": "aca1a038f1faaf485e054dc7e208ce49027624fd63542019afe8b29e8a3412e5"
+  },
+  "datasets": {
+    "v3": {
+      "full_finding_and_context_parity": true,
+      "findings": 625,
+      "canonical_sha256": "b9e54fca613c7870d4ecc1fcef9ad312fc409e66311e042e8f186291f0e40c09"
+    },
+    "v2": {
+      "full_finding_and_context_parity": true,
+      "findings": 625,
+      "canonical_sha256": "eeb96b17f6ba02752c6ec1928386d5011f85e93f3e3ad0ff617fd7bdf3d89e6b"
+    },
+    "original": {
+      "full_finding_and_context_parity": true,
+      "findings": 34,
+      "canonical_sha256": "f1d4b4ad5736d93c3837fbc2ad01d0261bddf0abfeb6986d4509b6c6ac9b2d9d"
+    },
+    "capabilities": {
+      "full_finding_and_context_parity": true,
+      "findings": 8,
+      "canonical_sha256": "0541112443af0bf54c82d5150bce2fcd1384fea022449d8b17f27f8b67107d7c"
+    }
+  }
+}

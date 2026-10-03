@@ -1,0 +1,2057 @@
+{
+  "schema_version": 1,
+  "binary_sha256": {
+    "before": "2f8029c58d3ad2ce1525cc2b3ab81e5799013057d9854a6b7e2e1cc6a51c0555",
+    "after": "aca1a038f1faaf485e054dc7e208ce49027624fd63542019afe8b29e8a3412e5"
+  },
+  "benchmark_script_sha256": "3575afc0e7d1389eb2b2a2c9d5b4708282e90e36f4afbe246afb3ee676e66378",
+  "host": {
+    "system": "Darwin",
+    "release": "25.5.0",
+    "machine": "arm64"
+  },
+  "scope": "Whole-version comparison, not isolated causal attribution; default rules, Base64 disabled, warm/uncleared filesystem cache, fresh processes. RSS is per-child wait4 peak, not sampled simultaneous process-tree RSS. Wall and first-result include pipe transfer and benchmark validation/backpressure. After pipe EOF, process-exit polling requests sleeps of at most 1 ms; scheduler delays can exceed that interval.",
+  "parity_scope": "Rule, path and exact source coordinates; fingerprints intentionally excluded because fingerprint identity policy changed between versions. Filesystem paths normalized relative to each fixture source root; Git commit/path provenance remains unchanged.",
+  "repeats": 20,
+  "threads_argument": 4,
+  "cases": {
+    "densefindings_10000": {
+      "fixture": {
+        "name": "densefindings_10000",
+        "kind": "dense",
+        "mode": "scan",
+        "expected": 10000,
+        "input_bytes": 410000,
+        "input_sha256": "ee23044b69e730c221ad77826c98b452f967f326c35a8910fd87c1261d4e45d1"
+      },
+      "finding_parity": true,
+      "before": {
+        "runs": [
+          {
+            "wall_ms": 227.35695797018707,
+            "first_finding_ms": 55.63937500119209,
+            "peak_rss_bytes": 30294016,
+            "user_ms": 53.891999999999996,
+            "system_ms": 6.377,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 177.8697919799015,
+            "first_finding_ms": 56.22637504711747,
+            "peak_rss_bytes": 30474240,
+            "user_ms": 53.394,
+            "system_ms": 6.185,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 174.31733303237706,
+            "first_finding_ms": 54.11695793736726,
+            "peak_rss_bytes": 29949952,
+            "user_ms": 52.382,
+            "system_ms": 5.257,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 171.2793749757111,
+            "first_finding_ms": 53.33279201295227,
+            "peak_rss_bytes": 30081024,
+            "user_ms": 52.8,
+            "system_ms": 4.927,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 171.74616700503975,
+            "first_finding_ms": 52.88145807571709,
+            "peak_rss_bytes": 30736384,
+            "user_ms": 51.962999999999994,
+            "system_ms": 5.318,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 175.04604195710272,
+            "first_finding_ms": 53.871957934461534,
+            "peak_rss_bytes": 29818880,
+            "user_ms": 52.813,
+            "system_ms": 6.130999999999999,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 173.33895899355412,
+            "first_finding_ms": 54.64158393442631,
+            "peak_rss_bytes": 30015488,
+            "user_ms": 52.869,
+            "system_ms": 5.733,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 180.31374993734062,
+            "first_finding_ms": 59.49858296662569,
+            "peak_rss_bytes": 30359552,
+            "user_ms": 53.921,
+            "system_ms": 6.26,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 172.86929104011506,
+            "first_finding_ms": 53.99454105645418,
+            "peak_rss_bytes": 30703616,
+            "user_ms": 52.023,
+            "system_ms": 6.414,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 171.44245805684477,
+            "first_finding_ms": 52.627458004280925,
+            "peak_rss_bytes": 30162944,
+            "user_ms": 51.835,
+            "system_ms": 5.055,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 175.18520797602832,
+            "first_finding_ms": 53.55429102201015,
+            "peak_rss_bytes": 29966336,
+            "user_ms": 52.373999999999995,
+            "system_ms": 5.294999999999999,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 173.95837500225753,
+            "first_finding_ms": 52.98795807175338,
+            "peak_rss_bytes": 30801920,
+            "user_ms": 51.809999999999995,
+            "system_ms": 5.228,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 173.14254201482981,
+            "first_finding_ms": 53.20300010498613,
+            "peak_rss_bytes": 30179328,
+            "user_ms": 52.017,
+            "system_ms": 5.826,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 174.50608301442116,
+            "first_finding_ms": 53.68362495210022,
+            "peak_rss_bytes": 30687232,
+            "user_ms": 52.346999999999994,
+            "system_ms": 5.603999999999999,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 172.91612492408603,
+            "first_finding_ms": 53.77345799934119,
+            "peak_rss_bytes": 29949952,
+            "user_ms": 52.284,
+            "system_ms": 5.789,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 175.72891700547189,
+            "first_finding_ms": 54.211709066294134,
+            "peak_rss_bytes": 29622272,
+            "user_ms": 53.373,
+            "system_ms": 5.774,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 180.47041608951986,
+            "first_finding_ms": 54.84037508722395,
+            "peak_rss_bytes": 29786112,
+            "user_ms": 53.646,
+            "system_ms": 8.256,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 172.3035000031814,
+            "first_finding_ms": 53.39370795991272,
+            "peak_rss_bytes": 30015488,
+            "user_ms": 52.669000000000004,
+            "system_ms": 5.446,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 172.28541697841138,
+            "first_finding_ms": 51.69224995188415,
+            "peak_rss_bytes": 29753344,
+            "user_ms": 51.503,
+            "system_ms": 5.135,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 173.91324997879565,
+            "first_finding_ms": 53.0711249448359,
+            "peak_rss_bytes": 30048256,
+            "user_ms": 52.058,
+            "system_ms": 6.074999999999999,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          }
+        ],
+        "wall_ms": {
+          "median": 173.9358124905266,
+          "min": 171.2793749757111,
+          "max": 227.35695797018707
+        },
+        "first_finding_ms": {
+          "median": 53.728541475720704,
+          "min": 51.69224995188415,
+          "max": 59.49858296662569
+        },
+        "peak_rss_bytes": {
+          "median": 30064640.0,
+          "min": 29622272,
+          "max": 30801920
+        },
+        "user_ms": {
+          "median": 52.378,
+          "min": 51.503,
+          "max": 53.921
+        },
+        "system_ms": {
+          "median": 5.7535,
+          "min": 4.927,
+          "max": 8.256
+        },
+        "stdout_bytes": {
+          "median": 5084187.0,
+          "min": 5084187,
+          "max": 5084187
+        },
+        "stderr_bytes": {
+          "median": 0.0,
+          "min": 0,
+          "max": 0
+        },
+        "progress_records": {
+          "median": 2.0,
+          "min": 2,
+          "max": 2
+        }
+      },
+      "after": {
+        "runs": [
+          {
+            "wall_ms": 219.8601251002401,
+            "first_finding_ms": 96.09970904421061,
+            "peak_rss_bytes": 29835264,
+            "user_ms": 67.691,
+            "system_ms": 9.177,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 182.10754194296896,
+            "first_finding_ms": 56.88183300662786,
+            "peak_rss_bytes": 30326784,
+            "user_ms": 55.931999999999995,
+            "system_ms": 6.754,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 170.9949589567259,
+            "first_finding_ms": 52.71841702051461,
+            "peak_rss_bytes": 29949952,
+            "user_ms": 51.816,
+            "system_ms": 5.011,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 172.7095419773832,
+            "first_finding_ms": 53.76908299513161,
+            "peak_rss_bytes": 30801920,
+            "user_ms": 52.292,
+            "system_ms": 5.143,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 171.93437495734543,
+            "first_finding_ms": 53.071958012878895,
+            "peak_rss_bytes": 30703616,
+            "user_ms": 51.995,
+            "system_ms": 5.265,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 170.38341704756021,
+            "first_finding_ms": 52.93887504376471,
+            "peak_rss_bytes": 30048256,
+            "user_ms": 51.987,
+            "system_ms": 5.018,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 172.0682909945026,
+            "first_finding_ms": 53.707499988377094,
+            "peak_rss_bytes": 29999104,
+            "user_ms": 52.293,
+            "system_ms": 5.576999999999999,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 175.71445798967034,
+            "first_finding_ms": 53.07595792692155,
+            "peak_rss_bytes": 29753344,
+            "user_ms": 52.611,
+            "system_ms": 6.051,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 173.93549997359514,
+            "first_finding_ms": 55.256917024962604,
+            "peak_rss_bytes": 30867456,
+            "user_ms": 53.367,
+            "system_ms": 5.397,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 172.05341695807874,
+            "first_finding_ms": 53.008583025075495,
+            "peak_rss_bytes": 30572544,
+            "user_ms": 51.949,
+            "system_ms": 5.084,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 173.39233297389,
+            "first_finding_ms": 53.49637498147786,
+            "peak_rss_bytes": 30162944,
+            "user_ms": 51.833,
+            "system_ms": 5.644,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 172.25699999835342,
+            "first_finding_ms": 52.95241600833833,
+            "peak_rss_bytes": 30867456,
+            "user_ms": 52.416,
+            "system_ms": 4.9879999999999995,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 172.51770803704858,
+            "first_finding_ms": 53.4329580841586,
+            "peak_rss_bytes": 30703616,
+            "user_ms": 52.275999999999996,
+            "system_ms": 5.3229999999999995,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 172.82466602046043,
+            "first_finding_ms": 53.19783301092684,
+            "peak_rss_bytes": 30195712,
+            "user_ms": 52.14,
+            "system_ms": 5.832,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 170.55549996439368,
+            "first_finding_ms": 52.832124987617135,
+            "peak_rss_bytes": 29884416,
+            "user_ms": 51.604,
+            "system_ms": 5.826,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 173.46449999604374,
+            "first_finding_ms": 53.35629207547754,
+            "peak_rss_bytes": 30883840,
+            "user_ms": 51.876,
+            "system_ms": 5.614,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 174.81125006452203,
+            "first_finding_ms": 54.693292011506855,
+            "peak_rss_bytes": 29999104,
+            "user_ms": 53.129,
+            "system_ms": 5.926,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 175.5023340228945,
+            "first_finding_ms": 55.34029204864055,
+            "peak_rss_bytes": 29687808,
+            "user_ms": 53.396,
+            "system_ms": 6.352,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 172.09829203784466,
+            "first_finding_ms": 53.892332944087684,
+            "peak_rss_bytes": 30687232,
+            "user_ms": 52.568,
+            "system_ms": 5.696,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 174.82437496073544,
+            "first_finding_ms": 54.30679093115032,
+            "peak_rss_bytes": 30048256,
+            "user_ms": 52.66,
+            "system_ms": 5.978,
+            "stdout_bytes": 5084187,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 10000,
+            "github_occurrences": 10000,
+            "identity_multiset_sha256_sum": "a4d061d1601b4ff1b9ef4946168bf656c43387af34c31cd07712961fafb734bb",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 410000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          }
+        ],
+        "wall_ms": {
+          "median": 172.7671039989218,
+          "min": 170.38341704756021,
+          "max": 219.8601251002401
+        },
+        "first_finding_ms": {
+          "median": 53.46466653281823,
+          "min": 52.71841702051461,
+          "max": 96.09970904421061
+        },
+        "peak_rss_bytes": {
+          "median": 30179328.0,
+          "min": 29687808,
+          "max": 30883840
+        },
+        "user_ms": {
+          "median": 52.292500000000004,
+          "min": 51.604,
+          "max": 67.691
+        },
+        "system_ms": {
+          "median": 5.629,
+          "min": 4.9879999999999995,
+          "max": 9.177
+        },
+        "stdout_bytes": {
+          "median": 5084187.0,
+          "min": 5084187,
+          "max": 5084187
+        },
+        "stderr_bytes": {
+          "median": 0.0,
+          "min": 0,
+          "max": 0
+        },
+        "progress_records": {
+          "median": 2.0,
+          "min": 2,
+          "max": 2
+        }
+      }
+    },
+    "densefindings_100000": {
+      "fixture": {
+        "name": "densefindings_100000",
+        "kind": "dense",
+        "mode": "scan",
+        "expected": 100000,
+        "input_bytes": 4100000,
+        "input_sha256": "1028669be71fe441d1eeb6cac76ffbf6fb1da3aabd9ae9087c28d37dfb069989"
+      },
+      "finding_parity": true,
+      "before": {
+        "runs": [
+          {
+            "wall_ms": 1425.2473330125213,
+            "first_finding_ms": 227.29933296795934,
+            "peak_rss_bytes": 105594880,
+            "user_ms": 260.217,
+            "system_ms": 22.491,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1411.512374994345,
+            "first_finding_ms": 226.9602919695899,
+            "peak_rss_bytes": 104562688,
+            "user_ms": 260.113,
+            "system_ms": 23.354,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1409.9598750472069,
+            "first_finding_ms": 225.47087504062802,
+            "peak_rss_bytes": 104235008,
+            "user_ms": 258.704,
+            "system_ms": 21.345,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1413.7242500437424,
+            "first_finding_ms": 228.55666710529476,
+            "peak_rss_bytes": 105791488,
+            "user_ms": 262.871,
+            "system_ms": 24.962,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1405.6785409338772,
+            "first_finding_ms": 224.71354098524898,
+            "peak_rss_bytes": 104448000,
+            "user_ms": 257.513,
+            "system_ms": 21.429999999999996,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1410.9419169835746,
+            "first_finding_ms": 227.14387497399002,
+            "peak_rss_bytes": 102957056,
+            "user_ms": 260.126,
+            "system_ms": 21.807,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1407.2390830842778,
+            "first_finding_ms": 225.1989170908928,
+            "peak_rss_bytes": 104546304,
+            "user_ms": 258.943,
+            "system_ms": 22.031,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1423.6864160047844,
+            "first_finding_ms": 225.43616604525596,
+            "peak_rss_bytes": 103481344,
+            "user_ms": 259.355,
+            "system_ms": 22.075999999999997,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1436.4716249983758,
+            "first_finding_ms": 237.61100007686764,
+            "peak_rss_bytes": 103923712,
+            "user_ms": 268.48,
+            "system_ms": 25.214,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1434.438541997224,
+            "first_finding_ms": 223.74679194763303,
+            "peak_rss_bytes": 102744064,
+            "user_ms": 258.64300000000003,
+            "system_ms": 22.718,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1411.852166056633,
+            "first_finding_ms": 234.57874997984618,
+            "peak_rss_bytes": 104382464,
+            "user_ms": 267.738,
+            "system_ms": 24.048,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1448.2170830015093,
+            "first_finding_ms": 227.00508299749345,
+            "peak_rss_bytes": 105578496,
+            "user_ms": 269.627,
+            "system_ms": 27.656,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1506.1078750295565,
+            "first_finding_ms": 275.7507920032367,
+            "peak_rss_bytes": 105037824,
+            "user_ms": 319.573,
+            "system_ms": 37.508,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1615.3989580925554,
+            "first_finding_ms": 370.5007079988718,
+            "peak_rss_bytes": 102498304,
+            "user_ms": 386.494,
+            "system_ms": 34.485,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1601.9456660142168,
+            "first_finding_ms": 342.29924995452166,
+            "peak_rss_bytes": 105054208,
+            "user_ms": 372.577,
+            "system_ms": 35.393,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1445.528500014916,
+            "first_finding_ms": 261.58054207917303,
+            "peak_rss_bytes": 106020864,
+            "user_ms": 325.445,
+            "system_ms": 31.132,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1414.4072079798207,
+            "first_finding_ms": 241.95845797657967,
+            "peak_rss_bytes": 105070592,
+            "user_ms": 309.212,
+            "system_ms": 29.654,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1377.2966669639573,
+            "first_finding_ms": 226.052499958314,
+            "peak_rss_bytes": 105938944,
+            "user_ms": 262.19599999999997,
+            "system_ms": 20.968999999999998,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1376.016499940306,
+            "first_finding_ms": 228.50795893464237,
+            "peak_rss_bytes": 105021440,
+            "user_ms": 259.484,
+            "system_ms": 19.642,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1393.5637079412118,
+            "first_finding_ms": 224.63158296886832,
+            "peak_rss_bytes": 104595456,
+            "user_ms": 258.657,
+            "system_ms": 20.006,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          }
+        ],
+        "wall_ms": {
+          "median": 1414.0657290117815,
+          "min": 1376.016499940306,
+          "max": 1615.3989580925554
+        },
+        "first_finding_ms": {
+          "median": 227.22160397097468,
+          "min": 223.74679194763303,
+          "max": 370.5007079988718
+        },
+        "peak_rss_bytes": {
+          "median": 104579072.0,
+          "min": 102498304,
+          "max": 106020864
+        },
+        "user_ms": {
+          "median": 261.2065,
+          "min": 257.513,
+          "max": 386.494
+        },
+        "system_ms": {
+          "median": 23.036,
+          "min": 19.642,
+          "max": 37.508
+        },
+        "stdout_bytes": {
+          "median": 51235415.0,
+          "min": 51235415,
+          "max": 51235415
+        },
+        "stderr_bytes": {
+          "median": 0.0,
+          "min": 0,
+          "max": 0
+        },
+        "progress_records": {
+          "median": 2.0,
+          "min": 2,
+          "max": 2
+        }
+      },
+      "after": {
+        "runs": [
+          {
+            "wall_ms": 1432.5984580209479,
+            "first_finding_ms": 229.95208308566362,
+            "peak_rss_bytes": 104628224,
+            "user_ms": 260.957,
+            "system_ms": 25.017999999999997,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1406.7152079660445,
+            "first_finding_ms": 225.7677079178393,
+            "peak_rss_bytes": 103825408,
+            "user_ms": 259.599,
+            "system_ms": 21.936999999999998,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1403.661541058682,
+            "first_finding_ms": 226.96412506047636,
+            "peak_rss_bytes": 104513536,
+            "user_ms": 260.604,
+            "system_ms": 21.941,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1410.2113340049982,
+            "first_finding_ms": 230.04958394449204,
+            "peak_rss_bytes": 105906176,
+            "user_ms": 262.84999999999997,
+            "system_ms": 23.885,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1413.3196669863537,
+            "first_finding_ms": 232.57583298254758,
+            "peak_rss_bytes": 104579072,
+            "user_ms": 263.25399999999996,
+            "system_ms": 21.474999999999998,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1414.946083095856,
+            "first_finding_ms": 227.904292056337,
+            "peak_rss_bytes": 105037824,
+            "user_ms": 260.615,
+            "system_ms": 22.866999999999997,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1404.2752920649946,
+            "first_finding_ms": 226.57158400397748,
+            "peak_rss_bytes": 105840640,
+            "user_ms": 259.17400000000004,
+            "system_ms": 22.616,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1413.6391669744626,
+            "first_finding_ms": 227.43512503802776,
+            "peak_rss_bytes": 105840640,
+            "user_ms": 259.996,
+            "system_ms": 22.275,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1417.6093749701977,
+            "first_finding_ms": 228.5608749371022,
+            "peak_rss_bytes": 103120896,
+            "user_ms": 261.83299999999997,
+            "system_ms": 23.150999999999996,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1410.118667059578,
+            "first_finding_ms": 227.91383310686797,
+            "peak_rss_bytes": 104906752,
+            "user_ms": 260.492,
+            "system_ms": 22.578999999999997,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1417.6510840188712,
+            "first_finding_ms": 229.24362495541573,
+            "peak_rss_bytes": 102907904,
+            "user_ms": 267.544,
+            "system_ms": 25.174,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1410.383875016123,
+            "first_finding_ms": 229.20008306391537,
+            "peak_rss_bytes": 105709568,
+            "user_ms": 263.4,
+            "system_ms": 26.412,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1610.2707909885794,
+            "first_finding_ms": 329.8323330236599,
+            "peak_rss_bytes": 105086976,
+            "user_ms": 355.013,
+            "system_ms": 33.68,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1593.8552080187947,
+            "first_finding_ms": 359.0598329901695,
+            "peak_rss_bytes": 104824832,
+            "user_ms": 383.55899999999997,
+            "system_ms": 34.526999999999994,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1416.1410839296877,
+            "first_finding_ms": 248.51516692433506,
+            "peak_rss_bytes": 106201088,
+            "user_ms": 316.583,
+            "system_ms": 30.105999999999998,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1441.806749906391,
+            "first_finding_ms": 267.9973329650238,
+            "peak_rss_bytes": 105889792,
+            "user_ms": 320.93499999999995,
+            "system_ms": 30.525,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1378.3221250632778,
+            "first_finding_ms": 224.58745900075883,
+            "peak_rss_bytes": 104431616,
+            "user_ms": 265.39,
+            "system_ms": 22.285,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1390.236375038512,
+            "first_finding_ms": 227.15245909057558,
+            "peak_rss_bytes": 105463808,
+            "user_ms": 262.841,
+            "system_ms": 21.231,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1372.3945000674576,
+            "first_finding_ms": 222.98879199661314,
+            "peak_rss_bytes": 104497152,
+            "user_ms": 256.606,
+            "system_ms": 20.323,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          },
+          {
+            "wall_ms": 1370.1225830009207,
+            "first_finding_ms": 225.31112493015826,
+            "peak_rss_bytes": 103186432,
+            "user_ms": 259.453,
+            "system_ms": 20.473,
+            "stdout_bytes": 51235415,
+            "stderr_bytes": 0,
+            "exit_code": 1,
+            "raw_value_absent": true,
+            "findings": 100000,
+            "github_occurrences": 100000,
+            "identity_multiset_sha256_sum": "7daa4e05e0ca9c9e661bd96e7f7c1b6dffd8a8e5a080c2733789fa321b0d1c6e",
+            "progress_records": 2,
+            "coordinates_verified": true,
+            "complete": true,
+            "stats": {
+              "files": 1,
+              "bytes": 4100000,
+              "skipped": 0,
+              "detection_passes": 1
+            }
+          }
+        ],
+        "wall_ms": {
+          "median": 1411.8517710012384,
+          "min": 1370.1225830009207,
+          "max": 1610.2707909885794
+        },
+        "first_finding_ms": {
+          "median": 228.23735402198508,
+          "min": 222.98879199661314,
+          "max": 359.0598329901695
+        },
+        "peak_rss_bytes": {
+          "median": 104865792.0,
+          "min": 102907904,
+          "max": 106201088
+        },
+        "user_ms": {
+          "median": 262.337,
+          "min": 256.606,
+          "max": 383.55899999999997
+        },
+        "system_ms": {
+          "median": 22.7415,
+          "min": 20.323,
+          "max": 34.526999999999994
+        },
+        "stdout_bytes": {
+          "median": 51235415.0,
+          "min": 51235415,
+          "max": 51235415
+        },
+        "stderr_bytes": {
+          "median": 0.0,
+          "min": 0,
+          "max": 0
+        },
+        "progress_records": {
+          "median": 2.0,
+          "min": 2,
+          "max": 2
+        }
+      }
+    }
+  }
+}
