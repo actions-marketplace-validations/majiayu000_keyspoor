@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "tools": [
+    {
+      "id": "secret-scan-before",
+      "status": "available",
+      "version": "0.1.0",
+      "source_url": "local independent implementation",
+      "commit_or_digest": "aca1a038f1faaf485e054dc7e208ce49027624fd63542019afe8b29e8a3412e5",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+      "offline": true,
+      "parser": "secret_scan",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+          "scan",
+          "{input}",
+          "--format",
+          "json"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+          "history",
+          "{input}",
+          "--format",
+          "json"
+        ],
+        "staged": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+          "staged",
+          "{input}",
+          "--format",
+          "json"
+        ]
+      },
+      "notes": "v5 baseline"
+    },
+    {
+      "id": "secret-scan",
+      "status": "available",
+      "version": "0.1.0",
+      "source_url": "local independent implementation",
+      "commit_or_digest": "94e3b936287ec45e44f37e596e67553d7a4762f5f287e78fa2a0a04391d7938a",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+      "offline": true,
+      "parser": "secret_scan",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+          "scan",
+          "{input}",
+          "--format",
+          "json"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+          "history",
+          "{input}",
+          "--format",
+          "json"
+        ],
+        "staged": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+          "staged",
+          "{input}",
+          "--format",
+          "json"
+        ]
+      },
+      "notes": "Shared Finding path and explanation; intentional Rust field type change; JSON contract unchanged"
+    }
+  ],
+  "platform": "darwin-arm64",
+  "recorded_at": "2026-10-03",
+  "python_lock": "bench/tools/python-requirements.lock",
+  "npm_lock": "bench/tools/npm/package-lock.json"
+}

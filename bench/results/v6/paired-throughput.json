@@ -1,0 +1,3404 @@
+{
+  "binary_sha256": {
+    "before": "aca1a038f1faaf485e054dc7e208ce49027624fd63542019afe8b29e8a3412e5",
+    "after": "94e3b936287ec45e44f37e596e67553d7a4762f5f287e78fa2a0a04391d7938a"
+  },
+  "driver_sha256": "e0475ff62cd945ca789d96f198205a835a39e7eb96d6475184737e9391c71bc5",
+  "runner_sha256": "10ee1a11671252530f19ce1b2cdabd8e82413f80531fce27694e0e92791c38de",
+  "hardware": {
+    "system": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
+    "python": "3.14.7",
+    "logical_cpus": 12,
+    "memory_bytes": "103079215104",
+    "cpu": "Apple M2 Max"
+  },
+  "repeats": 20,
+  "method": "One warmup per binary/dataset, then 20 alternating before/after pairs. Fresh processes; default rules and threads; uncontrolled warm filesystem cache. CLI JSON output goes to a temporary file; parsing and parity validation are outside timing. RSS is the scanner process wait4 peak, not aggregate process-tree memory.",
+  "datasets": {
+    "throughput-16mib": {
+      "input_sha256": "483a0b1e1a788aeb54823995effff1ff43206798a3b3286ee2917fb496d4c6b2",
+      "before": [
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.05888679204508662,
+          "user_seconds": 0.11609399999999999,
+          "system_seconds": 0.00804,
+          "peak_rss_bytes": 23691264,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "ccefde216ecdfd2096ba6b0920b501f970593c8373e0d068cd2da42730cc99b9",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 51
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.06320129195228219,
+          "user_seconds": 0.122149,
+          "system_seconds": 0.010428999999999999,
+          "peak_rss_bytes": 24264704,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "302eb17b4bdcc0e33fdce22c15e3693ad7660c3a7c31d18d0238f4c077c991f9",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 55
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.06204874999821186,
+          "user_seconds": 0.122275,
+          "system_seconds": 0.009479,
+          "peak_rss_bytes": 24051712,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "62a7773b75bef52dc83252dc3ab89f6d52db39923c89d2a1c16f996695f72bd3",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 54
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.05988545797299594,
+          "user_seconds": 0.11693999999999999,
+          "system_seconds": 0.007803,
+          "peak_rss_bytes": 23379968,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "ccefde216ecdfd2096ba6b0920b501f970593c8373e0d068cd2da42730cc99b9",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 51
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.05942700000014156,
+          "user_seconds": 0.11745499999999999,
+          "system_seconds": 0.007976,
+          "peak_rss_bytes": 24068096,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "357cae82d4722a18fde02d52c15a3a1654cfdc8892c724fc28ed31164c779176",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 52
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.0598875000141561,
+          "user_seconds": 0.11853,
+          "system_seconds": 0.008492999999999999,
+          "peak_rss_bytes": 24084480,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "357cae82d4722a18fde02d52c15a3a1654cfdc8892c724fc28ed31164c779176",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 52
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.05974412499926984,
+          "user_seconds": 0.11750899999999999,
+          "system_seconds": 0.00811,
+          "peak_rss_bytes": 23527424,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "357cae82d4722a18fde02d52c15a3a1654cfdc8892c724fc28ed31164c779176",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 52
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.06015508295968175,
+          "user_seconds": 0.118186,
+          "system_seconds": 0.008310999999999999,
+          "peak_rss_bytes": 23756800,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "357cae82d4722a18fde02d52c15a3a1654cfdc8892c724fc28ed31164c779176",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 52
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.057577708968892694,
+          "user_seconds": 0.11545499999999999,
+          "system_seconds": 0.007241999999999999,
+          "peak_rss_bytes": 23986176,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "7958b8b1cc3d20b371de3f3eafae8612407d10f9ec2727ad48ed41b35367281c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 50
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.057025125017389655,
+          "user_seconds": 0.115216,
+          "system_seconds": 0.00665,
+          "peak_rss_bytes": 23265280,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "7958b8b1cc3d20b371de3f3eafae8612407d10f9ec2727ad48ed41b35367281c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 50
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.05725570791400969,
+          "user_seconds": 0.11551199999999999,
+          "system_seconds": 0.006987999999999999,
+          "peak_rss_bytes": 23396352,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "7958b8b1cc3d20b371de3f3eafae8612407d10f9ec2727ad48ed41b35367281c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 50
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.056612374959513545,
+          "user_seconds": 0.115353,
+          "system_seconds": 0.006915999999999999,
+          "peak_rss_bytes": 23330816,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "7958b8b1cc3d20b371de3f3eafae8612407d10f9ec2727ad48ed41b35367281c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 50
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.05626245797611773,
+          "user_seconds": 0.115246,
+          "system_seconds": 0.006482,
+          "peak_rss_bytes": 22970368,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "7958b8b1cc3d20b371de3f3eafae8612407d10f9ec2727ad48ed41b35367281c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 50
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.05861383397132158,
+          "user_seconds": 0.116326,
+          "system_seconds": 0.007469,
+          "peak_rss_bytes": 23379968,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "ccefde216ecdfd2096ba6b0920b501f970593c8373e0d068cd2da42730cc99b9",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 51
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.056579249911010265,
+          "user_seconds": 0.115239,
+          "system_seconds": 0.006951,
+          "peak_rss_bytes": 23445504,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "7958b8b1cc3d20b371de3f3eafae8612407d10f9ec2727ad48ed41b35367281c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 50
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.05643916700500995,
+          "user_seconds": 0.115273,
+          "system_seconds": 0.00677,
+          "peak_rss_bytes": 23134208,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "7958b8b1cc3d20b371de3f3eafae8612407d10f9ec2727ad48ed41b35367281c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 50
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.0571549580199644,
+          "user_seconds": 0.11499699999999999,
+          "system_seconds": 0.006931,
+          "peak_rss_bytes": 22790144,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "7958b8b1cc3d20b371de3f3eafae8612407d10f9ec2727ad48ed41b35367281c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 50
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.058423415990546346,
+          "user_seconds": 0.117422,
+          "system_seconds": 0.007431999999999999,
+          "peak_rss_bytes": 23855104,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "ccefde216ecdfd2096ba6b0920b501f970593c8373e0d068cd2da42730cc99b9",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 51
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.05933650000952184,
+          "user_seconds": 0.12172999999999999,
+          "system_seconds": 0.007828,
+          "peak_rss_bytes": 23625728,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "6558f3a2fc40a1e7e4dc6143ddb363b12d740dc32cdf20ab291129c72662f12c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 53
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.05780283303465694,
+          "user_seconds": 0.11730299999999999,
+          "system_seconds": 0.007228999999999999,
+          "peak_rss_bytes": 23511040,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "ccefde216ecdfd2096ba6b0920b501f970593c8373e0d068cd2da42730cc99b9",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 51
+          }
+        }
+      ],
+      "after": [
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.059688374982215464,
+          "user_seconds": 0.11788699999999999,
+          "system_seconds": 0.008362,
+          "peak_rss_bytes": 24444928,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "357cae82d4722a18fde02d52c15a3a1654cfdc8892c724fc28ed31164c779176",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 52
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.061698000063188374,
+          "user_seconds": 0.120503,
+          "system_seconds": 0.009368,
+          "peak_rss_bytes": 23805952,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "62a7773b75bef52dc83252dc3ab89f6d52db39923c89d2a1c16f996695f72bd3",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 54
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.06044741696678102,
+          "user_seconds": 0.116824,
+          "system_seconds": 0.008541,
+          "peak_rss_bytes": 23412736,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "ccefde216ecdfd2096ba6b0920b501f970593c8373e0d068cd2da42730cc99b9",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 51
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.06042470899410546,
+          "user_seconds": 0.118266,
+          "system_seconds": 0.008607,
+          "peak_rss_bytes": 23822336,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "6558f3a2fc40a1e7e4dc6143ddb363b12d740dc32cdf20ab291129c72662f12c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 53
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.05869474995415658,
+          "user_seconds": 0.11669299999999999,
+          "system_seconds": 0.007814,
+          "peak_rss_bytes": 24215552,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "ccefde216ecdfd2096ba6b0920b501f970593c8373e0d068cd2da42730cc99b9",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 51
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.05939745809882879,
+          "user_seconds": 0.117755,
+          "system_seconds": 0.007803,
+          "peak_rss_bytes": 23314432,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "357cae82d4722a18fde02d52c15a3a1654cfdc8892c724fc28ed31164c779176",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 52
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.06034541700500995,
+          "user_seconds": 0.119291,
+          "system_seconds": 0.008527999999999999,
+          "peak_rss_bytes": 24248320,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "6558f3a2fc40a1e7e4dc6143ddb363b12d740dc32cdf20ab291129c72662f12c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 53
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.05951741698663682,
+          "user_seconds": 0.117034,
+          "system_seconds": 0.007751,
+          "peak_rss_bytes": 23494656,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "357cae82d4722a18fde02d52c15a3a1654cfdc8892c724fc28ed31164c779176",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 52
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.057068875059485435,
+          "user_seconds": 0.11558099999999999,
+          "system_seconds": 0.007287999999999999,
+          "peak_rss_bytes": 23314432,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "7958b8b1cc3d20b371de3f3eafae8612407d10f9ec2727ad48ed41b35367281c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 50
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.05670716590248048,
+          "user_seconds": 0.115187,
+          "system_seconds": 0.006888,
+          "peak_rss_bytes": 22937600,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "7958b8b1cc3d20b371de3f3eafae8612407d10f9ec2727ad48ed41b35367281c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 50
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.056864166050218046,
+          "user_seconds": 0.115255,
+          "system_seconds": 0.006977,
+          "peak_rss_bytes": 23183360,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "7958b8b1cc3d20b371de3f3eafae8612407d10f9ec2727ad48ed41b35367281c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 50
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.05664595903363079,
+          "user_seconds": 0.115535,
+          "system_seconds": 0.006919,
+          "peak_rss_bytes": 23691264,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "7958b8b1cc3d20b371de3f3eafae8612407d10f9ec2727ad48ed41b35367281c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 50
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.05674891592934728,
+          "user_seconds": 0.11535,
+          "system_seconds": 0.006756,
+          "peak_rss_bytes": 23265280,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "7958b8b1cc3d20b371de3f3eafae8612407d10f9ec2727ad48ed41b35367281c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 50
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.0573230420704931,
+          "user_seconds": 0.115932,
+          "system_seconds": 0.007088,
+          "peak_rss_bytes": 23871488,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "ccefde216ecdfd2096ba6b0920b501f970593c8373e0d068cd2da42730cc99b9",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 51
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.05741491599474102,
+          "user_seconds": 0.116509,
+          "system_seconds": 0.007133,
+          "peak_rss_bytes": 23248896,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "7958b8b1cc3d20b371de3f3eafae8612407d10f9ec2727ad48ed41b35367281c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 50
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.056475791963748634,
+          "user_seconds": 0.115244,
+          "system_seconds": 0.006918,
+          "peak_rss_bytes": 23560192,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "7958b8b1cc3d20b371de3f3eafae8612407d10f9ec2727ad48ed41b35367281c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 50
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.05796354194171727,
+          "user_seconds": 0.11599,
+          "system_seconds": 0.007123,
+          "peak_rss_bytes": 23543808,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "ccefde216ecdfd2096ba6b0920b501f970593c8373e0d068cd2da42730cc99b9",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 51
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.056840875069610775,
+          "user_seconds": 0.116071,
+          "system_seconds": 0.006821,
+          "peak_rss_bytes": 23265280,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "7958b8b1cc3d20b371de3f3eafae8612407d10f9ec2727ad48ed41b35367281c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 50
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.058527084067463875,
+          "user_seconds": 0.12112999999999999,
+          "system_seconds": 0.008353,
+          "peak_rss_bytes": 23805952,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "357cae82d4722a18fde02d52c15a3a1654cfdc8892c724fc28ed31164c779176",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 52
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.057741250027902424,
+          "user_seconds": 0.11704099999999999,
+          "system_seconds": 0.007385999999999999,
+          "peak_rss_bytes": 23609344,
+          "stdout_bytes": 8994,
+          "stderr_bytes": 0,
+          "stdout_sha256": "ccefde216ecdfd2096ba6b0920b501f970593c8373e0d068cd2da42730cc99b9",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+            "--format",
+            "json"
+          ],
+          "findings": 16,
+          "locations_sha256": "0d321c11f69b1ac72ef86e42e47b33a3f9aebb17316cd0ee67002133c1467d12",
+          "stats": {
+            "detection_passes": 64,
+            "files": 64,
+            "bytes": 16777216,
+            "skipped": 0,
+            "elapsed_ms": 51
+          }
+        }
+      ],
+      "finding_parity": true
+    },
+    "throughput-128mib": {
+      "input_sha256": "e29b0c3af9715995799f828ad66918365ba8de1ae0299730745cf4d162cc21dc",
+      "before": [
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.22310141706839204,
+          "user_seconds": 0.7276859999999999,
+          "system_seconds": 0.03569,
+          "peak_rss_bytes": 24870912,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "02aff007e048299b86a337516b4cbeb3eb0552e4a663f8ede472a9b698781cae",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 216
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.21332424995489419,
+          "user_seconds": 0.715819,
+          "system_seconds": 0.035772,
+          "peak_rss_bytes": 25018368,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "e06d912e88af445b5a6b826f502831d8a0550a3e35b2a12a73c4014ac5847cac",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 206
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.2123782909475267,
+          "user_seconds": 0.715486,
+          "system_seconds": 0.035313,
+          "peak_rss_bytes": 24592384,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "a10aa1ed2f3c56598031fc3ff3610b31288db7a5b30759dc73dc21731d383cee",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 205
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.21353120892308652,
+          "user_seconds": 0.714456,
+          "system_seconds": 0.033320999999999996,
+          "peak_rss_bytes": 24690688,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "e06d912e88af445b5a6b826f502831d8a0550a3e35b2a12a73c4014ac5847cac",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 206
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.21593041601590812,
+          "user_seconds": 0.721152,
+          "system_seconds": 0.034144,
+          "peak_rss_bytes": 24903680,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "b3fb2266f75b370ab1d8ba594bd1fcea19e92f26961278f0cfe25c208742b1eb",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 209
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.21998970897402614,
+          "user_seconds": 0.719147,
+          "system_seconds": 0.037602,
+          "peak_rss_bytes": 24870912,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "b45d7d82588be1855aa84e07ee5b59c2a76fae4c285db3bb084ce3c1cebc2b92",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 212
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.21603366697672755,
+          "user_seconds": 0.715279,
+          "system_seconds": 0.034696,
+          "peak_rss_bytes": 25001984,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "0e2403760d1fe975ffb0790c18e0482c3f11ea3ca1cd36a892592bd6ae9f399e",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 208
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.21657904202584177,
+          "user_seconds": 0.716753,
+          "system_seconds": 0.037634,
+          "peak_rss_bytes": 24969216,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "b3fb2266f75b370ab1d8ba594bd1fcea19e92f26961278f0cfe25c208742b1eb",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 209
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.2201462920056656,
+          "user_seconds": 0.719259,
+          "system_seconds": 0.041328,
+          "peak_rss_bytes": 25018368,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "b45d7d82588be1855aa84e07ee5b59c2a76fae4c285db3bb084ce3c1cebc2b92",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 212
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.21912637492641807,
+          "user_seconds": 0.723414,
+          "system_seconds": 0.037974,
+          "peak_rss_bytes": 25182208,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "b45d7d82588be1855aa84e07ee5b59c2a76fae4c285db3bb084ce3c1cebc2b92",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 212
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.21793604199774563,
+          "user_seconds": 0.7201,
+          "system_seconds": 0.036758,
+          "peak_rss_bytes": 25378816,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "49abe1fad79257edf9245ae7ae2f64da9a45a32e96c911487f0403e13d55ce79",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 210
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.21808450005482882,
+          "user_seconds": 0.718834,
+          "system_seconds": 0.036146,
+          "peak_rss_bytes": 24788992,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "a767e2172976fb8323abe82528307e2e752fd31ece40c07b0a0b408c20306e86",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 211
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.2134356249589473,
+          "user_seconds": 0.715391,
+          "system_seconds": 0.034988,
+          "peak_rss_bytes": 24821760,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "e06d912e88af445b5a6b826f502831d8a0550a3e35b2a12a73c4014ac5847cac",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 206
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.2229542500572279,
+          "user_seconds": 0.7282069999999999,
+          "system_seconds": 0.043677999999999995,
+          "peak_rss_bytes": 25280512,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "a2d0b85ce46babce0b0d1f8d6db398602052f44fa6c1d3690b2ee9a1c42f0f5a",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 215
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.2199000419350341,
+          "user_seconds": 0.7231,
+          "system_seconds": 0.036524999999999995,
+          "peak_rss_bytes": 24674304,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "b45d7d82588be1855aa84e07ee5b59c2a76fae4c285db3bb084ce3c1cebc2b92",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 212
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.22219187510199845,
+          "user_seconds": 0.7301909999999999,
+          "system_seconds": 0.041405,
+          "peak_rss_bytes": 25001984,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "a2d0b85ce46babce0b0d1f8d6db398602052f44fa6c1d3690b2ee9a1c42f0f5a",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 215
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.22581087506841868,
+          "user_seconds": 0.737796,
+          "system_seconds": 0.041437999999999996,
+          "peak_rss_bytes": 25477120,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "f91fc5adca6c5f4a5e3e2702a54b4760b6a948d9c6fca13454714ef3515d8038",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 219
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.22411858290433884,
+          "user_seconds": 0.73348,
+          "system_seconds": 0.040672,
+          "peak_rss_bytes": 25067520,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "02aff007e048299b86a337516b4cbeb3eb0552e4a663f8ede472a9b698781cae",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 216
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.22579304198734462,
+          "user_seconds": 0.738946,
+          "system_seconds": 0.043043,
+          "peak_rss_bytes": 25395200,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "61c0cb8b43e22cf37a4fc7d5c9493ab35b036e2934be3ccd701ab24f8a718a13",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 218
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.22357924992684275,
+          "user_seconds": 0.732703,
+          "system_seconds": 0.041152,
+          "peak_rss_bytes": 25067520,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "02aff007e048299b86a337516b4cbeb3eb0552e4a663f8ede472a9b698781cae",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 216
+          }
+        }
+      ],
+      "after": [
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.21722975000739098,
+          "user_seconds": 0.7242719999999999,
+          "system_seconds": 0.036718,
+          "peak_rss_bytes": 24936448,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "49abe1fad79257edf9245ae7ae2f64da9a45a32e96c911487f0403e13d55ce79",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 210
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.2137021670350805,
+          "user_seconds": 0.719621,
+          "system_seconds": 0.036245,
+          "peak_rss_bytes": 24281088,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "e06d912e88af445b5a6b826f502831d8a0550a3e35b2a12a73c4014ac5847cac",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 206
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.2151872080285102,
+          "user_seconds": 0.7168749999999999,
+          "system_seconds": 0.036093,
+          "peak_rss_bytes": 24690688,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "0ba5f1320e57641ef31e3ec8103cb212ec64ed0f3025a4cc413b98d1fab3cc87",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 207
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.21351766597945243,
+          "user_seconds": 0.713781,
+          "system_seconds": 0.034901999999999996,
+          "peak_rss_bytes": 24788992,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "e06d912e88af445b5a6b826f502831d8a0550a3e35b2a12a73c4014ac5847cac",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 206
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.21933470806106925,
+          "user_seconds": 0.717455,
+          "system_seconds": 0.038537999999999996,
+          "peak_rss_bytes": 25296896,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "b45d7d82588be1855aa84e07ee5b59c2a76fae4c285db3bb084ce3c1cebc2b92",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 212
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.21590183302760124,
+          "user_seconds": 0.714911,
+          "system_seconds": 0.033942,
+          "peak_rss_bytes": 24985600,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "0e2403760d1fe975ffb0790c18e0482c3f11ea3ca1cd36a892592bd6ae9f399e",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 208
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.21444395801518112,
+          "user_seconds": 0.713823,
+          "system_seconds": 0.033908,
+          "peak_rss_bytes": 24674304,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "0ba5f1320e57641ef31e3ec8103cb212ec64ed0f3025a4cc413b98d1fab3cc87",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 207
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.21604858397040516,
+          "user_seconds": 0.717569,
+          "system_seconds": 0.034489,
+          "peak_rss_bytes": 24674304,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "b3fb2266f75b370ab1d8ba594bd1fcea19e92f26961278f0cfe25c208742b1eb",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 209
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.22692537494003773,
+          "user_seconds": 0.72066,
+          "system_seconds": 0.039391999999999996,
+          "peak_rss_bytes": 25001984,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "b45d7d82588be1855aa84e07ee5b59c2a76fae4c285db3bb084ce3c1cebc2b92",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 212
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.22380220890045166,
+          "user_seconds": 0.7290909999999999,
+          "system_seconds": 0.039638,
+          "peak_rss_bytes": 25460736,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "02aff007e048299b86a337516b4cbeb3eb0552e4a663f8ede472a9b698781cae",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 216
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.2177379169734195,
+          "user_seconds": 0.717428,
+          "system_seconds": 0.035289999999999995,
+          "peak_rss_bytes": 24985600,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "49abe1fad79257edf9245ae7ae2f64da9a45a32e96c911487f0403e13d55ce79",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 210
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.2223160829162225,
+          "user_seconds": 0.724903,
+          "system_seconds": 0.040062,
+          "peak_rss_bytes": 25624576,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "a2d0b85ce46babce0b0d1f8d6db398602052f44fa6c1d3690b2ee9a1c42f0f5a",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 215
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.21499675000086427,
+          "user_seconds": 0.7171649999999999,
+          "system_seconds": 0.036351999999999995,
+          "peak_rss_bytes": 24920064,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "0e2403760d1fe975ffb0790c18e0482c3f11ea3ca1cd36a892592bd6ae9f399e",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 208
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.2140255420235917,
+          "user_seconds": 0.7163349999999999,
+          "system_seconds": 0.03503,
+          "peak_rss_bytes": 25509888,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "e06d912e88af445b5a6b826f502831d8a0550a3e35b2a12a73c4014ac5847cac",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 206
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.22353891702368855,
+          "user_seconds": 0.7327469999999999,
+          "system_seconds": 0.041268,
+          "peak_rss_bytes": 25198592,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "02aff007e048299b86a337516b4cbeb3eb0552e4a663f8ede472a9b698781cae",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 216
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.22539112495724112,
+          "user_seconds": 0.734574,
+          "system_seconds": 0.041412,
+          "peak_rss_bytes": 25608192,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "73b5e7b9f6dd861b2e066406a5ab00ee99d6fd1cdd45caa044fde8d0d513c368",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 217
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.23340870800893754,
+          "user_seconds": 0.754259,
+          "system_seconds": 0.045343999999999995,
+          "peak_rss_bytes": 25198592,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "834487e10f2e5cf69277575216fc115826420051a1f7ce7ed731f69dc147d986",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 226
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.23099141696002334,
+          "user_seconds": 0.747166,
+          "system_seconds": 0.043240999999999995,
+          "peak_rss_bytes": 25509888,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "5c4c2424d182fb82d7726f72f51a246fa73f4afc173a7af78588fba8dbb78833",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 223
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.2238455000333488,
+          "user_seconds": 0.7330099999999999,
+          "system_seconds": 0.041596,
+          "peak_rss_bytes": 25149440,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "02aff007e048299b86a337516b4cbeb3eb0552e4a663f8ede472a9b698781cae",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 216
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.22338220907840878,
+          "user_seconds": 0.7325109999999999,
+          "system_seconds": 0.040522999999999997,
+          "peak_rss_bytes": 25362432,
+          "stdout_bytes": 68591,
+          "stderr_bytes": 0,
+          "stdout_sha256": "02aff007e048299b86a337516b4cbeb3eb0552e4a663f8ede472a9b698781cae",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+            "--format",
+            "json"
+          ],
+          "findings": 128,
+          "locations_sha256": "a0a442d2bf7148c801cf2b6b9ea0bd740ca581fe4a15c5469cf8d2f68bbb8363",
+          "stats": {
+            "detection_passes": 512,
+            "files": 512,
+            "bytes": 134217728,
+            "skipped": 0,
+            "elapsed_ms": 216
+          }
+        }
+      ],
+      "finding_parity": true
+    },
+    "real-regex": {
+      "input_sha256": "c404bcbf4f1517a017b133211ac33b80ab26a348af0f03158ef13b3b09e30c1d",
+      "before": [
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07493512495420873,
+          "user_seconds": 0.16658099999999998,
+          "system_seconds": 0.03334,
+          "peak_rss_bytes": 32079872,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "f1696271cfaecef11ca2ad674d87e17e5069e23165eb4897fd9d31bc41402c2a",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 67
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07528370805084705,
+          "user_seconds": 0.168515,
+          "system_seconds": 0.029769,
+          "peak_rss_bytes": 31719424,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "d4c943d3fc06d2035a7b44c915d5f8c86f38c514fdbf9beb6d96fc8d4c2f31c6",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 68
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07665791700128466,
+          "user_seconds": 0.17095,
+          "system_seconds": 0.029023,
+          "peak_rss_bytes": 31997952,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "4373fc250cc3e0b9ba728679477444768fa1cf05041e508c0ed1d04a5efbb9ee",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 69
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07715829205699265,
+          "user_seconds": 0.170734,
+          "system_seconds": 0.031319,
+          "peak_rss_bytes": 31129600,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "f98b9bb7dd13b1dc109e896e3e622e05fdb5b12cf6bcb8fe3aad1365a2c6023b",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 70
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.08105379191692919,
+          "user_seconds": 0.17822,
+          "system_seconds": 0.034442,
+          "peak_rss_bytes": 31670272,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "48e63d7bdd5e6784f02162512ae706655395fe80de0bedd53a334cd0593fed1e",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 73
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07868433301337063,
+          "user_seconds": 0.17562899999999998,
+          "system_seconds": 0.033035999999999996,
+          "peak_rss_bytes": 32145408,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "33bcad1110cc414dcd0a330edec34c3533802cb2a43560e745151be4a594b37a",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 71
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.0773038340266794,
+          "user_seconds": 0.17307699999999998,
+          "system_seconds": 0.031762,
+          "peak_rss_bytes": 31145984,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "f98b9bb7dd13b1dc109e896e3e622e05fdb5b12cf6bcb8fe3aad1365a2c6023b",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 70
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07528312492650002,
+          "user_seconds": 0.169326,
+          "system_seconds": 0.03083,
+          "peak_rss_bytes": 31162368,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "d4c943d3fc06d2035a7b44c915d5f8c86f38c514fdbf9beb6d96fc8d4c2f31c6",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 68
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07451158307958394,
+          "user_seconds": 0.168061,
+          "system_seconds": 0.03015,
+          "peak_rss_bytes": 31244288,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "f1696271cfaecef11ca2ad674d87e17e5069e23165eb4897fd9d31bc41402c2a",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 67
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07517808303236961,
+          "user_seconds": 0.169515,
+          "system_seconds": 0.031113,
+          "peak_rss_bytes": 31784960,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "d4c943d3fc06d2035a7b44c915d5f8c86f38c514fdbf9beb6d96fc8d4c2f31c6",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 68
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07573333301115781,
+          "user_seconds": 0.169815,
+          "system_seconds": 0.031333,
+          "peak_rss_bytes": 32178176,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "d4c943d3fc06d2035a7b44c915d5f8c86f38c514fdbf9beb6d96fc8d4c2f31c6",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 68
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07558154198341072,
+          "user_seconds": 0.169896,
+          "system_seconds": 0.032073,
+          "peak_rss_bytes": 32358400,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "d4c943d3fc06d2035a7b44c915d5f8c86f38c514fdbf9beb6d96fc8d4c2f31c6",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 68
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07601754204370081,
+          "user_seconds": 0.16936199999999998,
+          "system_seconds": 0.031848999999999995,
+          "peak_rss_bytes": 31227904,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "4373fc250cc3e0b9ba728679477444768fa1cf05041e508c0ed1d04a5efbb9ee",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 69
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07827637507580221,
+          "user_seconds": 0.173008,
+          "system_seconds": 0.032132,
+          "peak_rss_bytes": 31358976,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "f98b9bb7dd13b1dc109e896e3e622e05fdb5b12cf6bcb8fe3aad1365a2c6023b",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 70
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07539266697131097,
+          "user_seconds": 0.170035,
+          "system_seconds": 0.031031,
+          "peak_rss_bytes": 30720000,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "d4c943d3fc06d2035a7b44c915d5f8c86f38c514fdbf9beb6d96fc8d4c2f31c6",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 68
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07584708300419152,
+          "user_seconds": 0.168572,
+          "system_seconds": 0.030125,
+          "peak_rss_bytes": 30900224,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "d4c943d3fc06d2035a7b44c915d5f8c86f38c514fdbf9beb6d96fc8d4c2f31c6",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 68
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07909512496553361,
+          "user_seconds": 0.175592,
+          "system_seconds": 0.03513,
+          "peak_rss_bytes": 31817728,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "12832f8591cc7d62cf3711402bb95fdb58082b1e60759c0a894da45b3b46a398",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 72
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07652704196516424,
+          "user_seconds": 0.171426,
+          "system_seconds": 0.032462,
+          "peak_rss_bytes": 31571968,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "4373fc250cc3e0b9ba728679477444768fa1cf05041e508c0ed1d04a5efbb9ee",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 69
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07522058300673962,
+          "user_seconds": 0.169244,
+          "system_seconds": 0.031028,
+          "peak_rss_bytes": 31850496,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "d4c943d3fc06d2035a7b44c915d5f8c86f38c514fdbf9beb6d96fc8d4c2f31c6",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 68
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07684633310418576,
+          "user_seconds": 0.170753,
+          "system_seconds": 0.030664,
+          "peak_rss_bytes": 32423936,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "4373fc250cc3e0b9ba728679477444768fa1cf05041e508c0ed1d04a5efbb9ee",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-v5-aca1a038",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 69
+          }
+        }
+      ],
+      "after": [
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07510749995708466,
+          "user_seconds": 0.167604,
+          "system_seconds": 0.032114,
+          "peak_rss_bytes": 31965184,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "d4c943d3fc06d2035a7b44c915d5f8c86f38c514fdbf9beb6d96fc8d4c2f31c6",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 68
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07658895803615451,
+          "user_seconds": 0.17077199999999998,
+          "system_seconds": 0.032179,
+          "peak_rss_bytes": 31997952,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "4373fc250cc3e0b9ba728679477444768fa1cf05041e508c0ed1d04a5efbb9ee",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 69
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07541779207531363,
+          "user_seconds": 0.170851,
+          "system_seconds": 0.03263,
+          "peak_rss_bytes": 31948800,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "d4c943d3fc06d2035a7b44c915d5f8c86f38c514fdbf9beb6d96fc8d4c2f31c6",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 68
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.0760478749871254,
+          "user_seconds": 0.169927,
+          "system_seconds": 0.030837999999999997,
+          "peak_rss_bytes": 31948800,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "4373fc250cc3e0b9ba728679477444768fa1cf05041e508c0ed1d04a5efbb9ee",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 69
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07846379198599607,
+          "user_seconds": 0.171252,
+          "system_seconds": 0.033395999999999995,
+          "peak_rss_bytes": 32309248,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "33bcad1110cc414dcd0a330edec34c3533802cb2a43560e745151be4a594b37a",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 71
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07608479203190655,
+          "user_seconds": 0.172306,
+          "system_seconds": 0.032043999999999996,
+          "peak_rss_bytes": 31571968,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "4373fc250cc3e0b9ba728679477444768fa1cf05041e508c0ed1d04a5efbb9ee",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 69
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07753737503662705,
+          "user_seconds": 0.173305,
+          "system_seconds": 0.03342,
+          "peak_rss_bytes": 31293440,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "f98b9bb7dd13b1dc109e896e3e622e05fdb5b12cf6bcb8fe3aad1365a2c6023b",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 70
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07509720895905048,
+          "user_seconds": 0.168327,
+          "system_seconds": 0.030577999999999998,
+          "peak_rss_bytes": 32030720,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "d4c943d3fc06d2035a7b44c915d5f8c86f38c514fdbf9beb6d96fc8d4c2f31c6",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 68
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07593775005079806,
+          "user_seconds": 0.170295,
+          "system_seconds": 0.03132,
+          "peak_rss_bytes": 31096832,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "4373fc250cc3e0b9ba728679477444768fa1cf05041e508c0ed1d04a5efbb9ee",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 69
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07607166701927781,
+          "user_seconds": 0.171673,
+          "system_seconds": 0.032124,
+          "peak_rss_bytes": 31047680,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "4373fc250cc3e0b9ba728679477444768fa1cf05041e508c0ed1d04a5efbb9ee",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 69
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07707620807923377,
+          "user_seconds": 0.171903,
+          "system_seconds": 0.032184,
+          "peak_rss_bytes": 33013760,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "f98b9bb7dd13b1dc109e896e3e622e05fdb5b12cf6bcb8fe3aad1365a2c6023b",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 70
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07479408395010978,
+          "user_seconds": 0.16972099999999998,
+          "system_seconds": 0.030902,
+          "peak_rss_bytes": 31375360,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "d4c943d3fc06d2035a7b44c915d5f8c86f38c514fdbf9beb6d96fc8d4c2f31c6",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 68
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.0764576249057427,
+          "user_seconds": 0.168372,
+          "system_seconds": 0.028346999999999997,
+          "peak_rss_bytes": 31817728,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "4373fc250cc3e0b9ba728679477444768fa1cf05041e508c0ed1d04a5efbb9ee",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 69
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07764108292758465,
+          "user_seconds": 0.172946,
+          "system_seconds": 0.032417999999999995,
+          "peak_rss_bytes": 31571968,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "f98b9bb7dd13b1dc109e896e3e622e05fdb5b12cf6bcb8fe3aad1365a2c6023b",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 70
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07658750005066395,
+          "user_seconds": 0.17152099999999998,
+          "system_seconds": 0.032367,
+          "peak_rss_bytes": 32292864,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "4373fc250cc3e0b9ba728679477444768fa1cf05041e508c0ed1d04a5efbb9ee",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 69
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07896254200022668,
+          "user_seconds": 0.17402299999999998,
+          "system_seconds": 0.031264,
+          "peak_rss_bytes": 31408128,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "f98b9bb7dd13b1dc109e896e3e622e05fdb5b12cf6bcb8fe3aad1365a2c6023b",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 70
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07595366693567485,
+          "user_seconds": 0.169705,
+          "system_seconds": 0.032597,
+          "peak_rss_bytes": 32129024,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "4373fc250cc3e0b9ba728679477444768fa1cf05041e508c0ed1d04a5efbb9ee",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 69
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07750491600017995,
+          "user_seconds": 0.172184,
+          "system_seconds": 0.033135,
+          "peak_rss_bytes": 32030720,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "f98b9bb7dd13b1dc109e896e3e622e05fdb5b12cf6bcb8fe3aad1365a2c6023b",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 70
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.0763090830296278,
+          "user_seconds": 0.169371,
+          "system_seconds": 0.030472,
+          "peak_rss_bytes": 31686656,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "4373fc250cc3e0b9ba728679477444768fa1cf05041e508c0ed1d04a5efbb9ee",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 69
+          }
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.07681437500286847,
+          "user_seconds": 0.171517,
+          "system_seconds": 0.031745999999999996,
+          "peak_rss_bytes": 31571968,
+          "stdout_bytes": 462,
+          "stderr_bytes": 0,
+          "stdout_sha256": "4373fc250cc3e0b9ba728679477444768fa1cf05041e508c0ed1d04a5efbb9ee",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "command": [
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+            "scan",
+            "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+            "--format",
+            "json"
+          ],
+          "findings": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "stats": {
+            "detection_passes": 451,
+            "files": 451,
+            "bytes": 8434814,
+            "skipped": 0,
+            "elapsed_ms": 69
+          }
+        }
+      ],
+      "finding_parity": true
+    }
+  }
+}

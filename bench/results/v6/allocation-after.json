@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "label": "after",
+  "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+  "build": {
+    "source_sha256": "13f9266a1057a9bbee70534bd066fad4118937564dfe05ea986d24ecd56cd463",
+    "library_sha256": "7ebc8f53e761ee8f210a8c76d9c53562cf514b20941c2bb6c00f34ebfa96a1e9",
+    "git_head_at_build": "3b28f5cba12a5fe772680a03f2e1500f0ad4a40f",
+    "rustc": "rustc 1.97.0 (2d8144b78 2026-07-07)",
+    "cargo_build_command": [
+      "cargo",
+      "build",
+      "--release",
+      "--lib",
+      "--locked",
+      "--message-format=json",
+      "--target-dir",
+      "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target"
+    ],
+    "build_command": [
+      "rustc",
+      "--edition=2024",
+      "-C",
+      "opt-level=3",
+      "-C",
+      "lto=thin",
+      "-C",
+      "codegen-units=1",
+      "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/results/v6/allocation_probe.rs",
+      "-L",
+      "dependency=/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/deps",
+      "-o",
+      "/private/tmp/secret-scan-v6-allocation-after",
+      "--extern",
+      "secret_scan=/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/libsecret_scan.rlib",
+      "--extern",
+      "serde_json=/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/deps/libserde_json-11496908a69b72c7.rlib",
+      "--extern",
+      "blake3=/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/deps/libblake3-176db3941d223eb5.rlib"
+    ],
+    "dependency_rlibs": {
+      "serde_json": {
+        "path": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/deps/libserde_json-11496908a69b72c7.rlib",
+        "sha256": "1086486abce543b339336667e42487e6ec1625965c4e401d4be4c405807377ad"
+      },
+      "blake3": {
+        "path": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/deps/libblake3-176db3941d223eb5.rlib",
+        "sha256": "767b64b17acb99450647532401fce40237faae0689bb9882deff3020b1b77e98"
+      }
+    },
+    "binary_sha256": "1d0a710d1a30ab01e0052a49b43ce3e706fa755dacc94a8cc312f17639d1d0ab"
+  },
+  "method": {
+    "single_thread": true,
+    "warmup_scans_per_case": 1,
+    "engine_and_input_construction_excluded": true,
+    "serialization_and_validation_excluded": true,
+    "units": "requested allocator layout bytes; not RSS, usable size or copied bytes",
+    "realloc": "successful new-size requests reported separately; live bytes change only by new size minus old size",
+    "peak": "net live requested bytes above pre-scan baseline; transient System realloc internals are unobservable",
+    "caveat": "process-global atomics; valid for this single-threaded probe, not concurrent unrelated allocations; counters perturb timing"
+  },
+  "cases": [
+    {
+      "allocation_calls": 17,
+      "allocation_requested_bytes": 1624,
+      "count": 1,
+      "deallocation_calls_during_scan": 10,
+      "encoding": "utf8",
+      "finding_capacity": 4,
+      "finding_size_bytes": 216,
+      "input_bytes": 41,
+      "live_after_drop_delta_bytes": 0,
+      "live_at_scan_return_delta_bytes": 1008,
+      "live_baseline_bytes": 10271472,
+      "peak_scan_live_delta_bytes": 1284,
+      "reallocation_calls": 2,
+      "reallocation_requested_bytes": 54,
+      "redaction_verified": true,
+      "serialized_output_blake3": "d15caf6d82fd2c122969bd9bf3c80e4672f1629af59cbd3f147b520951d06ea8",
+      "serialized_output_bytes": 473
+    },
+    {
+      "allocation_calls": 100008,
+      "allocation_requested_bytes": 6671173,
+      "count": 10000,
+      "deallocation_calls_during_scan": 50006,
+      "encoding": "utf8",
+      "finding_capacity": 16384,
+      "finding_size_bytes": 216,
+      "input_bytes": 410000,
+      "live_after_drop_delta_bytes": 0,
+      "live_at_scan_return_delta_bytes": 4578984,
+      "live_baseline_bytes": 10681435,
+      "peak_scan_live_delta_bytes": 6739003,
+      "reallocation_calls": 14,
+      "reallocation_requested_bytes": 7076214,
+      "redaction_verified": true,
+      "serialized_output_blake3": "deef208652fca1750766b9bf22c82f82be7531ea8efd531554a27500e8ae6abd",
+      "serialized_output_bytes": 4833474
+    },
+    {
+      "allocation_calls": 1000008,
+      "allocation_requested_bytes": 55901173,
+      "count": 100000,
+      "deallocation_calls_during_scan": 500006,
+      "encoding": "utf8",
+      "finding_capacity": 131072,
+      "finding_size_bytes": 216,
+      "input_bytes": 4100000,
+      "live_after_drop_delta_bytes": 0,
+      "live_at_scan_return_delta_bytes": 38711592,
+      "live_baseline_bytes": 14371436,
+      "peak_scan_live_delta_bytes": 49511611,
+      "reallocation_calls": 17,
+      "reallocation_requested_bytes": 56621430,
+      "redaction_verified": true,
+      "serialized_output_blake3": "41f1cd899739ce489a88acb72a7d4f8f9a5912aab952322b1071df1f09d8496d",
+      "serialized_output_bytes": 48634694
+    },
+    {
+      "allocation_calls": 100009,
+      "allocation_requested_bytes": 6991181,
+      "count": 10000,
+      "deallocation_calls_during_scan": 50007,
+      "encoding": "utf16le",
+      "finding_capacity": 16384,
+      "finding_size_bytes": 216,
+      "input_bytes": 820002,
+      "live_after_drop_delta_bytes": 0,
+      "live_at_scan_return_delta_bytes": 4578984,
+      "live_baseline_bytes": 11774806,
+      "peak_scan_live_delta_bytes": 7263291,
+      "reallocation_calls": 30,
+      "reallocation_requested_bytes": 8124774,
+      "redaction_verified": true,
+      "serialized_output_blake3": "3e8d078acb00b652742275339da02a06a2662c92629d29534fa26ae7dbf81def",
+      "serialized_output_bytes": 5086184
+    }
+  ]
+}
