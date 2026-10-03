@@ -191,7 +191,7 @@ fn finding_defaults_never_contain_unredacted_material() {
 fn entropy_allowlist_and_excluded_paths_filter_without_leaking() {
     let mut json: serde_json::Value = serde_json::from_str(RULE).unwrap();
     json["rules"][0]["exclude_paths"] = serde_json::json!(["(^|/)vendor/"]);
-    json["rules"][0]["allowlist"] = serde_json::json!(["^Ab3d"]);
+    json["rules"][0]["allowlist"] = serde_json::json!([{"regexes":["^Ab3d"]}]);
     let (_dir, engine) = custom_engine(&json.to_string(), None);
     assert!(
         engine
@@ -323,7 +323,11 @@ fn configuration_errors_do_not_echo_secret_bearing_patterns_or_json_values() {
     }
     for field in ["allowlist", "exclude_paths"] {
         let mut json: serde_json::Value = serde_json::from_str(RULE).unwrap();
-        json["rules"][0][field] = serde_json::json!(["SyntheticSensitiveConfigMarker("]);
+        json["rules"][0][field] = if field == "allowlist" {
+            serde_json::json!([{"regexes":["SyntheticSensitiveConfigMarker("]}])
+        } else {
+            serde_json::json!(["SyntheticSensitiveConfigMarker("])
+        };
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("rules.json");
         std::fs::write(&path, json.to_string()).unwrap();
@@ -615,4 +619,324 @@ fn quoted_assignments_allow_comments_and_closing_call_parentheses() {
             assert_eq!(&text[generic[0].start..generic[0].end], "spruce-wren-26");
         }
     }
+}
+
+#[test]
+fn generic_token_explanation_context_does_not_hide_natural_language_passwords() {
+    let engine = Engine::new(EngineConfig::default()).unwrap();
+    let prose = "This detector accepts literal values, but excludes descriptions that explain its matching behavior";
+    let metadata = format!("\"generic-api-key\": \"{prose}\",\n");
+    assert!(
+        !engine
+            .scan_bytes("rules.py", metadata.as_bytes())
+            .unwrap()
+            .iter()
+            .any(|finding| finding.rule_id.starts_with("generic-credential-"))
+    );
+    for key in ["password", "passwd", "pwd", "secret", "client_secret"] {
+        let input = format!("{key} = \"{prose}\"\n");
+        assert!(
+            engine
+                .scan_bytes("README.md", input.as_bytes())
+                .unwrap()
+                .iter()
+                .any(|finding| finding.rule_id.starts_with("generic-credential-"))
+        );
+    }
+    for value in [
+        "a small natural phrase",
+        "one two three four five six seven eight nine ten",
+        "one two, three four",
+    ] {
+        let input = format!("api_key = '{value}'\n");
+        assert!(
+            engine
+                .scan_bytes("README.md", input.as_bytes())
+                .unwrap()
+                .iter()
+                .any(|finding| finding.rule_id.starts_with("generic-credential-"))
+        );
+    }
+}
+
+#[test]
+fn capture_selection_supports_alternatives_empty_groups_and_explicit_whole_match() {
+    for (pattern, group, input, expected) in [
+        (
+            r"alpha_([A-Z]{4})|beta_([A-Z]{4})",
+            serde_json::Value::Null,
+            "beta_QWER",
+            "QWER",
+        ),
+        (r"()([A-Z]{4})", serde_json::Value::Null, "QWER", "QWER"),
+        (
+            r"whole_[A-Z]{4}",
+            serde_json::Value::Null,
+            "whole_QWER",
+            "whole_QWER",
+        ),
+        (
+            r"whole_([A-Z]{4})",
+            serde_json::json!(0),
+            "whole_QWER",
+            "whole_QWER",
+        ),
+        (
+            r"whole_([A-Z]{4})",
+            serde_json::json!(1),
+            "whole_QWER",
+            "QWER",
+        ),
+    ] {
+        let rules = serde_json::json!({"rules":[{"id":"capture","name":"Capture","pattern":pattern,"secret_group":group}]});
+        let (_dir, engine) = custom_engine(&rules.to_string(), None);
+        let findings = engine.scan_bytes("a", input.as_bytes()).unwrap();
+        assert_eq!(findings.len(), 1);
+        assert_eq!(&input[findings[0].start..findings[0].end], expected);
+    }
+}
+
+#[test]
+fn allowlist_targets_and_boolean_groups_preserve_conjunctions() {
+    let make = |group: serde_json::Value| {
+        let rules = serde_json::json!({"rules":[{"id":"allow","name":"Allow","pattern":"token=([A-Za-z0-9-]+)","secret_group":1,"allowlist":[group]}]});
+        custom_engine(&rules.to_string(), None)
+    };
+    let (_dir, engine) = make(
+        serde_json::json!({"condition":"and","target":"line","paths":["\\.recipe$"],"regexes":["LICENSE"]}),
+    );
+    for (path, source, count) in [
+        ("a.recipe", "LICENSE token=Value42", 0),
+        ("a.txt", "LICENSE token=Value42", 1),
+        ("a.recipe", "NORMAL token=Value42", 1),
+        ("a.txt", "NORMAL token=Value42", 1),
+        ("a.recipe", "LICENSE\ntoken=Value42", 1),
+    ] {
+        assert_eq!(
+            engine.scan_bytes(path, source.as_bytes()).unwrap().len(),
+            count
+        );
+    }
+    let (_dir, engine) = make(
+        serde_json::json!({"condition":"or","target":"match","paths":["\\.recipe$"],"regexes":["^token=Value"]}),
+    );
+    assert!(
+        engine
+            .scan_bytes("a.txt", b"token=Value42")
+            .unwrap()
+            .is_empty()
+    );
+    assert!(
+        engine
+            .scan_bytes("a.recipe", b"token=Other42")
+            .unwrap()
+            .is_empty()
+    );
+    assert_eq!(
+        engine.scan_bytes("a.txt", b"token=Other42").unwrap().len(),
+        1
+    );
+    let (_dir, engine) = make(
+        serde_json::json!({"condition":"and","target":"match","regexes":["^token="],"stopwords":["value"]}),
+    );
+    assert!(engine.scan_bytes("a", b"token=VaLuE42").unwrap().is_empty());
+    assert_eq!(engine.scan_bytes("a", b"token=Other42").unwrap().len(), 1);
+    // Stopwords must not inspect the prefix/full match when their target is match.
+    let (_dir, engine) = make(serde_json::json!({"target":"match","stopwords":["token"]}));
+    assert_eq!(engine.scan_bytes("a", b"token=Other42").unwrap().len(), 1);
+    let (_dir, engine) = make(serde_json::json!({"target":"secret","regexes":["^token="]}));
+    assert_eq!(engine.scan_bytes("a", b"token=Other42").unwrap().len(), 1);
+}
+
+#[test]
+fn identity_is_separate_from_display_path_and_lexical_paths_are_stable() {
+    let mut rules: serde_json::Value = serde_json::from_str(RULE).unwrap();
+    rules["rules"][0]["path"] = serde_json::json!(r"\.env$");
+    let (_dir, engine) = custom_engine(&rules.to_string(), None);
+    let input = format!("fixture_{TOKEN}");
+    let first = engine.scan_bytes("config.env", input.as_bytes()).unwrap();
+    let dotted = engine.scan_bytes("./config.env", input.as_bytes()).unwrap();
+    assert_eq!(first[0].fingerprint, dotted[0].fingerprint);
+    assert_eq!(dotted[0].path, "./config.env");
+    let a = engine
+        .scan_bytes_with_identity("config.env", "checkout-a/config.env", input.as_bytes())
+        .unwrap();
+    let b = engine
+        .scan_bytes_with_identity("config.env", "checkout-b/config.env", input.as_bytes())
+        .unwrap();
+    assert_ne!(a[0].fingerprint, b[0].fingerprint);
+    let same_identity = engine
+        .scan_bytes_with_identity("alternate.env", "checkout-a/config.env", input.as_bytes())
+        .unwrap();
+    assert_eq!(a[0].fingerprint, same_identity[0].fingerprint);
+    assert_eq!(same_identity[0].path, "alternate.env");
+    assert!(
+        engine
+            .scan_bytes_with_identity("excluded.txt", "config.env", input.as_bytes())
+            .unwrap()
+            .is_empty()
+    );
+}
+
+#[test]
+fn configuration_identity_tracks_actual_rules_semantics_and_key_identity() {
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("rules.json");
+    std::fs::write(&path, RULE).unwrap();
+    let config = EngineConfig {
+        builtin_rules: false,
+        custom_rule_paths: vec![path.clone()],
+        ..Default::default()
+    };
+    let first = Engine::new(config.clone()).unwrap();
+    assert_eq!(first.configuration_id().len(), 64);
+    assert!(!first.configuration_id().contains("fixture"));
+    let formatted: serde_json::Value = serde_json::from_str(RULE).unwrap();
+    std::fs::write(&path, serde_json::to_string_pretty(&formatted).unwrap()).unwrap();
+    assert_eq!(
+        first.configuration_id(),
+        Engine::new(config.clone()).unwrap().configuration_id()
+    );
+    for changed in [
+        EngineConfig {
+            enable_base64: false,
+            ..config.clone()
+        },
+        EngineConfig {
+            min_entropy: Some(1.0),
+            ..config.clone()
+        },
+        EngineConfig {
+            min_confidence: secret_scan::rules::Confidence::High,
+            ..config.clone()
+        },
+        EngineConfig {
+            fingerprint_key: Some([17; 32]),
+            ..config.clone()
+        },
+        EngineConfig {
+            fingerprint_key: Some([18; 32]),
+            ..config.clone()
+        },
+    ] {
+        assert_ne!(
+            first.configuration_id(),
+            Engine::new(changed).unwrap().configuration_id()
+        );
+    }
+    for field in ["pattern", "allowlist", "exclude_paths", "secret_group"] {
+        let mut changed = formatted.clone();
+        changed["rules"][0][field] = match field {
+            "pattern" => serde_json::json!("fixture_([A-Za-z0-9]{23,24})"),
+            "allowlist" => serde_json::json!([{"regexes":["NeverAllowThis"]}]),
+            "exclude_paths" => serde_json::json!(["never-match-path"]),
+            _ => serde_json::json!(0),
+        };
+        std::fs::write(&path, changed.to_string()).unwrap();
+        assert_ne!(
+            first.configuration_id(),
+            Engine::new(config.clone()).unwrap().configuration_id()
+        );
+    }
+    let mut rules = formatted["rules"].as_array().unwrap().clone();
+    let mut other = rules[0].clone();
+    other["id"] = serde_json::json!("a-second-rule");
+    rules.push(other);
+    let collection = |rules| serde_json::json!({"rules":rules});
+    std::fs::write(&path, collection(rules.clone()).to_string()).unwrap();
+    let ordered = Engine::new(config.clone()).unwrap();
+    rules.reverse();
+    std::fs::write(&path, collection(rules).to_string()).unwrap();
+    assert_eq!(
+        ordered.configuration_id(),
+        Engine::new(config).unwrap().configuration_id()
+    );
+}
+
+#[test]
+fn sparse_line_mapping_handles_out_of_order_rules_crlf_binary_and_base64() {
+    let (_dir, engine) = custom_engine(RULE, None);
+    let encoded = b"Zml4dHVyZV9BYjNkRWY3aElqOWtMbTJuT3A0cVJzNnQ=";
+    let mut source = vec![b'\n'; 16384];
+    source.extend_from_slice(b"\xff\r\n  ");
+    let encoded_start = source.len();
+    source.extend_from_slice(encoded);
+    source.extend_from_slice(b"\r\n\xff ");
+    let raw_start = source.len() + 8;
+    source.extend_from_slice(format!("fixture_{TOKEN}").as_bytes());
+    let findings = engine.scan_bytes("data.bin", &source).unwrap();
+    assert_eq!(findings.len(), 2);
+    assert_eq!(
+        (findings[0].start, findings[0].line, findings[0].column),
+        (encoded_start, 16386, 2)
+    );
+    assert_eq!(
+        (findings[1].start, findings[1].line, findings[1].column),
+        (raw_start, 16387, 10)
+    );
+    assert!(findings[0].is_base64_encoded);
+}
+
+#[test]
+fn restored_catalog_detectors_cover_nonfirst_capture_branches() {
+    let engine = Engine::new(EngineConfig {
+        enable_base64: false,
+        ..Default::default()
+    })
+    .unwrap();
+    let atlassian_first = "q7r2s8t3u9v4w5x6y1z0a1b2";
+    let atlassian_second = format!("ATATT3{}cD4_EF", "aB9_xY7-zQ2=".repeat(15));
+    for token in [atlassian_first, atlassian_second.as_str()] {
+        let source = format!("ATLASSIAN_TOKEN='{token}'\n");
+        let findings = engine
+            .scan_bytes("providers.conf", source.as_bytes())
+            .unwrap();
+        let finding = findings
+            .iter()
+            .find(|finding| finding.rule_id == "atlassian-api-token")
+            .unwrap();
+        assert_eq!(&source[finding.start..finding.end], token);
+    }
+    let token = "zR8kN2pV7mB3xQ6tY4hL9jF5";
+    let source = format!("curl -H 'X-Api-Key: {token}' https://service.invalid\n");
+    let findings = engine.scan_bytes("example.sh", source.as_bytes()).unwrap();
+    let finding = findings
+        .iter()
+        .find(|finding| finding.rule_id == "curl-auth-header")
+        .unwrap();
+    assert_eq!(&source[finding.start..finding.end], token);
+}
+
+#[test]
+fn restored_kubernetes_rule_preserves_full_match_allowlist() {
+    let engine = Engine::new(EngineConfig {
+        enable_base64: false,
+        ..Default::default()
+    })
+    .unwrap();
+    let entry = "password: Y2VkYXItb3R0ZXItNzQ=";
+    for source in [
+        format!("kind: Secret\ndata:\n  {entry}\n"),
+        format!("data:\n  {entry}\nkind: Secret\n"),
+    ] {
+        let findings = engine
+            .scan_bytes("manifest.yml", source.as_bytes())
+            .unwrap();
+        let finding = findings
+            .iter()
+            .find(|finding| finding.rule_id == "kubernetes-secret-yaml")
+            .unwrap();
+        assert_eq!(&source[finding.start..finding.end], entry);
+    }
+    // The pinned upstream expression requires content between the separator
+    // and data. An immediately adjacent `---\ndata:` is an upstream limitation,
+    // not a guarantee supplied by the target-selection implementation.
+    let source = format!("kind: Secret\n---\nmetadata: {{}}\ndata:\n  {entry}\n");
+    assert!(
+        !engine
+            .scan_bytes("manifest.yml", source.as_bytes())
+            .unwrap()
+            .iter()
+            .any(|finding| finding.rule_id == "kubernetes-secret-yaml")
+    );
 }

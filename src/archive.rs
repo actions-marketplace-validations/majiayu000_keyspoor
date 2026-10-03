@@ -4,7 +4,7 @@ use std::io::{Cursor, Read};
 use anyhow::{Result, bail};
 use flate2::read::MultiGzDecoder;
 
-use crate::{Engine, ScanReport};
+use crate::{Engine, ScanReport, scan::ScanControl};
 
 const MAX_DEPTH: usize = 4;
 
@@ -44,6 +44,26 @@ pub fn scan_archive(
     bytes: &[u8],
     max_bytes: u64,
 ) -> Result<Option<ScanReport>> {
+    scan_archive_with_identity(
+        engine,
+        name,
+        name,
+        bytes,
+        max_bytes,
+        &ScanControl::default(),
+    )
+}
+
+/// Scan an archive with a stable logical identity and cooperative cancellation.
+/// Display paths continue to select rules; member identities determine fingerprints.
+pub fn scan_archive_with_identity(
+    engine: &Engine,
+    name: &str,
+    identity: &str,
+    bytes: &[u8],
+    max_bytes: u64,
+    control: &ScanControl,
+) -> Result<Option<ScanReport>> {
     let Some(kind) = format(name, bytes) else {
         return Ok(None);
     };
@@ -51,8 +71,10 @@ pub fn scan_archive(
         engine,
         remaining: max_bytes,
         report: ScanReport::default(),
+        control,
+        cancelled: false,
     };
-    state.archive(name, bytes, kind, 0)?;
+    state.archive(name, identity, bytes, kind, 0)?;
     Ok(Some(state.report))
 }
 
@@ -60,6 +82,8 @@ struct State<'a> {
     engine: &'a Engine,
     remaining: u64,
     report: ScanReport,
+    control: &'a ScanControl,
+    cancelled: bool,
 }
 
 impl State<'_> {
@@ -68,29 +92,54 @@ impl State<'_> {
         self.report.fail(name, message);
     }
 
-    fn read(&mut self, name: &str, reader: impl Read) -> Result<Option<Vec<u8>>> {
-        let mut bytes = Vec::new();
-        // Never reserve memory from an untrusted advertised member size.
-        let result = reader
-            .take(self.remaining.saturating_add(1))
-            .read_to_end(&mut bytes);
-        if bytes.len() as u64 > self.remaining {
-            self.remaining = 0;
-            self.skip(name, "archive cumulative decompressed byte limit exceeded");
-            return Ok(None);
+    fn cancelled(&mut self, name: &str) -> bool {
+        if self.control.is_cancelled() {
+            if !self.cancelled {
+                self.cancelled = true;
+                self.skip(name, "scan cancelled");
+            }
+            true
+        } else {
+            false
         }
-        self.remaining -= bytes.len() as u64;
-        if result.is_err() {
-            bail!("archive member decompression or integrity check failed");
-        }
-        Ok(Some(bytes))
     }
 
-    fn member(&mut self, name: &str, bytes: &[u8], depth: usize) {
+    fn read(&mut self, name: &str, reader: impl Read) -> Result<Option<Vec<u8>>> {
+        let mut bytes = Vec::new();
+        // Bound each decompressor read so cancellation does not wait for a
+        // complete member. Never reserve an untrusted advertised member size.
+        let mut reader = reader.take(self.remaining.saturating_add(1));
+        let mut buffer = [0; 16 * 1024];
+        loop {
+            if self.cancelled(name) {
+                return Ok(None);
+            }
+            let count = match reader.read(&mut buffer) {
+                Ok(count) => count,
+                Err(error) if error.kind() == std::io::ErrorKind::Interrupted => continue,
+                Err(_) => bail!("archive member decompression or integrity check failed"),
+            };
+            if count == 0 {
+                return Ok(Some(bytes));
+            }
+            if count as u64 > self.remaining {
+                self.remaining = 0;
+                self.skip(name, "archive cumulative decompressed byte limit exceeded");
+                return Ok(None);
+            }
+            self.remaining -= count as u64;
+            bytes.extend_from_slice(&buffer[..count]);
+        }
+    }
+
+    fn member(&mut self, name: &str, identity: &str, bytes: &[u8], depth: usize) {
+        if self.cancelled(name) {
+            return;
+        }
         if let Some(kind) = format(name, bytes) {
             if depth >= MAX_DEPTH {
                 self.skip(name, "archive nesting depth limit exceeded");
-            } else if self.archive(name, bytes, kind, depth).is_err() {
+            } else if self.archive(name, identity, bytes, kind, depth).is_err() {
                 self.skip(name, "nested archive is corrupt or unsupported");
             }
             return;
@@ -98,7 +147,7 @@ impl State<'_> {
         self.report.stats.files += 1;
         self.report.stats.bytes += bytes.len() as u64;
         self.report.stats.detection_passes += 1;
-        match self.engine.scan_bytes(name, bytes) {
+        match self.engine.scan_bytes_with_identity(name, identity, bytes) {
             Ok(mut findings) => {
                 for finding in &mut findings {
                     finding.coordinate_space = if finding.coordinate_space == "source_bytes" {
@@ -113,13 +162,26 @@ impl State<'_> {
         }
     }
 
-    fn archive(&mut self, name: &str, bytes: &[u8], kind: Format, depth: usize) -> Result<()> {
+    fn archive(
+        &mut self,
+        name: &str,
+        identity: &str,
+        bytes: &[u8],
+        kind: Format,
+        depth: usize,
+    ) -> Result<()> {
+        if self.cancelled(name) {
+            return Ok(());
+        }
         match kind {
             Format::Zip => {
                 let Ok(mut archive) = zip::ZipArchive::new(Cursor::new(bytes)) else {
                     bail!("invalid ZIP archive");
                 };
                 for index in 0..archive.len() {
+                    if self.cancelled(name) {
+                        break;
+                    }
                     let Ok(mut entry) = archive.by_index(index) else {
                         self.skip(name, "cannot decode ZIP member");
                         continue;
@@ -128,8 +190,9 @@ impl State<'_> {
                         continue;
                     }
                     let path = format!("{name}!{}", entry.name());
+                    let member_identity = format!("{identity}!{}", entry.name());
                     match self.read(&path, &mut entry) {
-                        Ok(Some(data)) => self.member(&path, &data, depth + 1),
+                        Ok(Some(data)) => self.member(&path, &member_identity, &data, depth + 1),
                         Ok(None) => break,
                         Err(_) => {
                             self.skip(&path, "ZIP member decompression or integrity check failed")
@@ -147,6 +210,9 @@ impl State<'_> {
                     bail!("invalid tar archive");
                 };
                 for (index, entry) in entries.enumerate() {
+                    if self.cancelled(name) {
+                        break;
+                    }
                     let mut entry = match entry {
                         Ok(entry) => entry,
                         Err(_) if index == 0 => bail!("invalid tar archive header"),
@@ -164,12 +230,13 @@ impl State<'_> {
                         continue;
                     };
                     let path = format!("{name}!{member_name}");
+                    let member_identity = format!("{identity}!{member_name}");
                     if !entry.header().entry_type().is_file() {
                         self.skip(&path, "unsupported tar member type; links are not followed");
                         continue;
                     }
                     match self.read(&path, &mut entry) {
-                        Ok(Some(data)) => self.member(&path, &data, depth + 1),
+                        Ok(Some(data)) => self.member(&path, &member_identity, &data, depth + 1),
                         Ok(None) => break,
                         Err(_) => self.skip(&path, "tar member is truncated or unreadable"),
                     }
@@ -186,11 +253,68 @@ impl State<'_> {
                     "content".to_owned()
                 };
                 let path = format!("{name}!{inner}");
+                let member_identity = format!("{identity}!{inner}");
                 if let Some(data) = self.read(&path, MultiGzDecoder::new(bytes))? {
-                    self.member(&path, &data, depth + 1);
+                    self.member(&path, &member_identity, &data, depth + 1);
                 }
             }
         }
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::EngineConfig;
+
+    #[test]
+    fn cancellation_stops_between_read_chunks_and_preserves_prior_findings() {
+        struct CancelAfterRead<'a> {
+            control: &'a ScanControl,
+            reads: usize,
+        }
+        impl Read for CancelAfterRead<'_> {
+            fn read(&mut self, buffer: &mut [u8]) -> std::io::Result<usize> {
+                self.reads += 1;
+                buffer.fill(b'x');
+                self.control.cancel();
+                Ok(buffer.len())
+            }
+        }
+        let engine = Engine::new(EngineConfig::default()).unwrap();
+        let control = ScanControl::default();
+        let mut state = State {
+            engine: &engine,
+            remaining: 1_000_000,
+            report: ScanReport::default(),
+            control: &control,
+            cancelled: false,
+        };
+        // Synthetic provider-shaped fixture; never issued by a provider.
+        let fixture = format!("ghp_{}", "aZ7kP2mQ9xT4vR6n".repeat(3));
+        state.member(
+            "bundle.zip!first.txt",
+            "stable!first.txt",
+            fixture.as_bytes(),
+            1,
+        );
+        assert!(!state.report.findings.is_empty());
+        let prior_findings = state.report.findings.clone();
+        let mut reader = CancelAfterRead {
+            control: &control,
+            reads: 0,
+        };
+        assert!(
+            state
+                .read("bundle.zip!large.txt", &mut reader)
+                .unwrap()
+                .is_none()
+        );
+        assert_eq!(reader.reads, 1);
+        assert_eq!(state.remaining, 1_000_000 - 16 * 1024);
+        assert_eq!(state.report.findings, prior_findings);
+        assert_eq!(state.report.exit_code(), 2);
+        assert_eq!(state.report.errors.len(), 1);
     }
 }

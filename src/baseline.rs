@@ -7,7 +7,7 @@ use std::{
 use anyhow::{Context, Result, anyhow, ensure};
 use serde::{Deserialize, Serialize};
 
-use crate::{Finding, ScanReport};
+use crate::{Finding, ScanReport, context::ScanContext};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BaselineEntry {
@@ -19,6 +19,7 @@ pub struct BaselineEntry {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Baseline {
     pub schema_version: u32,
+    pub context: ScanContext,
     /// One representative location per secret identity; reports retain all locations.
     pub entries: BTreeMap<String, BaselineEntry>,
 }
@@ -38,6 +39,16 @@ impl Baseline {
             report.complete && report.errors.is_empty(),
             "cannot create a baseline from an incomplete scan"
         );
+        let context = report
+            .context
+            .as_ref()
+            .context("cannot create a baseline without scan context")?;
+        if let Some(previous) = previous {
+            ensure!(
+                previous.context == *context,
+                "baseline scan context mismatch"
+            );
+        }
         let mut entries = BTreeMap::new();
         for finding in &report.findings {
             entries
@@ -50,7 +61,8 @@ impl Baseline {
                 });
         }
         Ok(Self {
-            schema_version: 1,
+            schema_version: 2,
+            context: context.clone(),
             entries,
         })
     }
@@ -68,7 +80,7 @@ impl Baseline {
             )
         })?;
         ensure!(
-            baseline.schema_version == 1,
+            baseline.schema_version == 2,
             "unsupported baseline schema version {}",
             baseline.schema_version
         );
@@ -89,14 +101,19 @@ impl Baseline {
     }
 
     /// Compare identities, retaining every new occurrence in the scan.
-    pub fn diff(&self, report: &ScanReport) -> BaselineDiff {
+    pub fn diff(&self, report: &ScanReport) -> Result<BaselineDiff> {
+        let context = report
+            .context
+            .as_ref()
+            .context("cannot compare a baseline without scan context")?;
+        ensure!(self.context == *context, "baseline scan context mismatch");
         let complete = report.complete && report.errors.is_empty();
         let present: HashSet<&str> = report
             .findings
             .iter()
             .map(|finding| finding.fingerprint.as_str())
             .collect();
-        BaselineDiff {
+        Ok(BaselineDiff {
             complete,
             new: report
                 .findings
@@ -113,6 +130,6 @@ impl Baseline {
             } else {
                 vec![]
             },
-        }
+        })
     }
 }

@@ -192,3 +192,52 @@ fn truncated_tar_member_does_not_become_clean() {
     assert!(!report.complete);
     assert_eq!(report.exit_code(), 2);
 }
+
+#[test]
+fn nested_members_use_stable_identity_without_changing_display_paths() {
+    use secret_scan::{archive::scan_archive_with_identity, scan::ScanControl};
+    let input = fixture();
+    let outer = zip(&[("inner.gz", &gzip(&input))]);
+    let scan = |name| {
+        scan_archive_with_identity(
+            &ENGINE,
+            name,
+            "/canonical/bundle.zip",
+            &outer,
+            100_000,
+            &ScanControl::default(),
+        )
+        .unwrap()
+        .unwrap()
+    };
+    let first = scan("bundle.zip");
+    let second = scan("./bundle.zip");
+    assert!(first.complete && second.complete);
+    assert!(!first.findings.is_empty());
+    for (a, b) in first.findings.iter().zip(&second.findings) {
+        assert_ne!(a.path, b.path);
+        assert_eq!(a.fingerprint, b.fingerprint);
+        assert!(a.path.ends_with("!inner.gz!inner"));
+    }
+}
+
+#[test]
+fn cancelled_archive_is_incomplete_before_any_member_is_scanned() {
+    use secret_scan::{archive::scan_archive_with_identity, scan::ScanControl};
+    let control = ScanControl::default();
+    control.cancel();
+    let input = fixture();
+    for (name, bytes) in [
+        ("bundle.zip", zip(&[("member.txt", &input)])),
+        ("bundle.tar", tar("member.txt", &input)),
+        ("bundle.gz", gzip(&input)),
+    ] {
+        let report = scan_archive_with_identity(&ENGINE, name, name, &bytes, 100_000, &control)
+            .unwrap()
+            .unwrap();
+        assert_eq!(report.exit_code(), 2);
+        assert_eq!(report.stats.files, 0);
+        assert_eq!(report.errors.len(), 1);
+        assert_eq!(report.errors[0].message, "scan cancelled");
+    }
+}

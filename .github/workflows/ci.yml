@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_BUILD_JOBS: 2
+
+jobs:
+  test:
+    name: Test and package (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+      - name: Install stable Rust
+        run: rustup toolchain install stable --profile minimal
+      - name: Select stable Rust
+        run: rustup default stable
+      - name: Test all targets
+        run: cargo test --locked --all-targets
+      - name: Test documentation
+        run: cargo test --locked --doc
+      - name: Verify package and independent consumer
+        run: python scripts/check_package.py
+
+  quality:
+    name: Lint, benchmark self-tests and MSRV
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+      - name: Install stable Rust and lint components
+        run: rustup toolchain install stable --profile minimal --component rustfmt --component clippy
+      - name: Check formatting
+        run: cargo +stable fmt --all --check
+      - name: Clippy
+        run: cargo +stable clippy --locked --all-targets -- -D warnings
+      - name: Benchmark scorer self-tests
+        run: python -m unittest discover -s bench -p test_run.py
+      - name: Holdout corpus self-tests
+        run: python -m unittest discover -s bench -p test_holdout.py
+      - name: Stress benchmark self-tests
+        run: python -m unittest discover -s scripts -p test_stress_benchmark.py
+      - name: Corpus generator self-test
+        run: python bench/fixtures/generate.py --self-test
+      - name: Install minimum supported Rust
+        run: rustup toolchain install 1.96.0 --profile minimal
+      - name: Check MSRV
+        run: cargo +1.96.0 check --locked --all-targets

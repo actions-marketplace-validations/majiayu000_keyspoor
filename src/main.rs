@@ -7,8 +7,12 @@ use anyhow::{Context, Result, bail};
 use clap::{Args, Parser, Subcommand};
 use secret_scan::baseline::Baseline;
 use secret_scan::engine::Confidence;
-use secret_scan::report::{OutputFormat, write_report};
-use secret_scan::scan::{ScanOptions, scan_history, scan_paths, scan_reader, scan_staged};
+use secret_scan::report::{OutputFormat, write_report, write_scan_event, write_scan_summary};
+use secret_scan::scan::{
+    ScanControl, ScanOptions, scan_buffer, scan_history, scan_history_range,
+    scan_history_range_stream, scan_history_stream, scan_paths, scan_paths_stream, scan_reader,
+    scan_staged, scan_staged_stream,
+};
 use secret_scan::{Engine, EngineConfig, ScanReport};
 use serde::Deserialize;
 
@@ -82,6 +86,9 @@ struct ScanArgs {
     /// Save a complete scan as baseline, retaining existing review labels.
     #[arg(long)]
     write_baseline: Option<PathBuf>,
+    /// Git revision range, for history only (for example main..HEAD).
+    #[arg(long)]
+    range: Option<String>,
 }
 
 fn build_engine(args: EngineArgs) -> Result<Engine> {
@@ -205,7 +212,7 @@ fn serve(engine: &Engine) -> Result<()> {
         match serde_json::from_slice::<TextRequest>(&line) {
             Ok(request) => {
                 let report =
-                    scan_reader(engine, &request.path, request.text.as_bytes(), LIMIT as u64);
+                    scan_buffer(engine, &request.path, request.text.as_bytes(), LIMIT as u64);
                 serde_json::to_writer(
                     &mut output,
                     &serde_json::json!({"id":request.id,"result":report}),
@@ -247,6 +254,50 @@ fn run(cli: Cli) -> Result<u8> {
         max_bytes: args.max_bytes,
         respect_ignore: !args.no_ignore,
     };
+    if args.range.is_some() && mode != "history" {
+        bail!("--range is only supported by history");
+    }
+    if mode != "files" && args.paths.len() != 1 {
+        bail!("Git modes require exactly one repository path");
+    }
+    // Baseline policy is finalized during traversal. Validate it before emitting
+    // filtered results; the ordinary JSONL path streams directly to the writer.
+    if args.format == "jsonl"
+        && args.baseline.is_none()
+        && args.write_baseline.is_none()
+        && args.paths != [PathBuf::from("-")]
+    {
+        let control = ScanControl::default();
+        let mut output = io::BufWriter::new(io::stdout().lock());
+        let mut sink = |event| write_scan_event(&event, &mut output);
+        let mut summary = match mode {
+            "files" => scan_paths_stream(&engine, &args.paths, &options, &control, &mut sink)?,
+            "staged" => scan_staged_stream(&engine, &args.paths[0], &options, &control, &mut sink)?,
+            "history" => match args.range.as_deref() {
+                Some(range) => scan_history_range_stream(
+                    &engine,
+                    &args.paths[0],
+                    range,
+                    &options,
+                    &control,
+                    &mut sink,
+                )?,
+                None => {
+                    scan_history_stream(&engine, &args.paths[0], &options, &control, &mut sink)?
+                }
+            },
+            _ => unreachable!(),
+        };
+        summary.stats.elapsed_ms = started.elapsed().as_millis().min(u64::MAX as u128) as u64;
+        write_scan_summary(&summary, &mut output)?;
+        return Ok(if !summary.complete || summary.error_count != 0 {
+            2
+        } else if summary.finding_count != 0 {
+            1
+        } else {
+            0
+        });
+    }
     let mut report = match mode {
         "files" if args.paths == [PathBuf::from("-")] => {
             scan_reader(&engine, "stdin", io::stdin().lock(), options.max_bytes)
@@ -258,6 +309,8 @@ fn run(cli: Cli) -> Result<u8> {
             }
             if mode == "staged" {
                 scan_staged(&engine, &args.paths[0], &options)?
+            } else if let Some(range) = args.range.as_deref() {
+                scan_history_range(&engine, &args.paths[0], range, &options)?
             } else {
                 scan_history(&engine, &args.paths[0], &options)?
             }
@@ -266,7 +319,7 @@ fn run(cli: Cli) -> Result<u8> {
     };
     if let Some(path) = args.baseline {
         let baseline = read_baseline(&path)?;
-        report.findings = baseline.diff(&report).new;
+        report.findings = baseline.diff(&report)?.new;
     }
     if let Some(path) = args.write_baseline {
         save_baseline(&path, &report)?;

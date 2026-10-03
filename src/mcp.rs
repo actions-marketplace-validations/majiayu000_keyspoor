@@ -5,16 +5,25 @@
 //! No credential validation, file mutation, or logging to stdout is performed.
 use std::io::{self, BufRead, Write};
 use std::path::{Path, PathBuf};
+use std::sync::{
+    Arc, Mutex,
+    atomic::{AtomicBool, Ordering},
+    mpsc::{self, SyncSender},
+};
+use std::time::{Duration, Instant};
 
 use anyhow::{Context, Result, ensure};
 use serde::Deserialize;
 use serde_json::{Value, json};
 
-use crate::scan::{ScanOptions, scan_paths, scan_reader};
+use crate::scan::{ScanControl, ScanEvent, ScanOptions, scan_buffer, scan_paths_stream};
 use crate::{Engine, ScanReport};
 
 const REQUEST_LIMIT: usize = 8 * 1024 * 1024;
 const PROTOCOL_VERSION: &str = "2025-11-25";
+const RESULT_LIMIT: usize = 100;
+const RESULT_BYTES: usize = 512 * 1024;
+type Output = Arc<Mutex<io::Stdout>>;
 
 /// Serve until stdin closes. Paths resolve relative to the canonical server root.
 /// Traversal does not follow directory symlinks; explicitly requested paths must
@@ -23,25 +32,96 @@ pub fn serve(engine: &Engine, root: &Path, max_bytes: u64) -> Result<()> {
     let root = root.canonicalize().context("cannot resolve MCP root")?;
     ensure!(root.is_dir(), "MCP root must be a directory");
     let stdin = io::stdin();
-    let stdout = io::stdout();
+    let output = Arc::new(Mutex::new(io::stdout()));
     let mut input = stdin.lock();
-    let mut output = stdout.lock();
-    let mut state = State::New;
-    while let Some(frame) = read_frame(&mut input)? {
-        let response = match frame {
-            Some(bytes) => match serde_json::from_slice::<Value>(&bytes) {
-                Ok(request) => dispatch(engine, &root, max_bytes, &mut state, request),
-                Err(_) => Some(error(Value::Null, -32700, "Parse error")),
-            },
-            None => Some(error(Value::Null, -32600, "Request exceeds 8 MiB limit")),
-        };
-        if let Some(response) = response {
-            serde_json::to_writer(&mut output, &response)?;
-            writeln!(output)?;
-            output.flush()?;
+    std::thread::scope(|scope| -> Result<()> {
+        let (jobs, pending) = mpsc::sync_channel::<Job>(1);
+        let worker_output = Arc::clone(&output);
+        let worker_root = &root;
+        let worker = scope.spawn(move || -> Result<()> {
+            for job in pending {
+                let result = execute(engine, worker_root, max_bytes, &job, &worker_output);
+                // The scan has finished. A subsequent request may now be queued.
+                job.done.store(true, Ordering::Release);
+                // MCP cancellation has no final response; the internal scan summary
+                // remains incomplete, and the connection stays available for reuse.
+                if job.cancelled_by_client.load(Ordering::Acquire) {
+                    continue;
+                }
+                let response = match result {
+                    Ok(result) => json!({"jsonrpc":"2.0", "id":job.id, "result":result}),
+                    Err(_) => error(job.id, -32603, "Scan worker failed"),
+                };
+                send(&worker_output, &response)?;
+            }
+            Ok(())
+        });
+        let mut state = State::New;
+        let mut active: Option<Active> = None;
+        let reader_result = (|| -> Result<()> {
+            while let Some(frame) = read_frame(&mut input)? {
+                if active
+                    .as_ref()
+                    .is_some_and(|scan| scan.done.load(Ordering::Acquire))
+                {
+                    active = None;
+                }
+                let response = match frame {
+                    Some(bytes) => match serde_json::from_slice::<Value>(&bytes) {
+                        Ok(request) => dispatch(&mut state, &mut active, &jobs, request),
+                        Err(_) => Some(error(Value::Null, -32700, "Parse error")),
+                    },
+                    None => Some(error(Value::Null, -32600, "Request exceeds 8 MiB limit")),
+                };
+                if let Some(response) = response {
+                    send(&output, &response)?;
+                }
+            }
+            Ok(())
+        })();
+        if reader_result.is_err()
+            && let Some(active) = &active
+        {
+            active.control.cancel();
         }
-    }
+        drop(jobs);
+        let worker_result = worker
+            .join()
+            .map_err(|_| anyhow::anyhow!("MCP scan worker panicked"))?;
+        reader_result?;
+        worker_result
+    })
+}
+
+fn send(output: &Output, message: &Value) -> Result<()> {
+    let mut writer = output
+        .lock()
+        .map_err(|_| anyhow::anyhow!("MCP output lock poisoned"))?;
+    serde_json::to_writer(&mut *writer, message)?;
+    writeln!(writer)?;
+    writer.flush()?;
     Ok(())
+}
+
+struct Active {
+    id: Value,
+    control: ScanControl,
+    done: Arc<AtomicBool>,
+    cancelled_by_client: Arc<AtomicBool>,
+}
+
+struct Job {
+    id: Value,
+    input: ToolInput,
+    progress_token: Option<Value>,
+    control: ScanControl,
+    done: Arc<AtomicBool>,
+    cancelled_by_client: Arc<AtomicBool>,
+}
+
+enum ToolInput {
+    Text(TextArgs),
+    Paths(PathsArgs),
 }
 
 // Read bounded chunks and drain only the oversized frame, never its successor.
@@ -85,10 +165,9 @@ fn error(id: Value, code: i32, message: &str) -> Value {
 }
 
 fn dispatch(
-    engine: &Engine,
-    root: &Path,
-    max_bytes: u64,
     state: &mut State,
+    active: &mut Option<Active>,
+    jobs: &SyncSender<Job>,
     request: Value,
 ) -> Option<Value> {
     let Some(object) = request.as_object() else {
@@ -112,6 +191,14 @@ fn dispatch(
             && params.is_none_or(Value::is_object)
         {
             *state = State::Ready;
+        }
+        if method == "notifications/cancelled"
+            && let (Some(scan), Some(request_id)) =
+                (active.as_ref(), params.and_then(|p| p.get("requestId")))
+            && request_id == &scan.id
+        {
+            scan.cancelled_by_client.store(true, Ordering::Release);
+            scan.control.cancel();
         }
         return None;
     };
@@ -170,15 +257,61 @@ fn dispatch(
             if !arguments.is_object() {
                 return Some(error(id, -32602, "Tool arguments must be an object"));
             }
-            let report = call_tool(engine, root, max_bytes, name, arguments);
-            let is_error = !report.complete || !report.errors.is_empty();
-            match serde_json::to_value(report) {
-                Ok(report) => json!({
-                    "content":[{"type":"text","text":report.to_string()}],
-                    "structuredContent":report,"isError":is_error
-                }),
-                Err(_) => return Some(error(id, -32603, "Cannot serialize scan report")),
+            let input = match name {
+                "scan_text" => serde_json::from_value::<TextArgs>(arguments).map(ToolInput::Text),
+                _ => serde_json::from_value::<PathsArgs>(arguments).map(ToolInput::Paths),
+            };
+            let input = match input {
+                Ok(input) => input,
+                Err(_) => {
+                    return Some(tool_error(
+                        id,
+                        name,
+                        "Arguments do not match the tool input schema",
+                    ));
+                }
+            };
+            if params.get("_meta").is_some_and(|meta| !meta.is_object()) {
+                return Some(error(id, -32602, "Invalid request metadata"));
             }
+            let progress_token = params
+                .get("_meta")
+                .and_then(|meta| meta.get("progressToken"))
+                .cloned();
+            if progress_token
+                .as_ref()
+                .is_some_and(|token| !token.is_string() && !token.is_i64() && !token.is_u64())
+            {
+                return Some(error(id, -32602, "Invalid progress token"));
+            }
+            if active.is_some() {
+                return Some(tool_error(
+                    id,
+                    name,
+                    "A scan is already running; cancel it or wait for its response",
+                ));
+            }
+            let control = ScanControl::default();
+            let done = Arc::new(AtomicBool::new(false));
+            let cancelled_by_client = Arc::new(AtomicBool::new(false));
+            let job = Job {
+                id: id.clone(),
+                input,
+                progress_token,
+                control: control.clone(),
+                done: Arc::clone(&done),
+                cancelled_by_client: Arc::clone(&cancelled_by_client),
+            };
+            if jobs.send(job).is_err() {
+                return Some(error(id, -32603, "Scan worker is unavailable"));
+            }
+            *active = Some(Active {
+                id,
+                control,
+                done,
+                cancelled_by_client,
+            });
+            return None;
         }
         _ => return Some(error(id, -32601, "Method not found")),
     };
@@ -188,10 +321,10 @@ fn dispatch(
 fn tools() -> Value {
     let annotations = json!({"readOnlyHint":true,"destructiveHint":false,"idempotentHint":true,"openWorldHint":false});
     json!({"tools":[
-        {"name":"scan_text", "description":"Scan supplied text offline. Returns a redacted ScanReport; check complete and errors before interpreting no findings as clean.",
+        {"name":"scan_text", "description":"Scan supplied text offline. Returns a redacted report with at most 100 findings/errors and a shared 512 KiB preview budget. Check complete, finding_count, error_count and output_truncated.",
          "inputSchema":{"type":"object","properties":{"text":{"type":"string"},"path":{"type":"string","description":"Logical filename, not read from disk; defaults to stdin"}},"required":["text"],"additionalProperties":false},
          "annotations":annotations},
-        {"name":"scan_paths", "description":"Read files or directories within the configured server root, respecting ignore files. Does not follow directory symlinks. Returns a redacted ScanReport with completeness and errors.",
+        {"name":"scan_paths", "description":"Read files or directories within the configured server root, respecting ignore files. Does not follow directory symlinks. Returns a bounded redacted preview with complete, total counts and output_truncated. Only one scan may run at a time; requests support cancellation and optional progressToken.",
          "inputSchema":{"type":"object","properties":{"paths":{"type":"array","items":{"type":"string"},"minItems":1}},"required":["paths"],"additionalProperties":false},
          "annotations":annotations}
     ]})
@@ -221,55 +354,196 @@ fn failed(tool: &str, message: &str) -> ScanReport {
     report
 }
 
-fn call_tool(
+// Counts describe the whole scan, while these bounded arrays are only a preview.
+#[derive(Default)]
+struct Preview {
+    report: ScanReport,
+    finding_count: u64,
+    error_count: u64,
+    bytes: usize,
+}
+
+impl Preview {
+    fn push(&mut self, event: ScanEvent) -> Result<()> {
+        match event {
+            ScanEvent::Finding(finding) => {
+                self.finding_count += 1;
+                if self.report.findings.len() < RESULT_LIMIT {
+                    let size = serde_json::to_vec(&finding)?.len();
+                    if self.bytes.saturating_add(size) <= RESULT_BYTES {
+                        self.bytes += size;
+                        self.report.findings.push(finding);
+                    }
+                }
+            }
+            ScanEvent::Error(error) => {
+                self.error_count += 1;
+                self.report.complete = false;
+                if self.report.errors.len() < RESULT_LIMIT {
+                    let size = serde_json::to_vec(&error)?.len();
+                    if self.bytes.saturating_add(size) <= RESULT_BYTES {
+                        self.bytes += size;
+                        self.report.errors.push(error);
+                    }
+                }
+            }
+            ScanEvent::Progress(stats) => self.report.stats = stats,
+        }
+        Ok(())
+    }
+
+    fn from_report(mut report: ScanReport) -> Result<Self> {
+        let mut preview = Self::default();
+        for finding in std::mem::take(&mut report.findings) {
+            preview.push(ScanEvent::Finding(finding))?;
+        }
+        for error in std::mem::take(&mut report.errors) {
+            preview.push(ScanEvent::Error(error))?;
+        }
+        preview.report.complete = report.complete;
+        preview.report.stats = report.stats;
+        preview.report.context = report.context;
+        Ok(preview)
+    }
+
+    fn result(self) -> Result<Value> {
+        let is_error = !self.report.complete || self.error_count > 0;
+        let truncated = self.finding_count > self.report.findings.len() as u64
+            || self.error_count > self.report.errors.len() as u64;
+        let mut report = serde_json::to_value(self.report)?;
+        report["finding_count"] = json!(self.finding_count);
+        report["error_count"] = json!(self.error_count);
+        report["output_truncated"] = json!(truncated);
+        Ok(
+            json!({"content":[{"type":"text","text":report.to_string()}],
+            "structuredContent":report,"isError":is_error}),
+        )
+    }
+}
+
+fn tool_error(id: Value, tool: &str, message: &str) -> Value {
+    match Preview::from_report(failed(tool, message)).and_then(Preview::result) {
+        Ok(result) => json!({"jsonrpc":"2.0", "id":id, "result":result}),
+        Err(_) => error(id, -32603, "Cannot serialize scan report"),
+    }
+}
+
+fn progress(output: &Output, token: &Value, files: u64) -> Result<()> {
+    send(
+        output,
+        &json!({"jsonrpc":"2.0","method":"notifications/progress",
+        "params":{"progressToken":token,"progress":files,"message":"Scanning local inputs"}}),
+    )
+}
+
+fn execute(
     engine: &Engine,
     root: &Path,
     max_bytes: u64,
-    name: &str,
-    arguments: Value,
-) -> ScanReport {
-    if name == "scan_text" {
-        let Ok(args) = serde_json::from_value::<TextArgs>(arguments) else {
-            return failed(name, "Expected text string and optional path string");
-        };
-        return scan_reader(engine, &args.path, args.text.as_bytes(), max_bytes);
+    job: &Job,
+    output: &Output,
+) -> Result<Value> {
+    if !job.control.is_cancelled()
+        && let Some(token) = &job.progress_token
+    {
+        progress(output, token, 0)?;
     }
-    let Ok(args) = serde_json::from_value::<PathsArgs>(arguments) else {
-        return failed(name, "Expected a nonempty array of path strings");
-    };
-    if args.paths.is_empty() {
-        return failed(name, "At least one path is required");
-    }
-    let mut paths = Vec::with_capacity(args.paths.len());
-    for path in args.paths {
-        let candidate = if path.is_absolute() {
-            path
-        } else {
-            root.join(path)
-        };
-        let Ok(canonical) = candidate.canonicalize() else {
-            return failed(
-                name,
-                "A requested path cannot be resolved; no paths were scanned",
-            );
-        };
-        if !canonical.starts_with(root) {
-            return failed(
-                name,
-                "A requested path is outside the server root; no paths were scanned",
-            );
+    let mut reported_files = 0;
+    let mut preview = match &job.input {
+        ToolInput::Text(args) => {
+            let report = if job.control.is_cancelled() {
+                failed("scan_text", "Scan cancelled")
+            } else {
+                scan_buffer(engine, &args.path, args.text.as_bytes(), max_bytes)
+            };
+            Preview::from_report(report)?
         }
-        paths.push(canonical);
-    }
-    let options = ScanOptions {
-        max_bytes,
-        ..Default::default()
+        ToolInput::Paths(args) => {
+            if args.paths.is_empty() {
+                return Preview::from_report(failed(
+                    "scan_paths",
+                    "At least one path is required",
+                ))?
+                .result();
+            }
+            let mut paths = Vec::with_capacity(args.paths.len());
+            for path in &args.paths {
+                if job.control.is_cancelled() {
+                    return Preview::from_report(failed("scan_paths", "Scan cancelled"))?.result();
+                }
+                let candidate = if path.is_absolute() {
+                    path.clone()
+                } else {
+                    root.join(path)
+                };
+                let Ok(canonical) = candidate.canonicalize() else {
+                    return Preview::from_report(failed(
+                        "scan_paths",
+                        "A requested path cannot be resolved; no paths were scanned",
+                    ))?
+                    .result();
+                };
+                if !canonical.starts_with(root) {
+                    return Preview::from_report(failed(
+                        "scan_paths",
+                        "A requested path is outside the server root; no paths were scanned",
+                    ))?
+                    .result();
+                }
+                paths.push(canonical);
+            }
+            let options = ScanOptions {
+                max_bytes,
+                ..Default::default()
+            };
+            let mut preview = Preview::default();
+            let mut last_progress = Instant::now();
+            let summary = scan_paths_stream(engine, &paths, &options, &job.control, &mut |event| {
+                if let ScanEvent::Progress(stats) = &event
+                    && !job.control.is_cancelled()
+                    && stats.files > reported_files
+                    && last_progress.elapsed() >= Duration::from_millis(100)
+                {
+                    if let Some(token) = &job.progress_token {
+                        progress(output, token, stats.files)?;
+                    }
+                    reported_files = stats.files;
+                    last_progress = Instant::now();
+                }
+                preview.push(event)
+            });
+            match summary {
+                Ok(summary) => {
+                    preview.report.complete = summary.complete;
+                    preview.report.stats = summary.stats;
+                    preview.report.context = summary.context;
+                    preview.finding_count = summary.finding_count;
+                    preview.error_count = summary.error_count;
+                }
+                Err(_) => {
+                    preview.push(ScanEvent::Error(crate::ScanError {
+                        path: "scan_paths".into(),
+                        message: "Filesystem scan failed; inputs were not fully scanned".into(),
+                    }))?;
+                }
+            }
+            preview
+        }
     };
-    match scan_paths(engine, &paths, &options) {
-        Ok(report) => report,
-        Err(_) => failed(
-            name,
-            "Filesystem scan failed; inputs were not fully scanned",
-        ),
+    if job.control.is_cancelled() {
+        preview.report.complete = false;
+        if preview.error_count == 0 {
+            preview.push(ScanEvent::Error(crate::ScanError {
+                path: "scan".into(),
+                message: "Scan cancelled".into(),
+            }))?;
+        }
     }
+    if !job.control.is_cancelled()
+        && preview.report.stats.files > reported_files
+        && let Some(token) = &job.progress_token
+    {
+        progress(output, token, preview.report.stats.files)?;
+    }
+    preview.result()
 }

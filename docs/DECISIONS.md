@@ -43,3 +43,27 @@ engine is intrinsically faster. Changes informed by the labelled suite make
 subsequent scores regression results, not an independent holdout evaluation.
 Known limitations and all 60 research candidates are mapped in
 [FEATURES.md](FEATURES.md); an implemented entry only means its stated subset.
+
+## Scope safety and streaming update
+
+The implementation keeps the existing `Engine` and collecting APIs, with a
+small `ScanContext` value and synchronous event sink. Baselines compare scope
+and effective detection/selection policy before suppressing or resolving any
+finding. This rejects intentional policy changes rather than inventing an
+implicit migration or treating a smaller scan as a clean full scan.
+
+Filesystem acquisition uses standard-library scoped workers and bounded queues;
+MCP uses one scan worker and a separate protocol reader. An async runtime,
+persistent task service, pagination store and per-rule cancellation machinery
+were not needed for the current requirement. File-level buffering and Git
+metadata remain explicit limits. Cancellation is cooperative, and sink failures
+retain the error contract. Baseline-filtered JSONL collects first because its
+ignore-policy identity is only final after traversal.
+
+Rule capture and allowlist semantics are adapted from the pinned Gitleaks source;
+only its path-only PKCS12 rule remains excluded. Schema changes are intentional
+breaking changes, with no legacy rule/baseline conversion layer. Quality checks
+now distinguish uncertain localization from false positives and freeze an
+independently generated synthetic holdout before scoring. These decisions are
+validated with context mismatch, source identity, flow-control, protocol and
+location tests, plus whole-version stress and cross-tool measurements.

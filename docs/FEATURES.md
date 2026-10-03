@@ -2,26 +2,26 @@
 
 核查日期：2026-10-03。本文依据当前源码、已有测试文件、竞品官方研究和本机安装 manifest；不是“60 项全部完成”的声明，也不依据规则条数推导准确率。
 
-本项目的扫描调度、规则编译组织、候选筛选、匹配过滤、坐标映射、指纹、Git 获取、归档和接口由本仓库实现。底层使用通用 `regex`、`aho-corasick`、`rayon`、`zip`、`tar`、`flate2` 等库，**没有依赖或调用其他 secrets scanner SDK**。规则数据包含固定 Gitleaks v8.30.1 的 217 条 MIT 规则、本仓库 3 条通用赋值规则及 1 条 URI userinfo 密码规则，默认共 221 条。第三方规则与自研运行时的边界见 [RULE_SOURCES.md](RULE_SOURCES.md)。这不是从零编写正则引擎，也不是全部规则原创。
+本项目的扫描调度、规则编译组织、候选筛选、匹配过滤、坐标映射、指纹、Git 获取、归档和接口由本仓库实现。底层使用通用 `regex`、`aho-corasick`、`zip`、`tar`、`flate2` 等库，**没有依赖或调用其他 secrets scanner SDK**。规则数据包含固定 Gitleaks v8.30.1 的 221 条 MIT 规则、本仓库 3 条通用赋值规则及 1 条 URI userinfo 密码规则，默认共 225 条。第三方规则与自研运行时的边界见 [RULE_SOURCES.md](RULE_SOURCES.md)。这不是从零编写正则引擎，也不是全部规则原创。
 
 ## 当前公开能力
 
 | 入口 | 已实现范围 | 主要边界与证据 |
 | --- | --- | --- |
 | Rust `Engine::new` / `scan_bytes` | 编译后复用；线程安全字节扫描；关键词预筛；provider 正则、通用赋值、熵、占位符及规则 allowlist | 正则与启发式，不是 AST/数据流或自研 SIMD 引擎；[engine.rs](../src/engine.rs)、[rules.rs](../src/rules.rs) |
-| 自定义规则 | JSON 文件或规则目录；捕获组、关键词、置信度、熵、路径包含/排除、secret 值 allowlist | 不兼容全部 Gitleaks/Kingfisher 格式；没有复合近邻、checksum、验证器插件；[rules.rs](../src/rules.rs) |
+| 自定义规则 | JSON 文件或规则目录；捕获组、关键词、置信度、熵、路径包含/排除、secret/match/line allowlist、AND/OR、stopwords | 不兼容全部 Gitleaks/Kingfisher 格式；没有复合近邻、checksum、验证器插件；[rules.rs](../src/rules.rs) |
 | 通用赋值与 URI 密码 | quoted/unquoted 赋值；赋值后最多一个换行的相邻 quoted literal；postgres/postgresql/mysql/http/https/redis/rediss URI 中非空密码 | 不跨空行或常量拼接；URI 保留 percent-encoded 密码原始字节位置，不进行连接/验证；[rules.rs](../src/rules.rs) |
-| `scan` / stdin | 路径遍历、有界单文件读取、可配置线程数、ignore 控制、确定性排序 | 非整次扫描内存上界；所有路径和结果仍收集到内存；[scan.rs](../src/scan.rs) |
+| `scan` / stdin | 路径遍历、有界单文件读取、可配置线程数、ignore 控制、收集接口确定性排序、JSONL 事件流 | 有界文件队列；每个 worker 仍持有一个文件及其 findings；[scan.rs](../src/scan.rs) |
 | 编码 | BOM 标记 UTF-16 LE/BE 与原始位置映射；仅按 finding 边界保留回映信息；可选单层标准/URL-safe Base64 | Base64 不是递归解码；无 hex/URL 编码/UTF-32/无 BOM 字符集自动推断；[engine.rs](../src/engine.rs) |
 | 归档 | ZIP/tar/gzip，最多四层；累计解压量限制；不落盘、不执行、不跟随 tar 链接；成员来源和成员字节坐标 | 文件/stdin/staged/history 共用解包入口；Git 历史保留 `git:commit:path!member` 来源。无 PDF 文本/OCR、SQLite 行、pyc 常量或 OCI 层解析；[archive.rs](../src/archive.rs)、[archive 测试](../tests/archive.rs) |
 | `staged` | 读取 changed staged 文件的完整 index 内容，不误读 worktree | 不是仅新增行模式；不读取子模块内容；[scan.rs](../src/scan.rs)、[scan 测试](../tests/scan.rs) |
 | `history` | 本地可达 refs；每 blob 读取一次；每 blob/精确路径检测一次；投射所有 commit/path 出现位置 | 不拉取远程、LFS 或子模块；不发现 GitHub 删除/隐藏对象；没有跨运行缓存；[scan.rs](../src/scan.rs) |
-| `--baseline` / `--write-baseline` | 指纹差分、保留已有人工标签、完整扫描才可写基线；不完整扫描不推断 resolved | CLI 仅输出新增；库可返回 resolved；没有交互审计器、统计调参 UI、自动修复；[baseline.rs](../src/baseline.rs) |
+| `--baseline` / `--write-baseline` | 指纹差分、保留已有人工标签、完整扫描才可写基线；schema 2 绑定范围、ignore 和检测配置；不完整扫描不推断 resolved | CLI 仅输出新增；库可返回 resolved；没有交互审计器、统计调参 UI、自动修复；[baseline.rs](../src/baseline.rs) |
 | JSON / JSONL / SARIF | finding 默认脱敏、规则/位置/解释/置信度/指纹；完整性、错误与统计；退出码 0/1/2 分离 | 无原始秘密或代码片段回显；普通指纹不是低熵值保密机制，可选私有 key 的 BLAKE3；[report.rs](../src/report.rs)、[lib.rs](../src/lib.rs) |
 | `serve` | 常驻 JSONL 请求/响应；复用规则；单请求 8 MiB 限制 | 串行执行；无取消、进度、任务持久化、HTTP 服务；[main.rs](../src/main.rs) |
-| `mcp --root ...` | stdio MCP 握手、tools/list、scan_text、scan_paths；JSON Schema、只读提示、structuredContent、目录边界 | 不是 LSP 或完整 Agent 平台；路径限制不是对并发文件变更的 OS 沙箱；无验证/撤销工具；[mcp.rs](../src/mcp.rs) |
+| `mcp --root ...` | stdio MCP 握手、tools/list、scan_text、scan_paths；JSON Schema、只读提示、structuredContent、目录边界、进度及取消、限额预览 | 不是 LSP 或完整 Agent 平台；路径限制不是对并发文件变更的 OS 沙箱；无验证/撤销工具；[mcp.rs](../src/mcp.rs) |
 
-源码存在和已有测试不等于所有环境均通过。实际测试与 benchmark 结论以本次执行记录为准；本文件编写期间没有重新编译或运行测试。
+源码存在和已有测试不等于所有环境均通过。实际测试与 benchmark 结论以本次执行记录为准；新一轮执行记录见 [RESULTS.md](RESULTS.md)。
 
 ## 原 60 项候选的实现状态
 
@@ -36,19 +36,19 @@
 | P01 | 规则编译一次、多次 bytes 扫描 | 实现 | `Engine` 可反复复用，不需子进程。 |
 | P02 | 多模式前缀/关键词预筛 | 实现 | Aho–Corasick 关键词候选规则分发；无关键词规则始终执行。 |
 | P03 | SIMD 候选 + 局部精确捕获 | 未实现 | 候选规则仍在全内容运行 regex；无本项目 SIMD 多规则候选窗口引擎。 |
-| P04 | 有界并行、反压、缓冲复用 | 部分 | 线程数和单文件/归档字节有界；无有界队列反压/worker scratch，路径及结果全量收集。 |
+| P04 | 有界并行、反压、缓冲复用 | 部分 | 固定 workers、有界文件/结果队列、sink 反压；尚无 worker scratch 复用，单文件 findings 仍收集。 |
 | P05 | Git 对象去重并保留位置 | 实现 | blob 只读取一次；为路径规则正确性按 blob/path 检测；保留 commit/path occurrence。 |
 | P06 | 内容 + 规则配置身份缓存 | 未实现 | 无跨运行扫描缓存。 |
 | P07 | 读取与检测流水线 | 部分 | 不同文件的 worker 可重叠读取/检测；单文件先完整读入，无分块流水线。 |
 | P08 | 检测/验证独立并发、请求去重 | 未实现 | 没有网络验证阶段。 |
-| P09 | 常驻进程 | 实现 | JSONL `serve` 和 stdio MCP 复用 Engine；均串行请求。 |
+| P09 | 常驻进程 | 实现 | JSONL `serve` 和 stdio MCP 复用 Engine；每个接口均单扫描；MCP 读协议线程可处理 ping/取消。 |
 | P10 | GPU 后端与一致性 | 未实现 | 无 GPU 后端。 |
 
 ### D：检测与准确率
 
 | ID | 原候选 | 状态 | 实际边界 |
 | --- | --- | --- | --- |
-| D01 | Provider 格式 | 实现 | 217 条导入规则是格式规则数，不是 217 个 provider 或 validator。 |
+| D01 | Provider 格式 | 实现 | 221 条导入规则是格式规则数，不是 221 个 provider 或 validator。 |
 | D02 | 通用赋值 | 实现 | 3 条独立引号/无引号规则，支持赋值后一个换行的相邻 quoted literal；不跨空行，不承诺所有语法。 |
 | D03 | 候选 entropy | 实现 | Shannon 字节熵，按规则阈值或全局覆盖。 |
 | D04 | BPE 稀有度 | 未实现 | 无 tokenizer/BPE 模型。 |
@@ -69,7 +69,7 @@
 | --- | --- | --- | --- |
 | S01 | Bytes/string/stdin | 实现 | Rust 字节 API、`str.as_bytes()`、CLI stdin、JSONL/MCP text。 |
 | S02 | 文件树与 ignore | 实现 | 文件/目录、ignore/gitignore 控制；`.git` 固定排除。 |
-| S03 | Staged/patch/commit range | 部分 | staged index 完整文件；无独立 patch 输入及任意 commit-range API。 |
+| S03 | Staged/patch/commit range | 部分 | staged index 完整文件；支持完整快照 commit range；无独立 patch/仅变更行输入。 |
 | S04 | Git 历史/refs | 实现 | 本地可达 refs；不等于托管平台隐藏/删除 commit 全覆盖。 |
 | S05 | 托管平台枚举 | 未实现 | 无 GitHub/GitLab/org/user 枚举。 |
 | S06 | Issue/PR/log 等外围资产 | 未实现 | 无平台连接器。 |
@@ -85,15 +85,15 @@
 | ID | 原候选 | 状态 | 实际边界 |
 | --- | --- | --- | --- |
 | A01 | Rust SDK | 实现 | 当前 crate 公共 API；并非已发布稳定版本承诺。 |
-| A02 | JSON/JSONL | 实现 | 版本化 ScanReport；JSONL finding + summary。 |
+| A02 | JSON/JSONL | 实现 | 版本化 ScanReport；JSONL finding/error/progress + summary。 |
 | A03 | 默认遮盖 | 实现 | 结果无 raw secret、捕获值或源代码片段；保留调用方路径/ID。 |
 | A04 | Secret ID 与 occurrence 分离 | 部分 | 有稳定指纹、多个位置和基线代表记录；指纹含路径，不是跨路径统一 secret 实体模型。 |
 | A05 | 确定性排序、指纹语义 | 实现 | 规则/路径/值指纹，行移位不变；路径或规则变化会变；可选 keyed BLAKE3。 |
 | A06 | 精确位置与转换 map | 部分 | 原始字节/UTF-16 回映/归档成员坐标；Base64 指向整个编码段，没有内部字符映射。 |
 | A07 | 命中、错误、未完成区分 | 实现 | complete/errors/exit 0、1、2；失败不伪装 clean。 |
 | A08 | 规则原因、confidence、风险分离 | 部分 | 规则说明、静态 confidence、not live-validated；无风险评分/权限评估，confidence 不是实测概率。 |
-| A09 | 摘要、数量与按需详情 | 部分 | JSONL summary 有数量和统计；没有摘要查询、分页或详情 ID 获取接口。 |
-| A10 | 取消、超时、部分结果 | 部分 | 部分错误和限额保留已收集结果；无取消 token、总超时或进度协议。 |
+| A09 | 摘要、数量与按需详情 | 部分 | JSONL summary 有数量和统计；MCP 有总数、截断标志、100 findings/100 errors/512 KiB 预览；无分页详情接口。 |
+| A10 | 取消、超时、部分结果 | 部分 | 边界协作取消、MCP progress/cancel；单次正则不可中断，无总超时。 |
 | A11 | SARIF/CI | 实现 | SARIF 导出及非交互退出码可接 CI；不代表已发布 GitHub Action。 |
 | A12 | MCP | 实现 | 最小只读 stdio MCP，两工具；不是所有 MCP 可选能力实现。 |
 | A13 | Agent hooks | 部分 | CLI staged 可被外部 hook 调用；没有专用 Agent hook 安装/策略集成。 |

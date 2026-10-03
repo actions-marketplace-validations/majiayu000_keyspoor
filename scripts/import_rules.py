@@ -16,10 +16,6 @@ LICENSE_SHA256 = "e3884b252b3bfc045e55be43a34d1e80da070bc6f804ac95bf4660e97d62eb
 BASE = f"https://raw.githubusercontent.com/gitleaks/gitleaks/{COMMIT}/"
 ROOT = Path(__file__).resolve().parents[1]
 EXCLUDED = {
-    "atlassian-api-token": "alternative branches require first-nonempty capture selection; current schema uses one fixed capture",
-    "curl-auth-header": "alternative branches require first-nonempty capture selection; current schema uses one fixed capture",
-    "generic-api-key": "allowlists target full match and line, plus AND-combined path/line constraints; secret-only OR allowlist cannot preserve them",
-    "kubernetes-secret-yaml": "allowlist targets full match and alternatives require first-nonempty capture selection",
     "pkcs12-file": "path-only rule has no content regex; current findings require a byte span",
 }
 
@@ -61,39 +57,30 @@ def rust_pattern(pattern: str) -> str:
     return "".join(out)
 
 
-def capture_count(pattern: str) -> int:
-    count, index, in_class = 0, 0, False
-    while index < len(pattern):
-        char = pattern[index]
-        if char == "\\":
-            index += 2
-            continue
-        if char == "[":
-            in_class = True
-        elif char == "]":
-            in_class = False
-        elif not in_class and char == "(" and pattern[index + 1:index + 2] != "?":
-            count += 1
-        index += 1
-    return count
-
-
-def allowlist(config: dict) -> tuple[list[str], list[str]]:
+def allowlist(config: dict) -> dict:
     supported = {"description", "condition", "regexTarget", "regexes", "stopwords", "paths"}
     if set(config) - supported:
         raise ValueError(f"unsupported allowlist fields: {set(config) - supported}")
-    if config.get("condition", "OR").upper() not in {"", "OR", "||"}:
-        raise ValueError("non-OR allowlist")
-    if config.get("regexTarget", "secret") not in {"", "secret"}:
-        raise ValueError("allowlist must target secret")
-    expressions = [rust_pattern(pattern) for pattern in config.get("regexes", [])]
-    # Gitleaks stopwords are case-insensitive substrings of the captured secret.
-    expressions += ["(?i:" + re.escape(word) + ")" for word in config.get("stopwords", [])]
-    return expressions, [rust_pattern(pattern) for pattern in config.get("paths", [])]
+    condition = config.get("condition", "OR").upper()
+    if condition in {"", "OR", "||"}:
+        condition = "or"
+    elif condition in {"AND", "&&"}:
+        condition = "and"
+    else:
+        raise ValueError(f"unsupported allowlist condition: {condition}")
+    target = config.get("regexTarget") or "secret"
+    if target not in {"secret", "match", "line"}:
+        raise ValueError(f"unsupported allowlist target: {target}")
+    # Keep groups and targets intact. Stopwords always inspect the captured
+    # secret, even when the group's regex target is the match or source line.
+    return {"condition": condition, "target": target,
+            "regexes": [rust_pattern(pattern) for pattern in config.get("regexes", [])],
+            "paths": [rust_pattern(pattern) for pattern in config.get("paths", [])],
+            "stopwords": config.get("stopwords", [])}
 
 
 def convert(config: dict) -> dict:
-    global_allow, global_paths = allowlist(config["allowlist"])
+    global_allow = allowlist(config["allowlist"])
     rules = []
     observed_exclusions = set()
     supported = {"id", "description", "regex", "keywords", "entropy", "allowlists", "path", "secretGroup"}
@@ -104,18 +91,16 @@ def convert(config: dict) -> dict:
             continue
         if set(upstream) - supported:
             raise ValueError(f"{identity}: unsupported fields {set(upstream) - supported}")
-        expressions, paths = list(global_allow), list(global_paths)
-        for item in upstream.get("allowlists", []):
-            local_allow, local_paths = allowlist(item)
-            expressions.extend(local_allow)
-            paths.extend(local_paths)
-        group = upstream.get("secretGroup", 1 if capture_count(upstream["regex"]) else 0)
+        groups = [global_allow] + [allowlist(item) for item in upstream.get("allowlists", [])]
+        # Gitleaks omitted/zero secretGroup selects the first nonempty capture;
+        # our null represents that behavior (our explicit zero means whole match).
+        group = upstream.get("secretGroup") or None
         rules.append({"id": identity, "name": upstream["description"],
                       "pattern": rust_pattern(upstream["regex"]), "secret_group": group,
                       "keywords": upstream.get("keywords", []),
                       "min_entropy": upstream.get("entropy", 0),
                       "confidence": "medium", "path": rust_pattern(upstream["path"]) if "path" in upstream else None,
-                      "allowlist": expressions, "exclude_paths": paths})
+                      "allowlist": groups, "exclude_paths": []})
     if observed_exclusions != set(EXCLUDED):
         raise ValueError("pinned exclusion inventory changed")
     return {"rules": rules}

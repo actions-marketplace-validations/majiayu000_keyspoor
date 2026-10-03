@@ -8,8 +8,15 @@ from pathlib import Path
 def merge(paths):
     rows, metadata, artifacts = {}, {}, []
     launched_tools = set()
+    corpus_hashes, corpus_roles = set(), set()
     for path in paths:
         artifact = json.loads(path.read_text())
+        if artifact.get('schema_version')!=2 or artifact.get('method',{}).get('scoring_version')!=2:
+            raise ValueError('only schema/scoring v2 artifacts can be merged; preserve v1 results separately')
+        corpus_hashes.add(artifact['corpus_manifest_sha256'])
+        corpus_roles.add(artifact['method']['corpus_role'])
+        if len(corpus_hashes)>1 or len(corpus_roles)>1:
+            raise ValueError('different corpora or evaluation roles cannot be merged into one score table')
         tools = {t['id']:t for t in artifact['tools']}
         artifacts.append({'path':str(path),'timestamp_utc':artifact['timestamp_utc'],'runner_sha256':artifact.get('runner_sha256'),'method':artifact['method']})
         for row in artifact['results']:
@@ -27,14 +34,20 @@ def merge(paths):
     for key in list(rows):
         if key[1] is None and any(k[0]==key[0] and k[1] is not None for k in rows):
             del rows[key]
-    return {'schema_version':1,'executed_tool_count':len(launched_tools),'executed_tools':sorted(launched_tools),'corpus_limitations':['Three AWS-labelled synthetic candidates contain 9 in their suffix, outside the imported Gitleaks AWS-specific [A-Z2-7] format. They remain broad configuration-candidate labels, not valid or active AWS credentials. Labels were not removed after observing results; precision/recall is candidate-label performance, not real AWS credential recall.'],'interpretation':'Development-informed synthetic regression results, not an independent holdout. Real-source results have no accuracy labels. Default rule sets differ; input throughput alone is not an efficiency or accuracy ranking.','artifacts':artifacts,'tools':list(metadata.values()),'results':list(rows.values())}
+    corpus_role = next(iter(corpus_roles))
+    interpretation = ('Declared frozen synthetic holdout.' if corpus_role=='holdout' else 'Development-informed synthetic regression/diagnostic results, not an independent holdout.')
+    return {'schema_version':2,'scoring_version':2,'corpus_manifest_sha256':next(iter(corpus_hashes)),
+            'corpus_role':corpus_role,'executed_tool_count':len(launched_tools),'executed_tools':sorted(launched_tools),
+            'interpretation':interpretation+' Precision is conditional on localized unique findings; recall is a confirmed-location lower bound. Unlocalized outputs are separate from false positives and duplicates. Real-source results have no accuracy labels. Default rule sets differ; input throughput alone is not an efficiency or accuracy ranking.',
+            'artifacts':artifacts,'tools':list(metadata.values()),'results':list(rows.values())}
+
 
 
 def markdown(data):
     rows = {(r['tool'],r.get('dataset')):r for r in data['results']}
     lines = ['# Final measured comparison','',data['interpretation'],'',*data.get('corpus_limitations',[]),'',
-             '| Tool | Quality TP / FP / FN | 16 MiB, ms (TP/labels) | 128 MiB, ms (TP/labels) | Real source, ms | Real peak RSS, MiB | Quality status |',
-             '|---|---|---:|---:|---:|---:|---|']
+             '| Tool | Quality TP / FP / FN | Unlocalized | 16 MiB, ms (TP/labels) | 128 MiB, ms (TP/labels) | Real source, ms | Real peak RSS, MiB | Quality status |',
+             '|---|---|---:|---:|---:|---:|---:|---|']
     def duration(tool,dataset):
         row = rows.get((tool,dataset),{})
         if row.get('status')!='ok': return row.get('status','—')
@@ -52,7 +65,7 @@ def markdown(data):
         status=qrow.get('status',fallback.get('status','not measured'))
         real = rows.get((name,'real-regex'),{})
         rss = real.get('summary',{}).get('max_peak_rss_bytes')
-        lines.append('| '+' | '.join([name,quality,duration(name,'throughput-16mib'),duration(name,'throughput-128mib'),duration(name,'real-regex'),f'{rss/1048576:.1f}' if rss is not None else '—',status])+' |')
+        lines.append('| '+' | '.join([name,quality,str(q.get('unlocalized','—')) if q else '—',duration(name,'throughput-16mib'),duration(name,'throughput-128mib'),duration(name,'real-regex'),f'{rss/1048576:.1f}' if rss is not None else '—',status])+' |')
     lines += ['', 'Measured capability probes use default commands; a miss does not prove that no optional mode supports the feature. “Unsupported” means this harness has no confirmed command adapter for that input mode.', '',
               '| Tool | Boundary/encoding probes | ZIP / TAR member location | History target found | Index target found |', '|---|---|---|---|---|']
     for tool in data['tools']:
@@ -76,7 +89,10 @@ def main():
     parser.add_argument('artifacts',nargs='+',type=Path)
     parser.add_argument('--output',type=Path,required=True)
     args=parser.parse_args()
+    if args.output.exists() or args.output.with_suffix('.md').exists():
+        parser.error('output already exists; choose a new artifact path to preserve previous results')
     data=merge(args.artifacts)
+    args.output.parent.mkdir(parents=True,exist_ok=True)
     args.output.write_text(json.dumps(data,indent=2)+'\n')
     args.output.with_suffix('.md').write_text(markdown(data))
     print('merged',len(data['tools']),'tools;',len(data['results']),'rows')

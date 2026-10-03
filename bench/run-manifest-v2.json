@@ -1,0 +1,920 @@
+{
+  "schema_version": 1,
+  "tools": [
+    {
+      "id": "secret-scan",
+      "status": "available",
+      "version": "0.1.0",
+      "source_url": "local independent implementation",
+      "commit_or_digest": "ee95993e022bc78a4919e3770848866d52f7fc74e194ae0dbab74f0b31cd1cdc",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+      "offline": true,
+      "parser": "secret_scan",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+          "scan",
+          "{input}",
+          "--format",
+          "json"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+          "history",
+          "{input}",
+          "--format",
+          "json"
+        ],
+        "staged": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+          "staged",
+          "{input}",
+          "--format",
+          "json"
+        ]
+      },
+      "notes": "Independent Rust release frozen before first v2 holdout evaluation; scoring version 2."
+    },
+    {
+      "id": "gitleaks",
+      "status": "available",
+      "version": "v8.30.1",
+      "source_url": "https://github.com/gitleaks/gitleaks",
+      "asset_url": "https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_darwin_arm64.tar.gz",
+      "commit_or_digest": "sha256:b40ab0ae55c505963e365f271a8d3846efbc170aa17f2607f13df610a9aeb6a5",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/gitleaks",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/gitleaks",
+          "dir",
+          "{input}",
+          "--report-format",
+          "json",
+          "--report-path",
+          "{output}",
+          "--redact",
+          "--no-banner"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/gitleaks",
+          "git",
+          "{input}",
+          "--report-format",
+          "json",
+          "--report-path",
+          "{output}",
+          "--redact",
+          "--no-banner"
+        ],
+        "staged": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/gitleaks",
+          "git",
+          "{input}",
+          "--staged",
+          "--report-format",
+          "json",
+          "--report-path",
+          "{output}",
+          "--redact",
+          "--no-banner"
+        ]
+      },
+      "parser": "gitleaks",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/gitleaks",
+        "version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "8.30.1"
+    },
+    {
+      "id": "trufflehog",
+      "status": "available",
+      "version": "v3.97.9",
+      "source_url": "https://github.com/trufflesecurity/trufflehog",
+      "asset_url": "https://github.com/trufflesecurity/trufflehog/releases/download/v3.97.9/trufflehog_3.97.9_darwin_arm64.tar.gz",
+      "commit_or_digest": "sha256:3d25c178fe1a2563687b22547adcaebcf08cc8a607315c6741fe396c597951f7",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/trufflehog",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/trufflehog",
+          "filesystem",
+          "{input}",
+          "--no-verification",
+          "--no-update",
+          "--json",
+          "--fail-on-scan-errors"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/trufflehog",
+          "git",
+          "file://{input}",
+          "--no-verification",
+          "--no-update",
+          "--json",
+          "--fail-on-scan-errors"
+        ]
+      },
+      "parser": "trufflehog",
+      "accepted_exit_codes": [
+        0
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/trufflehog",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "trufflehog 3.97.9"
+    },
+    {
+      "id": "kingfisher",
+      "status": "available",
+      "version": "v2.9.1",
+      "source_url": "https://github.com/mongodb/kingfisher",
+      "asset_url": "https://github.com/mongodb/kingfisher/releases/download/v2.9.1/kingfisher-darwin-arm64.tgz",
+      "commit_or_digest": "sha256:0218b6fc1560cffa9a7e04b74a1e17371ef3fa6c78f0bd1d586f5d2893d84cff",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/kingfisher",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/kingfisher",
+          "scan",
+          "{input}",
+          "--no-validate",
+          "--no-update-check",
+          "--git-history",
+          "none",
+          "--format",
+          "sarif",
+          "--output",
+          "{output}",
+          "--quiet",
+          "--no-dedup"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/kingfisher",
+          "scan",
+          "{input}",
+          "--no-validate",
+          "--no-update-check",
+          "--git-history",
+          "full",
+          "--format",
+          "sarif",
+          "--output",
+          "{output}",
+          "--quiet",
+          "--no-dedup"
+        ],
+        "staged": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/kingfisher",
+          "scan",
+          "{input}",
+          "--no-validate",
+          "--no-update-check",
+          "--git-history",
+          "none",
+          "--format",
+          "sarif",
+          "--output",
+          "{output}",
+          "--quiet",
+          "--staged",
+          "--no-dedup"
+        ]
+      },
+      "parser": "sarif",
+      "accepted_exit_codes": [
+        0,
+        200
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/kingfisher",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "kingfisher 2.9.1",
+      "exit_code_evidence": "https://github.com/mongodb/kingfisher/blob/v2.9.1/src/main.rs#L1369",
+      "notes": "--no-dedup preserves all occurrences for occurrence-level ground-truth comparison; default dedup may choose nondeterministic representative locations."
+    },
+    {
+      "id": "betterleaks",
+      "status": "available",
+      "version": "v1.9.0",
+      "source_url": "https://github.com/betterleaks/betterleaks",
+      "asset_url": "https://github.com/betterleaks/betterleaks/releases/download/v1.9.0/betterleaks_1.9.0_darwin_arm64.tar.gz",
+      "commit_or_digest": "sha256:83dd7eaab13d44a1e8e347a17064cdef153a1478db473276d41b38d55613d3f2",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/betterleaks",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/betterleaks",
+          "dir",
+          "{input}",
+          "--report-format",
+          "json",
+          "--report-path",
+          "{output}",
+          "--redact",
+          "--no-banner"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/betterleaks",
+          "git",
+          "{input}",
+          "--report-format",
+          "json",
+          "--report-path",
+          "{output}",
+          "--redact",
+          "--no-banner"
+        ],
+        "staged": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/betterleaks",
+          "git",
+          "{input}",
+          "--staged",
+          "--report-format",
+          "json",
+          "--report-path",
+          "{output}",
+          "--redact",
+          "--no-banner"
+        ]
+      },
+      "parser": "gitleaks",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/betterleaks",
+        "version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "1.9.0"
+    },
+    {
+      "id": "titus",
+      "status": "available",
+      "version": "v1.2.10",
+      "source_url": "https://github.com/praetorian-inc/titus",
+      "asset_url": "https://github.com/praetorian-inc/titus/releases/download/v1.2.10/titus-darwin-arm64",
+      "commit_or_digest": "sha256:1501333f62becae4d4f9cbbe6edeaade4e77e4a7c74a1b6616c9fe6ae5b419ec",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/titus",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/titus",
+          "scan",
+          "{input}",
+          "--accessibility",
+          "private",
+          "--format",
+          "sarif",
+          "--output",
+          ":memory:",
+          "--quiet"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/titus",
+          "scan",
+          "{input}",
+          "--accessibility",
+          "private",
+          "--format",
+          "sarif",
+          "--output",
+          ":memory:",
+          "--quiet",
+          "--git"
+        ]
+      },
+      "parser": "sarif",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/titus",
+        "version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "Titus v1.2.10 (Go port of NoseyParker)\n\n  ______ ____ ______ __  __ _____\n /_  __//  _//_  __// / / // ___/\n  / /   / /   / /  / / / / \\__ \\\n / /  _/ /   / /  / /_/ / ___/ /\n/_/  /___/  /_/   \\____/ /____/\n There's always something.\n Praetorian Security, Inc."
+    },
+    {
+      "id": "ripsecrets",
+      "status": "available",
+      "version": "v0.1.11",
+      "source_url": "https://github.com/sirwart/ripsecrets",
+      "asset_url": "https://github.com/sirwart/ripsecrets/releases/download/v0.1.11/ripsecrets-0.1.11-aarch64-apple-darwin.tar.gz",
+      "commit_or_digest": "sha256:b2c822742e8cbf355ba0cb4cc690c3cd8fdc9ec1916c8148f27bd9098cb7aee4",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/ripsecrets",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/ripsecrets",
+          "{input}"
+        ]
+      },
+      "parser": "ripsecrets",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/ripsecrets",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "ripsecrets 0.1.11"
+    },
+    {
+      "id": "talisman",
+      "status": "available",
+      "version": "v1.37.0",
+      "source_url": "https://github.com/thoughtworks/talisman",
+      "asset_url": "https://github.com/thoughtworks/talisman/releases/download/v1.37.0/talisman_darwin_arm64",
+      "commit_or_digest": "sha256:4806746b2ba0190941f0606853990b4da6eb7df2d64c261212a6aa66eb6b15c2",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/talisman",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "git": [
+          "python3",
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/talisman_adapter.py",
+          "git",
+          "{input}"
+        ],
+        "staged": [
+          "python3",
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/talisman_adapter.py",
+          "staged",
+          "{input}"
+        ]
+      },
+      "parser": "normalized",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 2,
+      "notes": "Native report lacks structured lines. Findings omit line. Git JSON scan, staged native pre-commit table mapped to exact staged filenames; no working-tree substitution.",
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/talisman",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "talisman 1.37.0",
+      "command": [
+        "python3",
+        "bench/tools/talisman_adapter.py",
+        "{input}"
+      ],
+      "localization": "file",
+      "smoke": {
+        "git": {
+          "exit_code": 1,
+          "finding_count": 1
+        },
+        "staged": {
+          "exit_code": 1,
+          "finding_count": 1
+        },
+        "corpus": "bench/corpus-smoke/git-repo"
+      }
+    },
+    {
+      "id": "trivy",
+      "status": "available",
+      "version": "v0.75.0",
+      "source_url": "https://github.com/aquasecurity/trivy",
+      "asset_url": "https://github.com/aquasecurity/trivy/releases/download/v0.75.0/trivy_0.75.0_macOS-ARM64.tar.gz",
+      "commit_or_digest": "sha256:4a77108cccf8e55c8d6823e1e759939a622277e66cd0daa3c1fc621ed69e4568",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/trivy",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/trivy",
+          "fs",
+          "--scanners",
+          "secret",
+          "--offline-scan",
+          "--skip-db-update",
+          "--skip-java-db-update",
+          "--format",
+          "sarif",
+          "--output",
+          "{output}",
+          "{input}"
+        ]
+      },
+      "parser": "sarif",
+      "accepted_exit_codes": [
+        0
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/trivy",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "Version: 0.75.0"
+    },
+    {
+      "id": "leakferret",
+      "status": "available",
+      "version": "v0.1.9",
+      "source_url": "https://github.com/leakferrethq/leakferret",
+      "asset_url": "https://github.com/leakferrethq/leakferret/releases/download/v0.1.9/leakferret-0.1.9-aarch64-apple-darwin.tar.gz",
+      "commit_or_digest": "sha256:363b1da65bf34d2c89c37aa2e00eaa03d49c8595cc5b8bb752a344dacf21d7da",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/leakferret",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/leakferret",
+          "scan",
+          "{input}",
+          "--format",
+          "sarif",
+          "--quiet"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/leakferret",
+          "scan",
+          "{input}",
+          "--format",
+          "sarif",
+          "--quiet",
+          "--git"
+        ]
+      },
+      "parser": "sarif",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/leakferret",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "leakferret 0.1.9"
+    },
+    {
+      "id": "noseyparker",
+      "status": "available",
+      "version": "v0.24.0",
+      "source_url": "https://github.com/praetorian-inc/noseyparker",
+      "asset_url": "https://github.com/praetorian-inc/noseyparker/releases/download/v0.24.0/noseyparker-v0.24.0-aarch64-apple-darwin.tar.gz",
+      "commit_or_digest": "sha256:b19f983d586a738f127bc8c53ef1331055010db4926ac1789791f717fcc107b7",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/noseyparker",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "python3",
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/noseyparker_adapter.py",
+          "fs",
+          "{input}",
+          "{output}"
+        ],
+        "git": [
+          "python3",
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/noseyparker_adapter.py",
+          "git",
+          "{input}",
+          "{output}"
+        ]
+      },
+      "parser": "sarif",
+      "accepted_exit_codes": [
+        0
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "notes": "Fresh datastore per invocation; includes scan and SARIF reporting cost.",
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/noseyparker",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "noseyparker 0.24.0\n\nBuild Configuration:\n\n    Build Timestamp:    2025-05-08T21:09:00.215428000Z\n\n    Commit Timestamp:   2025-05-08T17:04:47.000000000-04:00\n    Commit Branch:      HEAD\n    Commit SHA:         61fa4ca67e4ded1b47b3b9ecce618ae91f1ff2fe\n\n    Cargo Features:     color_backtrace,default,disable_trace,github,log,mimalloc,parquet,release\n    Debug:              true\n    Optimization:       3\n    Target Triple:      aarch64-apple-darwin\n\nBuild System:\n\n    OS:                 Darwin\n    OS Version:         macOS 13.7.5 Ventura\n\n    CPU Vendor:         Apple\n    CPU Brand:          Apple M1 (Virtual)\n    CPU Cores:          6\n\n    rustc Version:      1.86.0\n    rustc Channel:      stable\n    rustc Host Triple:  aarch64-apple-darwin\n    rustc Commit Date:  2025-03-31\n    rustc Commit SHA:   05f9846f893b09a1be1fc8560e33fc3c815cfecb\n    rustc LLVM Version: 19.1"
+    },
+    {
+      "id": "rusty-hog",
+      "status": "available",
+      "version": "1.0.11",
+      "source_url": "https://github.com/newrelic/rusty-hog",
+      "asset_url": "https://github.com/newrelic/rusty-hog/releases/download/v1.0.11/rustyhogs-darwin-duroc_hog-1.0.11.zip",
+      "commit_or_digest": "9da595ad204f017cff576ffac5bce7f2bed1be2f",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/rusty-hog-build/target/release/duroc_hog",
+      "install_command": "cargo build --release --locked -j 2 --bin duroc_hog",
+      "commands": {
+        "fs": [
+          "python3",
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/rusty_hog_adapter.py",
+          "{input}"
+        ]
+      },
+      "parser": "normalized",
+      "accepted_exit_codes": [
+        0
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "binary_sha256": "6e25262ff480ac836336f64b159c5380eadb3ab496f6183b6b6185e9771cc486",
+      "source_folder": "rusty-hog-build",
+      "dependency_lock": "bench/tools/rusty-hog-Cargo.lock",
+      "dependency_lock_sha256": "8dee6e9ab5fc0688bc0392b8b9013c426d0ddfa3e96808dc8c228be25b0542c8",
+      "notes": "Official old macOS binary failed OpenSSL1.1 dylib; pinned current source built successfully without source modification. Adapter rejects missing/invalid JSON because native CLI logs some scan errors yet exits0.",
+      "smoke": {
+        "dataset": "quality",
+        "exit_code": 0,
+        "findings": 29
+      }
+    },
+    {
+      "id": "detect-secrets",
+      "status": "available",
+      "version": "1.5.0",
+      "source_url": "https://github.com/Yelp/detect-secrets",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/detect-secrets",
+      "help_exit_code": 0,
+      "accepted_exit_codes": [
+        0
+      ],
+      "offline": true,
+      "install_command": "uv pip install --python bench/tools/venvs/python/bin/python detect-secrets==1.5.0",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/detect-secrets",
+          "scan",
+          "--all-files",
+          "--no-verify",
+          "{input}"
+        ]
+      },
+      "parser": "detect_secrets",
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/detect-secrets",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "1.5.0",
+      "dependency_lock_sha256": "d513026775b6aabf6624264748d09c46277e9e91f9b22a4786869201334f0ed7"
+    },
+    {
+      "id": "deepsecrets",
+      "status": "available",
+      "version": "2.2.0",
+      "source_url": "https://github.com/ntoskernel/deepsecrets",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/deepsecrets",
+      "help_exit_code": 0,
+      "accepted_exit_codes": [
+        0
+      ],
+      "offline": true,
+      "install_command": "uv pip install --python bench/tools/venvs/python/bin/python deepsecrets==2.2.0",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/deepsecrets",
+          "--target-dir",
+          "{input}",
+          "--outfile",
+          "{output}",
+          "--outformat",
+          "sarif",
+          "--ci",
+          "--process-count",
+          "2"
+        ]
+      },
+      "parser": "sarif",
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/deepsecrets",
+        "--version"
+      ],
+      "version_exit_code": 2,
+      "version_output": "usage: deepsecrets [-h] --target-dir TARGET_DIR\n                   [--regex-rules [REGEX_RULES ...]]\n                   [--regex-candidate-scoring-rules [REGEX_CANDIDATE_SCORING_RULES ...]]\n                   [--hashed-values [HASHED_VALUES ...]]\n                   [--semantic-analysis [SEMANTIC_ANALYSIS ...]]\n                   [--variable-scoring-rules [VARIABLE_SCORING_RULES ...]]\n                   [--excluded-paths [EXCLUDED_PATHS ...]] [--skip-bundles]\n                   [--deep-max-size DEEP_MAX_SIZE]\n                   [--confidence-level {all,low,medium,high,very-high}]\n                   [--false-findings [FALSE_FINDINGS ...]] [-v]\n                   [--reflect-findings-in-return-code]\n                   [--process-count PROCESS_COUNT]\n                   [--max-file-size MAX_FILE_SIZE]\n                   [--multiprocessing-context {spawn,fork,forkserver}]\n                   [--ci | --no-ci] --outfile OUTFILE\n                   [--outformat {json,sarif,dojo-sarif}] [--disable-",
+      "dependency_lock_sha256": "d513026775b6aabf6624264748d09c46277e9e91f9b22a4786869201334f0ed7"
+    },
+    {
+      "id": "whispers",
+      "status": "available",
+      "version": "2.2.1",
+      "source_url": "https://github.com/Skyscanner/whispers",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/whispers",
+      "help_exit_code": 0,
+      "accepted_exit_codes": [
+        0
+      ],
+      "offline": true,
+      "install_command": "uv pip install --python bench/tools/venvs/python/bin/python whispers==2.2.1",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/whispers",
+          "{input}",
+          "--output",
+          "{output}"
+        ]
+      },
+      "parser": "whispers",
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/whispers",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "2.2.1",
+      "dependency_lock_sha256": "d513026775b6aabf6624264748d09c46277e9e91f9b22a4786869201334f0ed7"
+    },
+    {
+      "id": "secretlint",
+      "status": "available",
+      "version": "13.0.6",
+      "source_url": "https://github.com/secretlint/secretlint",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/npm/node_modules/.bin/secretlint",
+      "help_exit_code": 0,
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "install_command": "npm install --prefix bench/tools/npm secretlint@13.0.6 @secretlint/secretlint-rule-preset-recommend",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/npm/node_modules/.bin/secretlint",
+          "{input}/**/*",
+          "--format",
+          "json",
+          "--secretlintrc",
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secretlintrc.json",
+          "--no-gitignore"
+        ]
+      },
+      "parser": "secretlint",
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/npm/node_modules/.bin/secretlint",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "13.0.6",
+      "dependency_lock_sha256": "bd565245096d05bc70486fff55ddf8d2f478862f3291135d052ec32ac98d758a",
+      "notes": " Explicit --no-gitignore prevents generated corpus parent repository exclusions."
+    },
+    {
+      "id": "keyhog",
+      "status": "available",
+      "version": "0.5.86",
+      "source_url": "https://github.com/santhreal/keyhog",
+      "commit_or_digest": "c14d5538c2759e3ea299a02ec095d172025abd37",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/keyhog/target/release/keyhog",
+      "install_command": "cargo build --manifest-path bench/tools/source/keyhog/Cargo.toml --release --locked -j 2",
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/keyhog/target/release/keyhog",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "KeyHog v0.5.86\nCommit: c14d5538c2759e3ea299a02ec095d172025abd37\nDetector Set: 934 (934-dc43f6629978321b)\nBuild Target: aarch64-macos\nML Model Version: moe-v1-246a05b92bec9aa3\nML Model Card: recorded 2026-07-15; features 55; synthetic F1 0.971 / P 0.945 / R 0.999; real F1 0.832 / P 0.753 / R 0.931 / recall@0.40 0.938; zero-recall detectors 2/32; six-scanner differential unavailable",
+      "parser": "sarif",
+      "offline": true,
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "notes": "Default portable release build; explicit CPU backend disables calibration requirement and GPU; no network verification.",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/keyhog/target/release/keyhog",
+          "scan",
+          "{input}",
+          "--format",
+          "sarif",
+          "--no-verify",
+          "--backend",
+          "cpu",
+          "--quiet"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/keyhog/target/release/keyhog",
+          "scan",
+          "--git-history",
+          "{input}",
+          "--format",
+          "sarif",
+          "--no-verify",
+          "--backend",
+          "cpu",
+          "--quiet"
+        ]
+      }
+    },
+    {
+      "id": "git-secrets",
+      "status": "available",
+      "version": "HEAD",
+      "source_url": "https://github.com/awslabs/git-secrets",
+      "commit_or_digest": "7d6b970cbd3c216353cb22b383b70c150140662e",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/git-secrets/git-secrets",
+      "install_command": "git clone --depth 1 https://github.com/awslabs/git-secrets bench/tools/source/git-secrets",
+      "parser": "git_secrets",
+      "offline": true,
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "notes": "Official --register-aws pattern set in temporary isolated config; removes provider to avoid reading user AWS credentials; stderr finding records forwarded stdout.",
+      "commands": {
+        "fs": [
+          "python3",
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/git_secrets_adapter.py",
+          "fs",
+          "{input}"
+        ],
+        "git": [
+          "python3",
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/git_secrets_adapter.py",
+          "git",
+          "{input}"
+        ],
+        "staged": [
+          "python3",
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/git_secrets_adapter.py",
+          "staged",
+          "{input}"
+        ]
+      }
+    },
+    {
+      "id": "credential-digger",
+      "status": "available",
+      "source_url": "https://github.com/SAP-archive/credential-digger",
+      "commit_or_digest": "21f89283400168e2c454b57467291a248b571a3c",
+      "install_command": "uv pip install --python bench/tools/venvs/credentialdigger/bin/python ./bench/tools/source/credential-digger",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/credentialdigger/bin/python",
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/credentialdigger_adapter.py",
+          "{input}"
+        ]
+      },
+      "offline": true,
+      "install_adjustments": [
+        "uv pip install --python bench/tools/venvs/credentialdigger/bin/python 'transformers<5'",
+        "uv pip install --python bench/tools/venvs/credentialdigger/bin/python 'setuptools<81'"
+      ],
+      "help_exit_code": 0,
+      "command": [
+        "bench/tools/venvs/credentialdigger/bin/python",
+        "bench/tools/credentialdigger_adapter.py",
+        "{input}"
+      ],
+      "parser": "normalized",
+      "accepted_exit_codes": [
+        0
+      ],
+      "notes": "Official ui/backend/rules.yml, SDK fresh in-memory SQLite, models=None/similarity=False; no ML false-positive model claims. Import compatibility pins transformers4.57.6 + setuptools80.10.2 are in the lock.",
+      "smoke": {
+        "exit_code": 0,
+        "finding_count": 8,
+        "dataset": "bench/corpus-smoke/quality"
+      },
+      "dependency_lock": "bench/tools/credentialdigger-requirements.lock",
+      "dependency_lock_sha256": "434be7ef28d272dffb0cae05f187f049be951d3414baabbdf5610304ed1146f5"
+    },
+    {
+      "id": "scratch-scanner-rs",
+      "status": "available",
+      "source_url": "https://github.com/ahrav/scratch-scanner-rs",
+      "commit_or_digest": "3fb8740fb576a9859c84b7a5a08f3bbae06a9f05",
+      "install_command": "BOOST_ROOT=<tools>/source/boost_1_88_0 cargo build --release --locked -j 2",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/target/release/scanner-rs",
+          "scan",
+          "fs",
+          "{input}",
+          "--rules=/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/default_rules.yaml",
+          "--event-format=sarif"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/target/release/scanner-rs",
+          "scan",
+          "git",
+          "{input}",
+          "--rules=/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/default_rules.yaml",
+          "--event-format=sarif"
+        ]
+      },
+      "offline": true,
+      "version": "0.1.0",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/target/release/scanner-rs",
+      "binary_sha256": "a0e4b5edd1a2417ab6a808f78e4ab3585e500809a7e661d998dd129143753079",
+      "parser": "sarif",
+      "accepted_exit_codes": [
+        0
+      ],
+      "source_dependencies": [
+        {
+          "repository": "https://github.com/ahrav/Gossip-rs",
+          "commit": "7e632d795e09b51c3c43e816bb188e8d816ee5a6",
+          "path": "bench/tools/source/Gossip-rs",
+          "selection": "last commit before scanner commit timestamp; same vectorscan-rs-sys0.0.5"
+        }
+      ],
+      "native_dependencies": [
+        {
+          "name": "Boost headers",
+          "version": "1.88.0",
+          "url": "https://archives.boost.io/release/1.88.0/source/boost_1_88_0.tar.gz",
+          "sha256": "3621533e820dcab1e8012afd583c0c73cf0f77694952b81352bf38c1488f9cb4"
+        }
+      ],
+      "smoke": {
+        "fs": {
+          "exit_code": 0,
+          "findings": 52
+        },
+        "git": {
+          "exit_code": 0,
+          "findings": 2
+        }
+      },
+      "help_exit_code": 0,
+      "notes": "Source unchanged. Missing sibling fixed with contemporaneous pinned Gossip commit; latest sibling conflicts native hs versions. Boost headers installed only under bench/tools/source."
+    },
+    {
+      "id": "deepfence-secretscanner",
+      "status": "build_failed",
+      "source_url": "https://github.com/deepfence/SecretScanner",
+      "commit_or_digest": "5fa8aee4882ab8352dda2628d58eed283c1f966a",
+      "reason": "Retried after cloning YaraHunter and initializing both agent-plugins-grpc submodules. Go build then fails pkg-config yara: package not found. Official YARA v4.5.8 source has configure.ac but no generated configure; official latest5 releases publish no tarball assets. Local bootstrap attempted and fails autoreconf: command not found. No global packages or upstream source edits applied.",
+      "install_command": "go build -p 2 -o ../../binaries/SecretScanner .",
+      "commands": {},
+      "offline": true,
+      "source_dependencies": [
+        {
+          "repository": "https://github.com/deepfence/YaraHunter",
+          "commit": "8cb5a008056a407cf5a273fabb0ecf6626acd50e"
+        }
+      ],
+      "build_evidence": [
+        "bench/tools/deepfence-build-retry.log",
+        "bench/tools/yara-bootstrap.log"
+      ],
+      "native_dependencies": [
+        {
+          "name": "YARA",
+          "version": "4.5.8",
+          "url": "https://codeload.github.com/VirusTotal/yara/tar.gz/refs/tags/v4.5.8",
+          "sha256": "c322414975ff6f701149856613afdcd92a7e6939c284c798ae3c85618197efaa",
+          "status": "source downloaded; bootstrap blocked by missing autoreconf"
+        }
+      ]
+    },
+    {
+      "id": "ggshield",
+      "status": "external_service_required",
+      "source_url": "https://github.com/GitGuardian/ggshield",
+      "reason": "Open CLI invokes proprietary authenticated cloud detection; cannot participate in offline no-credentials benchmark.",
+      "commands": {},
+      "offline": false
+    },
+    {
+      "id": "secrets-patterns-db",
+      "status": "not_executable",
+      "source_url": "https://github.com/mazen160/secrets-patterns-db",
+      "reason": "Rule database, not a standalone scanning engine.",
+      "commands": {},
+      "offline": true
+    }
+  ],
+  "platform": "darwin-arm64",
+  "recorded_at": "2026-10-03",
+  "python_lock": "bench/tools/python-requirements.lock",
+  "npm_lock": "bench/tools/npm/package-lock.json"
+}

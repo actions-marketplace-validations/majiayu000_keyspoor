@@ -5,12 +5,14 @@
 //! `ScanReport::complete` before treating an empty result as a clean scan.
 pub mod archive;
 pub mod baseline;
+pub mod context;
 pub mod engine;
 pub mod mcp;
 pub mod report;
 pub mod rules;
 pub mod scan;
 
+pub use context::ScanContext;
 pub use engine::{Engine, EngineConfig, Finding};
 use serde::{Deserialize, Serialize};
 
@@ -37,6 +39,9 @@ pub struct ScanReport {
     pub findings: Vec<Finding>,
     pub errors: Vec<ScanError>,
     pub stats: ScanStats,
+    /// Identifies selection and detection semantics for safe baseline comparison.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub context: Option<ScanContext>,
 }
 
 impl Default for ScanReport {
@@ -47,6 +52,7 @@ impl Default for ScanReport {
             findings: Vec::new(),
             errors: Vec::new(),
             stats: ScanStats::default(),
+            context: None,
         }
     }
 }

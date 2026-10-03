@@ -82,7 +82,7 @@ def parse_output(parser, stdout, stderr, root):
             if len(parts)==3:
                 _, origin_revision, path = parts
                 revision = revision or (':index' if origin_revision in ('index','staged') else origin_revision)
-        item = {'path':relative_path(path,root)}
+        item = {'path':relative_path(path,root)} if isinstance(path,str) and path else {}
         for key, value in [('start',start),('end',end),('line',line),('rule_id',rule),('column',column),('revision',revision)]:
             if value is not None:
                 item[key] = value
@@ -96,6 +96,7 @@ def parse_output(parser, stdout, stderr, root):
         stats = {k:v for k,v in data.get('stats',{}).items() if k in ('files','bytes','skipped','detection_passes','elapsed_ms') and isinstance(v,(int,float))}
         for f in data.get('findings',[]):
             add(f.get('path'),f.get('start'),f.get('end'),f.get('line'),f.get('rule_id'),f.get('column'),f.get('revision'))
+            if isinstance(f.get('coordinate_space'),str): findings[-1]['coordinate_space'] = f['coordinate_space']
     elif parser in ('gitleaks','betterleaks'):
         if not isinstance(data,list): raise ValueError('expected findings array')
         for f in data:
@@ -134,7 +135,7 @@ def parse_output(parser, stdout, stderr, root):
             if any(i.get('executionSuccessful') is False for i in run.get('invocations',[])):
                 complete = False
             for f in run.get('results',[]):
-                for loc in f.get('locations',[]):
+                for loc in f.get('locations') or [{}]:
                     loc = loc.get('physicalLocation',{})
                     region = loc.get('region',{})
                     offset = region.get('byteOffset')
@@ -157,62 +158,125 @@ def parse_output(parser, stdout, stderr, root):
             if key=='persist_incomplete' and value.strip()=='true': complete = False
         if any(stats.get(k,0)>0 for k in ('errors','dropped_findings','persist_emit_failures')):
             complete = False
-    return {'complete':bool(complete),'findings':findings,'stats':stats}
+    return {'complete':bool(complete),'findings':[safe_finding(f) for f in findings],'stats':stats}
 
 
-def score_findings(findings, labels):
-    positives = [x for x in labels if x['label']=='positive']
-    negatives = [x for x in labels if x['label']=='negative']
-    matched = set()
+def safe_finding(finding):
+    """Persist only source metadata; never snippets, matches, values or messages."""
+    strings = ('path','rule_id','revision','coordinate_space')
+    integers = ('start','end','line','column')
+    result = {key:value for key,value in finding.items()
+              if (key in strings and isinstance(value,str)) or (key in integers and type(value) is int)}
+    invalid = [key for key in integers if finding.get(key) is not None and type(finding[key]) is not int]
+    invalid.extend(key for key in finding.get('invalid_location_fields',[]) if key in integers)
+    if invalid: result['invalid_location_fields'] = sorted(set(invalid))
+    return result
+
+
+def score_findings(findings, labels, file_limits=None):
+    positive_indices = {i for i,l in enumerate(labels) if l['label']=='positive'}
+    negative_indices = {i for i,l in enumerate(labels) if l['label']=='negative'}
+    matched, negative_hits, unresolved_negatives = set(), set(), set()
+    first_label_evidence, seen_locations = {}, {}
+    evidence = []
     location_quality = {'exact_span':0,'overlap_span':0,'line_only':0}
-    duplicates = 0
-    fp = 0
     by_group = collections.defaultdict(lambda:{'tp':0,'total':0})
     by_provider = collections.defaultdict(lambda:{'tp':0,'total':0})
-    for label in positives:
+    for i in positive_indices:
+        label = labels[i]
         by_group[label.get('group','unspecified')]['total'] += 1
         by_provider[label.get('provider','unspecified')]['total'] += 1
-    def location_match(f,l):
-        if f.get('path') != l.get('path'):
-            return None
-        if f.get('revision') and l.get('revision') and f['revision'] != l['revision']:
-            return None
-        if f.get('start') is not None and f.get('end') is not None:
-            if f['start']==l['start'] and f['end']==l['end']:
-                return 'exact_span'
-            overlap = min(f['end'],l['end'])-max(f['start'],l['start'])
-            if overlap >= (l['end']-l['start'])*0.5 and (f['end']-f['start']) <= max(1,l['end']-l['start'])*4:
-                return 'overlap_span'
-            return None
-        if f.get('line') is not None and f['line']==l.get('line'):
-            return 'line_only'
-        return None
-    for finding in findings:
-        candidates = [(i,location_match(finding,l)) for i,l in enumerate(positives)]
-        candidates = [(i,q) for i,q in candidates if q]
-        available = sorted(((i,q) for i,q in candidates if i not in matched),key=lambda x:({'exact_span':0,'overlap_span':1,'line_only':2}[x[1]],x[0]))
-        if available:
-            i,q = available[0]
-            matched.add(i)
-            location_quality[q] += 1
-            by_group[positives[i].get('group','unspecified')]['tp'] += 1
-            by_provider[positives[i].get('provider','unspecified')]['tp'] += 1
-        elif candidates:
-            duplicates += 1
+
+    def same_source(f,label):
+        return f.get('path')==label['path'] and not (f.get('revision') and label.get('revision') and f['revision']!=label['revision'])
+
+    for index, original in enumerate(findings):
+        finding = safe_finding(original)
+        item = dict(finding, finding_index=index)
+        related = [i for i,l in enumerate(labels) if same_source(finding,l)]
+        issue = None
+        path = finding.get('path')
+        has_span = original.get('start') is not None or original.get('end') is not None
+        if finding.get('invalid_location_fields'):
+            issue = 'invalid_coordinate_type'
+        elif not path or path=='.':
+            issue = 'missing_path'
+        elif file_limits is not None and path not in file_limits:
+            issue = 'unknown_source_path'
+        elif has_span:
+            if type(original.get('start')) is not int or type(original.get('end')) is not int or not (0 <= original['start'] < original['end']):
+                issue = 'invalid_byte_span'
+            elif finding.get('coordinate_space','source_bytes') != 'source_bytes':
+                issue = 'non_source_coordinate_space'
+            elif file_limits is not None and finding['end'] > file_limits[path]['bytes']:
+                issue = 'byte_span_out_of_bounds'
+        elif type(original.get('line')) is not int or original['line'] < 1:
+            issue = 'missing_or_invalid_line'
+        elif file_limits is not None and finding['line'] > file_limits[path]['lines']:
+            issue = 'line_out_of_bounds'
+
+        candidates = []
+        if issue is None:
+            if has_span:
+                exact = [i for i in related if finding['start']==labels[i]['start'] and finding['end']==labels[i]['end']]
+                overlap = [i for i in related if min(finding['end'],labels[i]['end'])-max(finding['start'],labels[i]['start']) >= (labels[i]['end']-labels[i]['start'])*0.5
+                           and finding['end']-finding['start'] <= max(1,labels[i]['end']-labels[i]['start'])*4]
+                candidates = exact or overlap
+                quality = 'exact_span' if exact else 'overlap_span'
+                if not candidates and any(min(finding['end'],labels[i]['end']) > max(finding['start'],labels[i]['start']) for i in related):
+                    issue = 'insufficient_span_precision'
+            else:
+                candidates = [i for i in related if labels[i].get('line',0) <= finding['line'] <= labels[i].get('end_line',labels[i].get('line',0))]
+                quality = 'line_only'
+            if len(candidates)>1:
+                issue = 'ambiguous_span' if has_span else 'ambiguous_line'
+        if issue:
+            item.update(classification='unlocalized',reason=issue)
+            possible = candidates or related
+            if not path or path=='.': possible = list(negative_indices)
+            unresolved_negatives.update(set(possible) & negative_indices)
         else:
-            fp += 1
-    negative_hits = {i for i,l in enumerate(negatives) if any(location_match(f,l) for f in findings)}
-    tp,fn = len(matched),len(positives)-len(matched)
+            location = (path,finding.get('revision'),finding.get('start'),finding.get('end')) if has_span else (path,finding.get('revision'),'line',finding['line'])
+            label_index = candidates[0] if candidates else None
+            previous = first_label_evidence.get(label_index) if label_index is not None else seen_locations.get(location)
+            item['location_quality'] = quality if candidates else ('byte_span' if has_span else 'line_only')
+            if label_index is not None: item['matched_label_id'] = labels[label_index]['id']
+            if previous is not None:
+                item.update(classification='duplicate',duplicate_of=previous)
+            elif label_index in positive_indices:
+                matched.add(label_index)
+                location_quality[quality] += 1
+                label = labels[label_index]
+                by_group[label.get('group','unspecified')]['tp'] += 1
+                by_provider[label.get('provider','unspecified')]['tp'] += 1
+                item['classification'] = 'tp'
+            else:
+                item.update(classification='fp',reason='negative_label' if label_index is not None else 'unmatched_location')
+                if label_index is not None: negative_hits.add(label_index)
+            if previous is None:
+                seen_locations[location] = index
+                if label_index is not None: first_label_evidence[label_index] = index
+        evidence.append(item)
+
+    counts = collections.Counter(item['classification'] for item in evidence)
+    tp,fp,fn = counts['tp'],counts['fp'],len(positive_indices)-len(matched)
     precision = tp/(tp+fp) if tp+fp else None
-    recall = tp/(tp+fn) if tp+fn else None
-    f1 = 2*precision*recall/(precision+recall) if precision is not None and recall is not None and precision+recall else (0.0 if tp+fn else None)
+    recall = tp/len(positive_indices) if positive_indices else None
+    f1 = 2*precision*recall/(precision+recall) if precision is not None and recall is not None and precision+recall else (0.0 if positive_indices else None)
     for groups in (by_group,by_provider):
         for group in groups.values():
             group['recall'] = group['tp']/group['total'] if group['total'] else None
-    return {'tp':tp,'fp':fp,'fn':fn,'negative_labels_flagged':len(negative_hits),'tn':len(negatives)-len(negative_hits),'positive_labels':len(positives),'negative_labels':len(negatives),'precision':precision,'recall':recall,'f1':f1,
-            'duplicate_findings':duplicates,'location_quality':location_quality,
+    unresolved_negatives -= negative_hits
+    return {'scoring_version':2,'tp':tp,'fp':fp,'fn':fn,'unlocalized':counts['unlocalized'],
+            'negative_labels_flagged':len(negative_hits),'negative_labels_unresolved':len(unresolved_negatives),
+            'tn':len(negative_indices)-len(negative_hits)-len(unresolved_negatives),
+            'positive_labels':len(positive_indices),'negative_labels':len(negative_indices),
+            'precision':precision,'precision_scope':'localized_unique_findings_only',
+            'recall':recall,'recall_scope':'confirmed_location_lower_bound','f1':f1,
+            'localization_rate':(len(findings)-counts['unlocalized'])/len(findings) if findings else None,
+            'duplicate_findings':counts['duplicate'],'location_quality':location_quality,
             'by_group':dict(by_group),'by_provider':dict(by_provider),
-            'missed_label_ids':[l['id'] for i,l in enumerate(positives) if i not in matched]}
+            'missed_label_ids':[labels[i]['id'] for i in sorted(positive_indices-matched)],'evidence':evidence}
 
 
 def hardware():
@@ -228,15 +292,15 @@ def hardware():
 def report_markdown(result):
     lines = ['# Secret scanner benchmark','',f"Generated: {result['timestamp_utc']}",'',
              'Offline, default-rule end-to-end comparison. First-run is a new process, not a cold disk-cache claim. Warm runs start new processes after an unmeasured warmup. No provider validation is enabled. Raw scanner output is discarded.',
-             '', '| Tool | Dataset | Status | Median ms | Input MiB/s | Peak RSS MiB | TP/FP/FN | P/R/F1 |', '|---|---|---|---:|---:|---:|---|---|']
+             '', '| Tool | Dataset | Status | Median ms | Input MiB/s | Peak RSS MiB | TP/FP/FN | Unlocalized | Localized P / recall lower bound / F1 |', '|---|---|---|---:|---:|---:|---|---:|---|']
     def pct(x): return '—' if x is None else f'{x:.3f}'
     for row in result['results']:
         s = row.get('summary',{})
         q = row.get('quality',{})
         quality = '/'.join(str(q[k]) for k in ('tp','fp','fn')) if q else '—'
         prf = '/'.join(pct(q[k]) for k in ('precision','recall','f1')) if q else '—'
-        lines.append('| '+ ' | '.join([row['tool'],row.get('dataset','—'),row['status'],f"{s['median_seconds']*1000:.3f}" if s else '—',f"{s['mib_per_second']:.2f}" if s and s.get('mib_per_second') is not None else '—',f"{s['max_peak_rss_bytes']/1048576:.2f}" if s else '—',quality,prf])+' |')
-    lines += ['', 'Precision is location-based on the labelled synthetic corpus, not a real-world false-positive estimate. Duplicate detections do not increase recall. Exact byte-span, overlapping-span and line-only matches are counted separately in JSON; line-only tools have weaker localization evidence. Tools have different default rules and coverage, so throughput alone does not rank engine efficiency. Unavailable and unsupported entries are not zero scores.', '', 'Hardware: `'+json.dumps(result['hardware'],sort_keys=True)+'`', '', 'See the JSON artifact for versions, commands, exits, per-run timings, CPU, RSS, corpus hashes, labels and completeness. RSS is per-child getrusage peak; it is not a simultaneous aggregate for a multiprocess tree.']
+        lines.append('| '+ ' | '.join([row['tool'],row.get('dataset','—'),row['status'],f"{s['median_seconds']*1000:.3f}" if s else '—',f"{s['mib_per_second']:.2f}" if s and s.get('mib_per_second') is not None else '—',f"{s['max_peak_rss_bytes']/1048576:.2f}" if s else '—',quality,str(q.get('unlocalized','—')),prf])+' |')
+    lines += ['', 'Schema/scoring v2: precision excludes unlocalized results and is conditional on localized unique findings, not a real-world false-positive estimate. Recall is a confirmed-location lower bound; unlocalized findings do not prove a miss or a hit. Duplicate detections do not increase recall. Exact byte-span, overlapping-span and line-only matches are counted separately in JSON; line-only tools have weaker localization evidence. Tools have different default rules and coverage, so throughput alone does not rank engine efficiency. Unavailable and unsupported entries are not zero scores.', '', 'Hardware: `'+json.dumps(result['hardware'],sort_keys=True)+'`', '', 'See the JSON artifact for versions, commands, exits, per-run timings, CPU, RSS, corpus hashes, labels and completeness. RSS is per-child getrusage peak; it is not a simultaneous aggregate for a multiprocess tree.']
     return '\n'.join(lines)+'\n'
 
 
@@ -244,14 +308,16 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--manifest',type=Path,default=Path(__file__).parent/'tools/manifest.json')
     parser.add_argument('--corpus',type=Path,required=True)
-    parser.add_argument('--output',type=Path,default=Path(__file__).parent/'results/latest.json')
+    parser.add_argument('--output',type=Path,default=Path(__file__).parent/'results/v2/latest.json')
     parser.add_argument('--tools',help='comma separated tool IDs')
     parser.add_argument('--datasets',help='comma separated dataset names; defaults to all declared datasets')
     parser.add_argument('--repeats',type=int,default=3)
     parser.add_argument('--timeout',type=float,default=120)
-    parser.add_argument('--corpus-role',default='synthetic-diagnostic',choices=['synthetic-diagnostic','regression'])
+    parser.add_argument('--corpus-role',default='synthetic-diagnostic',choices=['synthetic-diagnostic','regression','holdout'])
     args = parser.parse_args()
     if args.repeats < 1: parser.error('--repeats must be positive')
+    if args.output.exists() or args.output.with_suffix('.md').exists():
+        parser.error('output already exists; choose a new artifact path to preserve previous results')
     corpus = args.corpus.resolve()
     manifest_bytes = args.manifest.read_bytes()
     manifest = json.loads(manifest_bytes)
@@ -264,9 +330,9 @@ def main():
             if path.is_file():
                 label['line'] = path.read_bytes()[:label['start']].count(b'\n')+1
     datasets = fixture.get('datasets', {'quality':{'path':'quality','mode':'fs'},'throughput':{'path':'throughput','mode':'fs'}})
-    result = {'schema_version':1,'timestamp_utc':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),'hardware':hardware(),
+    result = {'schema_version':2,'timestamp_utc':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),'hardware':hardware(),
               'runner_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),'manifest_sha256':hashlib.sha256(manifest_bytes).hexdigest(),'corpus_manifest_sha256':hashlib.sha256(corpus_bytes).hexdigest(),
-              'method':{'corpus_role':args.corpus_role,'quality_interpretation':'Synthetic regression/diagnostic corpus, not an independent holdout; real-source dataset is unlabelled.','offline':True,'repeats':args.repeats,'timeout_seconds':args.timeout,'cache':'OS cache uncontrolled; warmup before repeats','scoring':'one-to-one location; exact/overlap byte span else line'},'tools':manifest['tools'],'datasets':datasets,'results':[]}
+              'method':{'scoring_version':2,'corpus_role':args.corpus_role,'quality_interpretation':('Declared frozen synthetic holdout; real-source datasets remain unlabelled.' if args.corpus_role=='holdout' else 'Synthetic regression/diagnostic corpus, not an independent holdout; real-source datasets remain unlabelled.'),'offline':True,'repeats':args.repeats,'timeout_seconds':args.timeout,'cache':'OS cache uncontrolled; warmup before repeats','scoring':'v2 unique location matches; missing/invalid/ambiguous coordinates unlocalized; precision conditional on localized unique findings'},'tools':manifest['tools'],'datasets':datasets,'results':[]}
     selected = set(args.tools.split(',')) if args.tools else None
     for tool in manifest['tools']:
         if selected and tool['id'] not in selected: continue
@@ -288,9 +354,13 @@ def main():
             corpus_files = sorted(p for p in input_path.rglob('*') if p.is_file() and '.git' not in p.parts)
             total_bytes = (dataset.get('bytes') or sum(p.stat().st_size for p in corpus_files)) if mode=='fs' else None
             content_digest = hashlib.sha256()
+            file_limits = {} if mode=='fs' else None
             for corpus_file in corpus_files:
                 content_digest.update(corpus_file.relative_to(input_path).as_posix().encode()+b'\0')
-                content_digest.update(hashlib.sha256(corpus_file.read_bytes()).digest())
+                content = corpus_file.read_bytes()
+                content_digest.update(hashlib.sha256(content).digest())
+                if file_limits is not None:
+                    file_limits[corpus_file.relative_to(corpus).as_posix()] = {'bytes':len(content),'lines':content.count(b'\n')+int(bool(content) and not content.endswith(b'\n'))}
             row = {'tool':tool['id'],'dataset':name,'mode':mode,'input_bytes':total_bytes,'input_files':len(corpus_files),'worktree_content_sha256':content_digest.hexdigest(),'runs':[],'status':'ok'}
             dataset_labels = [l for l in labels if l.get('dataset','quality')==name] if dataset.get('labelled',True) else []
             with tempfile.TemporaryDirectory(prefix='secret-benchmark-') as tmp:
@@ -312,7 +382,7 @@ def main():
                         # Tools often return input-root relative paths.
                         for f in parsed['findings']:
                             relative_input = input_path.relative_to(corpus).as_posix()
-                            if not Path(f['path']).is_absolute() and not (f['path']==relative_input or f['path'].startswith(relative_input+'/')):
+                            if f.get('path') and not Path(f['path']).is_absolute() and not (f['path']==relative_input or f['path'].startswith(relative_input+'/')):
                                 f['path'] = (input_path/f['path']).relative_to(corpus).as_posix()
                         measurement['scanner_stats'] = parsed.get('stats',{})
                         if row['input_files'] and parsed.get('stats',{}).get('files')==0:
@@ -320,6 +390,7 @@ def main():
                             measurement['coverage_error'] = 'nonempty dataset but scanner reported zero files'
                         measurement['complete'] = parsed['complete']
                         measurement['findings_count'] = len(parsed['findings'])
+                        measurement['normalized_findings'] = parsed['findings']
                         measurement['locations_sha256'] = hashlib.sha256(json.dumps(sorted(parsed['findings'],key=lambda x:json.dumps(x,sort_keys=True)),sort_keys=True).encode()).hexdigest()
                         if parsed_first is None: parsed_first = parsed
                     except (ValueError,TypeError,KeyError,AttributeError) as exc:
@@ -332,6 +403,7 @@ def main():
                     if measurement['status']!='finished' or measurement['exit_code'] not in tool.get('accepted_exit_codes',[0,1]) or not measurement.get('complete'):
                         row['status'] = 'timeout' if measurement['status']=='timeout' else 'failed'
                         break
+                row['scan_complete'] = all(r.get('complete') and r['status']=='finished' and r['exit_code'] in tool.get('accepted_exit_codes',[0,1]) for r in row['runs'])
                 if row['status']=='ok' and len({r['locations_sha256'] for r in row['runs']}) != 1:
                     row['status'] = 'nondeterministic'
                 if row['status']=='ok':
@@ -343,7 +415,7 @@ def main():
                         probes = []
                         excluded = []
                         for probe in dataset['archives']:
-                            hits = [f for f in quality_findings if Path(probe['path']).name in f['path']]
+                            hits = [f for f in quality_findings if Path(probe['path']).name in f.get('path','')]
                             excluded.extend(hits)
                             probes.append({'path':probe['path'],'member':probe['member'],'reported_archive':bool(hits),'reported_member':any(probe['member'] in f['path'] for f in hits),'evidence':'location only; no decoded span or credential validity claim'})
                         row['archive_probes'] = probes
@@ -351,13 +423,13 @@ def main():
                         quality_findings = [f for f in quality_findings if f not in excluded]
                     if dataset_labels and tool.get('localization')=='file':
                         expected_files = {l['path'] for l in dataset_labels if l['label']=='positive'}
-                        observed_files = {f['path'] for f in quality_findings}
+                        observed_files = {f['path'] for f in quality_findings if f.get('path') and f['path']!='.'}
                         row['file_level_quality'] = {'expected_positive_files':len(expected_files),'detected_positive_files':len(expected_files & observed_files),'missed_positive_files':sorted(expected_files-observed_files),'other_reported_files':sorted(observed_files-expected_files),'note':'File-level evidence only; cannot establish byte/line accuracy or distinguish index from worktree content at the same path.'}
                     elif dataset_labels:
                         if mode in ('git','staged'):
                             def at_location(f,label):
-                                if f['path'] != label['path']: return False
-                                if f.get('start') is not None and f.get('end') is not None:
+                                if f.get('path') != label['path']: return False
+                                if type(f.get('start')) is int and type(f.get('end')) is int:
                                     return min(f['end'],label['end']) > max(f['start'],label['start'])
                                 return f.get('line') is not None and f['line']==label.get('line')
                             others = [l for l in labels if l.get('dataset','quality')!=name and l['label']=='positive']
@@ -369,7 +441,7 @@ def main():
                                 row['status'] = 'scope_violation'
                             else:
                                 quality_findings = [f for f in quality_findings if f not in extra]
-                        row['quality'] = score_findings(quality_findings,dataset_labels)
+                        row['quality'] = score_findings(quality_findings,dataset_labels,file_limits=file_limits)
                 result['results'].append(row)
             args.output.parent.mkdir(parents=True,exist_ok=True)
             args.output.write_text(json.dumps(result,indent=2)+'\n')

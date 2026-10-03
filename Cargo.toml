@@ -5,6 +5,7 @@ edition = "2024"
 rust-version = "1.96"
 description = "Independent Rust secret detection engine with an agent-friendly CLI"
 license = "Apache-2.0"
+include = ["/src/**", "/tests/**", "/examples/**", "/docs/**", "/Cargo.toml", "/Cargo.lock", "/README.md", "/LICENSE", "/THIRD_PARTY_NOTICES"]
 
 [dependencies]
 anyhow = "1"

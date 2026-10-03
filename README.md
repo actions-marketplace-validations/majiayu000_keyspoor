@@ -6,9 +6,9 @@ acquisition and agent interfaces are implemented here. This project does not
 depend on Kingfisher or another secret scanner SDK. It uses general-purpose
 Rust regex, Aho–Corasick, hashing and archive libraries.
 
-The built-in catalog contains 217 rules adapted from the MIT-licensed Gitleaks
+The built-in catalog contains 221 rules adapted from the MIT-licensed Gitleaks
 v8.30.1 catalog plus four independently written rules (three generic assignment
-rules and one URI-password rule), for 221 rules in the default engine.
+rules and one URI-password rule), for 225 rules in the default engine.
 See [rule provenance and exclusions](docs/RULE_SOURCES.md) and
 [third-party notices](THIRD_PARTY_NOTICES). This is not a Gitleaks-compatible
 engine: rule semantics that cannot be preserved are explicitly excluded.
@@ -22,6 +22,7 @@ cargo build --release --locked
 target/release/secret-scan scan /path/to/project --format json
 target/release/secret-scan staged /path/to/repository
 target/release/secret-scan history /path/to/repository
+target/release/secret-scan history /path/to/repository --range main..HEAD
 target/release/secret-scan scan - --format jsonl
 target/release/secret-scan scan /path/to/project --write-baseline baseline.json
 target/release/secret-scan scan /path/to/project --baseline baseline.json
@@ -34,7 +35,14 @@ Exit codes: **0** means the selected scan completed with no reported findings;
 **1** means it completed with findings; **2** means an error or incomplete scan.
 An ignored finding is not evidence that the original input contained no secret.
 Baselines suppress existing fingerprints but preserve changed secret values.
-An incomplete scan cannot replace a baseline.
+An incomplete scan cannot replace a baseline. Baseline schema 2 binds the scan
+mode, canonical roots, effective ignore policy (including Git/Jujutsu repository
+boundaries), size budget and engine settings
+(including rule content and fingerprint key identity). A different scope or
+policy cannot compare against or overwrite that baseline. Create a separate
+baseline when intentionally changing policy. Schema 1 baselines are rejected.
+Canonical filesystem identity makes aliases such as `./` stable; reported paths
+and rule path predicates remain relative to the selected source root.
 
 Every finding is redacted and contains a rule, path, byte range, one-based line,
 zero-based byte column, confidence, explanation and fingerprint. No raw secret
@@ -78,10 +86,22 @@ directory. `--no-builtin` selects only custom rules. Each rule has `id`, `name`,
 `pattern`, optional `secret_group`, `keywords`, `min_entropy`, `confidence`,
 `path`, `allowlist` and `exclude_paths`. Keywords are case-insensitive OR-ed
 necessary conditions; rules without keywords are always considered. Allowlist
-regexes inspect the captured secret, not the entire source line. Unknown rule
+groups have `condition` (`or`/`and`), `target` (`secret`/`match`/`line`),
+`regexes`, `paths`, and `stopwords`. Groups are OR-ed; predicates within one
+category are OR-ed, then populated categories are combined using `condition`.
+Stopwords are case-insensitive substrings of the secret. Empty groups fail.
+Omitted/null `secret_group` selects the first nonempty capture (or whole match);
+explicit `0` selects the whole match. These rule-schema changes are breaking.
+Unknown rule
 fields and invalid regexes fail visibly. Rule patterns are never echoed in
 compilation errors. Custom rule descriptions and identifiers are trusted
 configuration and should not contain real secrets.
+
+Generic API/access/auth token assignments suppress long explanatory prose
+(at least eight words plus sentence/clause punctuation). This heuristic does not
+suppress natural-language password/secret assignments, but a real token formatted
+as a long punctuated phrase can still be missed. Provider rules retain upstream
+limitations; see the rule provenance document.
 
 ## Agent interfaces
 
@@ -96,10 +116,22 @@ root. The server does not perform writes or network verification. Root checks
 are not an OS sandbox against another local process replacing paths concurrently.
 MCP errors and tool failures are distinct, and malformed/oversized frames do not
 turn into successful clean results. stdout contains protocol messages only.
+One scan runs at a time while ping and cancellation remain responsive. Clients
+may supply a progress token and cancel by request id; cancelled requests receive
+no final response, and the session remains usable. Cancellation is checked at
+file, Git blob and archive-member boundaries (also archive read chunks), not
+inside a single regex operation. Tool results include at most 100 findings and
+100 errors within a shared 512 KiB entry budget, plus total counts and
+`output_truncated`; truncation is independent of scan completeness.
 
-JSON, JSONL and SARIF are available. JSONL serialization emits individual
-findings and a final completion summary, but the current filesystem scan
-collects findings before rendering; it is not a constant-memory result stream.
+JSON, JSONL and SARIF are available. Ordinary filesystem/Git JSONL scans emit
+`finding`, `error` and `progress` records during scanning, followed by a `summary`
+with counts and completeness. Bounded worker queues avoid collecting all file
+reports; output errors stop further acquisition. Each worker still buffers one
+input and its findings, and Git history metadata remains resident. JSON/SARIF,
+stdin, and JSONL scans using baselines collect reports; baseline validation must
+finish before filtered results are emitted. SDK callers can use the `scan_*_stream`
+APIs with `ScanControl` and a fallible event sink.
 
 ## Verification and comparison
 
@@ -110,6 +142,9 @@ cargo clippy --all-targets --locked -- -D warnings
 python3 -m unittest discover -s bench -p test_run.py
 python3 bench/fixtures/generate.py --self-test
 python3 scripts/import_rules.py --check
+python3 -m unittest discover -s bench -p test_holdout.py
+python3 -m unittest discover -s scripts -p test_stress_benchmark.py
+python3 scripts/check_package.py --allow-dirty
 ```
 
 [Benchmark methodology and reproduction](bench/README.md) separates synthetic
@@ -119,10 +154,13 @@ capabilities are retained. Online verification is disabled. These measurements
 do not establish production accuracy or universal speed leadership.
 
 Measured results: [implementation and measured findings](docs/RESULTS.md),
-[cross-tool comparison](bench/results/final.md),
+[current holdout comparison](bench/results/v2/holdout-current.md),
+[current regression/performance comparison](bench/results/v2/regression-current.md),
+[historical cross-tool comparison](bench/results/final.md),
 [machine-readable evidence](bench/results/final.json),
 [persistent agent latency](bench/results/agent-latency.json) and
-[UTF-16 memory comparison](bench/results/utf16-memory.json).
+[UTF-16 memory comparison](bench/results/utf16-memory.json) and
+[current whole-version stress comparison](bench/results/v2/stress-comparison.json).
 
 [Feature implementation matrix](docs/FEATURES.md) maps every item in the research
 catalog to implemented, partial or unimplemented status. Cloud connectors,

@@ -119,3 +119,111 @@ fn persistent_scanner_recovers_after_malformed_request_without_echoing_it() {
     assert_eq!(lines[1]["result"]["findings"].as_array().unwrap().len(), 1);
     assert_eq!(lines[2]["result"]["findings"].as_array().unwrap().len(), 0);
 }
+
+#[test]
+fn baseline_rejects_narrowed_scope_and_policy_changes_without_overwrite() {
+    let (dir, rule) = setup();
+    let root = dir.path().join("source");
+    fs::create_dir_all(root.join("clean")).unwrap();
+    fs::write(root.join("secret.txt"), "CANARY_abc123def456gh78").unwrap();
+    let baseline = dir.path().join("baseline.json");
+    assert_eq!(
+        cli(&rule)
+            .arg("scan")
+            .arg(&root)
+            .arg("--write-baseline")
+            .arg(&baseline)
+            .output()
+            .unwrap()
+            .status
+            .code(),
+        Some(1)
+    );
+    let original = fs::read(&baseline).unwrap();
+    for switch in ["--baseline", "--write-baseline"] {
+        let output = cli(&rule)
+            .arg("scan")
+            .arg(root.join("clean"))
+            .arg(switch)
+            .arg(&baseline)
+            .output()
+            .unwrap();
+        assert_eq!(output.status.code(), Some(2));
+        assert_eq!(fs::read(&baseline).unwrap(), original);
+    }
+    for extra in ["--no-ignore", "--no-decode"] {
+        let output = cli(&rule)
+            .arg("scan")
+            .arg(&root)
+            .arg(extra)
+            .arg("--write-baseline")
+            .arg(&baseline)
+            .output()
+            .unwrap();
+        assert_eq!(output.status.code(), Some(2));
+        assert_eq!(fs::read(&baseline).unwrap(), original);
+    }
+    fs::write(root.join(".ignore"), "secret.txt\n").unwrap();
+    let output = cli(&rule)
+        .arg("scan")
+        .arg(&root)
+        .arg("--write-baseline")
+        .arg(&baseline)
+        .output()
+        .unwrap();
+    assert_eq!(output.status.code(), Some(2));
+    assert_eq!(fs::read(&baseline).unwrap(), original);
+}
+
+#[test]
+fn jsonl_events_preserve_findings_errors_and_exit_contract() {
+    let (dir, rule) = setup();
+    let input = dir.path().join("input.txt");
+    fs::write(&input, "CANARY_abc123def456gh78").unwrap();
+    let output = cli(&rule)
+        .arg("scan")
+        .arg(&input)
+        .arg("--format=jsonl")
+        .output()
+        .unwrap();
+    assert_eq!(output.status.code(), Some(1));
+    let events: Vec<serde_json::Value> = String::from_utf8(output.stdout)
+        .unwrap()
+        .lines()
+        .map(|s| serde_json::from_str(s).unwrap())
+        .collect();
+    assert_eq!(events.iter().filter(|e| e["type"] == "finding").count(), 1);
+    let summary = events.last().unwrap();
+    assert_eq!(summary["type"], "summary");
+    assert_eq!(summary["complete"], true);
+    assert_eq!(summary["finding_count"], 1);
+    assert_eq!(summary["error_count"], 0);
+    let missing = cli(&rule)
+        .arg("scan")
+        .arg(dir.path().join("missing"))
+        .arg("--format=jsonl")
+        .output()
+        .unwrap();
+    assert_eq!(missing.status.code(), Some(2));
+    let events: Vec<serde_json::Value> = String::from_utf8(missing.stdout)
+        .unwrap()
+        .lines()
+        .map(|s| serde_json::from_str(s).unwrap())
+        .collect();
+    assert!(events.iter().any(|e| e["type"] == "error"));
+    assert_eq!(events.last().unwrap()["complete"], false);
+}
+
+#[test]
+fn history_range_is_rejected_for_file_scans() {
+    let (_dir, rule) = setup();
+    assert_eq!(
+        cli(&rule)
+            .args(["scan", "--range", "HEAD~1..HEAD"])
+            .output()
+            .unwrap()
+            .status
+            .code(),
+        Some(2)
+    );
+}

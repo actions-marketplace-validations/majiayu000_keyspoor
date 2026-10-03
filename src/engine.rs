@@ -1,5 +1,8 @@
 //! Independent compile-once keyword and regex secret detection.
-use std::{collections::BTreeMap, path::PathBuf};
+use std::{
+    collections::BTreeMap,
+    path::{Component, Path, PathBuf},
+};
 
 use aho_corasick::AhoCorasick;
 use anyhow::{Context, Result, ensure};
@@ -99,6 +102,7 @@ pub struct Engine {
     enable_base64: bool,
     min_entropy: Option<f32>,
     fingerprint_key: Option<[u8; 32]>,
+    configuration_id: String,
 }
 
 impl Engine {
@@ -114,6 +118,7 @@ impl Engine {
             &config.custom_rule_paths,
             config.min_confidence,
         )?;
+        let configuration_id = configuration_id(&rules, &config)?;
         let mut keyword_map: BTreeMap<String, Vec<usize>> = BTreeMap::new();
         let mut unconditional = Vec::new();
         for (id, rule) in rules.iter().enumerate() {
@@ -146,7 +151,14 @@ impl Engine {
             enable_base64: config.enable_base64,
             min_entropy: config.min_entropy,
             fingerprint_key: config.fingerprint_key,
+            configuration_id,
         })
+    }
+
+    /// Stable, opaque identity of actual compiled rules and semantic configuration.
+    /// Contains no serialized patterns or fingerprint key material.
+    pub fn configuration_id(&self) -> &str {
+        &self.configuration_id
     }
 
     pub fn rule_count(&self) -> usize {
@@ -167,12 +179,24 @@ impl Engine {
     /// Scan raw bytes, BOM-marked UTF-16 and optionally one layer of Base64. Positions refer to source
     /// bytes; decoded findings cover their original encoded container.
     pub fn scan_bytes(&self, path: &str, bytes: &[u8]) -> Result<Vec<Finding>> {
+        let identity = logical_identity(path);
+        self.scan_bytes_with_identity(path, &identity, bytes)
+    }
+
+    /// Separate display/rule-matching path from the caller's stable source identity.
+    /// `identity` is opaque and never interpreted through filesystem I/O.
+    pub fn scan_bytes_with_identity(
+        &self,
+        path: &str,
+        identity: &str,
+        bytes: &[u8],
+    ) -> Result<Vec<Finding>> {
         let decoded_utf16 = decode_utf16_bom(bytes)?;
         let content = decoded_utf16
             .as_ref()
             .map_or(bytes, |decoded| decoded.bytes.as_slice());
         let mut findings = Vec::new();
-        self.scan_content(path, content, None, &mut findings);
+        self.scan_content(path, identity, content, None, &mut findings);
         if self.enable_base64 {
             for candidate in self.base64_candidates.find_iter(content) {
                 let encoded = candidate.as_bytes();
@@ -187,6 +211,7 @@ impl Engine {
                 if let Some(decoded) = decoded {
                     self.scan_content(
                         path,
+                        identity,
                         &decoded,
                         Some((candidate.start(), candidate.end())),
                         &mut findings,
@@ -198,19 +223,7 @@ impl Engine {
             if let Some(decoded) = &decoded_utf16 {
                 map_utf16_findings(bytes, decoded.little_endian, &mut findings)?;
             } else {
-                let line_starts: Vec<_> = std::iter::once(0)
-                    .chain(
-                        bytes
-                            .iter()
-                            .enumerate()
-                            .filter_map(|(at, &byte)| (byte == b'\n').then_some(at + 1)),
-                    )
-                    .collect();
-                for finding in &mut findings {
-                    let line_index = line_starts.partition_point(|&at| at <= finding.start) - 1;
-                    finding.line = line_index + 1;
-                    finding.column = finding.start - line_starts[line_index];
-                }
+                map_byte_findings(bytes, &mut findings);
             }
         }
         findings.sort_by(|a, b| {
@@ -234,6 +247,7 @@ impl Engine {
     fn scan_content(
         &self,
         path: &str,
+        identity: &str,
         bytes: &[u8],
         container: Option<(usize, usize)>,
         out: &mut Vec<Finding>,
@@ -259,11 +273,27 @@ impl Engine {
                     .exclude_paths
                     .iter()
                     .any(|filter| filter.is_match(path))
+                || rule
+                    .allowlist
+                    .iter()
+                    .any(|group| group.matches_path_only(path))
             {
                 continue;
             }
             for captures in rule.pattern.captures_iter(bytes) {
-                let Some(secret) = captures.get(rule.spec.secret_group) else {
+                let Some(full_match) = captures.get(0) else {
+                    continue;
+                };
+                let secret = match rule.spec.secret_group {
+                    Some(group) => captures.get(group),
+                    None => captures
+                        .iter()
+                        .skip(1)
+                        .flatten()
+                        .find(|capture| !capture.is_empty())
+                        .or(Some(full_match)),
+                };
+                let Some(secret) = secret else {
                     continue;
                 };
                 let value = secret.as_bytes();
@@ -271,7 +301,27 @@ impl Engine {
                     || is_placeholder(value)
                     || (self.min_entropy.unwrap_or(rule.spec.min_entropy) > 0.0
                         && entropy(value) <= self.min_entropy.unwrap_or(rule.spec.min_entropy))
-                    || rule.allowlist.iter().any(|filter| filter.is_match(value))
+                    || (rule.spec.id.starts_with("generic-credential-")
+                        && token_assignment_is_prose(
+                            &bytes[full_match.start()..secret.start()],
+                            value,
+                        ))
+                {
+                    continue;
+                }
+                let line = if rule
+                    .allowlist
+                    .iter()
+                    .any(|group| matches!(group.target, rules::AllowlistTarget::Line))
+                {
+                    surrounding_lines(bytes, full_match.start(), full_match.end())
+                } else {
+                    &[]
+                };
+                if rule
+                    .allowlist
+                    .iter()
+                    .any(|group| group.allows(path, value, full_match.as_bytes(), line))
                 {
                     continue;
                 }
@@ -289,7 +339,7 @@ impl Engine {
                     line: 0,
                     column: 0,
                     redacted: REDACTED.into(),
-                    fingerprint: self.fingerprint(&rule.spec.id, path, value),
+                    fingerprint: self.fingerprint(&rule.spec.id, identity, value),
                     explanation: format!(
                         "Matched {} ({} confidence){}; not live-validated",
                         rule.spec.name, rule.spec.confidence, encoding
@@ -467,4 +517,109 @@ fn map_utf16_findings(source: &[u8], little: bool, findings: &mut [Finding]) -> 
         finding.explanation.push_str("; decoded UTF-16 BOM text");
     }
     Ok(())
+}
+
+fn logical_identity(path: &str) -> String {
+    Path::new(path)
+        .components()
+        .filter(|component| !matches!(component, Component::CurDir))
+        .collect::<PathBuf>()
+        .to_string_lossy()
+        .into_owned()
+}
+
+fn configuration_id(rules: &[CompiledRule], config: &EngineConfig) -> Result<String> {
+    let actual_rules: Vec<_> = rules.iter().map(|rule| &rule.spec).collect();
+    let settings = (
+        &actual_rules,
+        config.enable_base64,
+        config.min_entropy,
+        config.min_confidence,
+    );
+    let serialized =
+        serde_json::to_vec(&settings).context("serializing rule configuration identity")?;
+    let mut digest = blake3::Hasher::new();
+    digest.update(b"secret-scan/configuration/v2\0");
+    digest.update(env!("CARGO_PKG_VERSION").as_bytes());
+    digest.update(&(serialized.len() as u64).to_le_bytes());
+    digest.update(&serialized);
+    if let Some(key) = &config.fingerprint_key {
+        digest.update(b"keyed\0");
+        digest.update(blake3::keyed_hash(key, b"secret-scan/key-identity/v1").as_bytes());
+    } else {
+        digest.update(b"unkeyed\0");
+    }
+    Ok(digest.finalize().to_hex().to_string())
+}
+
+/// Walk the source at most once, stopping after the final needed start offset.
+/// The only index scales with findings; newline-heavy clean files allocate none.
+fn map_byte_findings(source: &[u8], findings: &mut [Finding]) {
+    let mut starts: Vec<_> = findings
+        .iter()
+        .enumerate()
+        .map(|(index, finding)| (finding.start, index))
+        .collect();
+    starts.sort_unstable();
+    let (mut at, mut line, mut line_start) = (0, 1, 0);
+    for (start, index) in starts {
+        while at < start {
+            if source[at] == b'\n' {
+                line += 1;
+                line_start = at + 1;
+            }
+            at += 1;
+        }
+        findings[index].line = line;
+        findings[index].column = start - line_start;
+    }
+}
+
+fn surrounding_lines(bytes: &[u8], start: usize, end: usize) -> &[u8] {
+    let line_start = bytes[..start]
+        .iter()
+        .rposition(|&byte| byte == b'\n')
+        .map_or(0, |at| at + 1);
+    let last = end.saturating_sub(1);
+    let line_end = bytes[last..]
+        .iter()
+        .position(|&byte| byte == b'\n')
+        .map_or(bytes.len(), |at| last + at);
+    &bytes[line_start..line_end]
+}
+
+/// Narrow, heuristic context filter for token-like assignments only. Long prose
+/// with clause punctuation is usually explanatory metadata. Password/secret keys
+/// and short or unpunctuated natural-language literals deliberately remain findings.
+fn token_assignment_is_prose(prefix: &[u8], value: &[u8]) -> bool {
+    let Some(delimiter) = prefix.iter().position(|&byte| byte == b'=' || byte == b':') else {
+        return false;
+    };
+    let key: Vec<_> = prefix[..delimiter]
+        .iter()
+        .copied()
+        .filter(|byte| byte.is_ascii_alphanumeric())
+        .map(|byte| byte.to_ascii_lowercase())
+        .collect();
+    if ![b"apikey".as_slice(), b"accesstoken", b"authtoken"]
+        .iter()
+        .any(|suffix| key.ends_with(suffix))
+    {
+        return false;
+    }
+    if value
+        .split(|byte| byte.is_ascii_whitespace())
+        .filter(|word| !word.is_empty())
+        .take(8)
+        .count()
+        < 8
+    {
+        return false;
+    }
+    value.iter().enumerate().any(|(at, &byte)| {
+        matches!(byte, b',' | b';' | b'.' | b'!' | b'?')
+            && value
+                .get(at + 1)
+                .is_none_or(|next| next.is_ascii_whitespace())
+    })
 }

@@ -6,6 +6,7 @@ use std::{
     sync::Arc,
 };
 
+use aho_corasick::AhoCorasick;
 use anyhow::{Context, Result, anyhow, ensure};
 use regex::{
     Regex,
@@ -41,7 +42,7 @@ pub struct RuleSpec {
     pub name: String,
     pub pattern: String,
     #[serde(default)]
-    pub secret_group: usize,
+    pub secret_group: Option<usize>,
     #[serde(default)]
     pub keywords: Vec<String>,
     #[serde(default)]
@@ -50,11 +51,80 @@ pub struct RuleSpec {
     pub confidence: Confidence,
     #[serde(default)]
     pub path: Option<String>,
-    /// Regexes matched against the extracted secret; matches are suppressed.
+    /// OR-ed groups of regex/path/stopword predicates.
     #[serde(default)]
-    pub allowlist: Vec<String>,
+    pub allowlist: Vec<AllowlistSpec>,
     #[serde(default)]
     pub exclude_paths: Vec<String>,
+}
+
+#[derive(Debug, Clone, Copy, Default, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum AllowlistCondition {
+    #[default]
+    Or,
+    And,
+}
+
+#[derive(Debug, Clone, Copy, Default, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum AllowlistTarget {
+    #[default]
+    Secret,
+    Match,
+    Line,
+}
+
+/// Within a category, predicates are OR-ed. `condition` combines populated
+/// categories; separate groups are always OR-ed. Stopwords target the secret.
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct AllowlistSpec {
+    #[serde(default)]
+    pub condition: AllowlistCondition,
+    #[serde(default)]
+    pub target: AllowlistTarget,
+    #[serde(default)]
+    pub regexes: Vec<String>,
+    #[serde(default)]
+    pub paths: Vec<String>,
+    #[serde(default)]
+    pub stopwords: Vec<String>,
+}
+
+pub(crate) struct CompiledAllowlist {
+    pub condition: AllowlistCondition,
+    pub target: AllowlistTarget,
+    pub regexes: Vec<Arc<BytesRegex>>,
+    pub paths: Vec<Arc<Regex>>,
+    pub stopwords: Option<Arc<AhoCorasick>>,
+}
+
+impl CompiledAllowlist {
+    pub fn matches_path_only(&self, path: &str) -> bool {
+        let matched = self.paths.iter().any(|regex| regex.is_match(path));
+        matched
+            && (matches!(self.condition, AllowlistCondition::Or)
+                || (self.regexes.is_empty() && self.stopwords.is_none()))
+    }
+
+    pub fn allows(&self, path: &str, secret: &[u8], full_match: &[u8], line: &[u8]) -> bool {
+        let target = match self.target {
+            AllowlistTarget::Secret => secret,
+            AllowlistTarget::Match => full_match,
+            AllowlistTarget::Line => line,
+        };
+        let checks = [
+            (!self.paths.is_empty()).then(|| self.paths.iter().any(|regex| regex.is_match(path))),
+            (!self.regexes.is_empty())
+                .then(|| self.regexes.iter().any(|regex| regex.is_match(target))),
+            self.stopwords.as_ref().map(|words| words.is_match(secret)),
+        ];
+        match self.condition {
+            AllowlistCondition::Or => checks.into_iter().flatten().any(|matched| matched),
+            AllowlistCondition::And => checks.into_iter().flatten().all(|matched| matched),
+        }
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -74,7 +144,7 @@ pub(crate) struct CompiledRule {
     pub spec: RuleSpec,
     pub pattern: BytesRegex,
     pub path: Option<Regex>,
-    pub allowlist: Vec<Arc<BytesRegex>>,
+    pub allowlist: Vec<CompiledAllowlist>,
     pub exclude_paths: Vec<Arc<Regex>>,
 }
 
@@ -102,6 +172,7 @@ pub(crate) fn compile(
     let mut compiled = Vec::new();
     let mut shared_allowlists: HashMap<String, Arc<BytesRegex>> = HashMap::new();
     let mut shared_exclusions: HashMap<String, Arc<Regex>> = HashMap::new();
+    let mut shared_stopwords: HashMap<Vec<String>, Arc<AhoCorasick>> = HashMap::new();
     for spec in specs
         .into_values()
         .filter(|rule| rule.confidence >= confidence)
@@ -122,7 +193,8 @@ pub(crate) fn compile(
                 )
             })?;
         ensure!(
-            spec.secret_group < pattern.captures_len(),
+            spec.secret_group
+                .is_none_or(|group| group < pattern.captures_len()),
             "capture group missing for rule {}",
             spec.id
         );
@@ -148,25 +220,80 @@ pub(crate) fn compile(
                 )
             })?;
         let mut allowlist = Vec::new();
-        for expression in &spec.allowlist {
-            let filter = if let Some(filter) = shared_allowlists.get(expression) {
-                Arc::clone(filter)
+        for group in &spec.allowlist {
+            ensure!(
+                !group.regexes.is_empty() || !group.paths.is_empty() || !group.stopwords.is_empty(),
+                "empty allowlist group for rule {}",
+                spec.id
+            );
+            let mut regexes = Vec::new();
+            for expression in &group.regexes {
+                let filter = if let Some(filter) = shared_allowlists.get(expression) {
+                    Arc::clone(filter)
+                } else {
+                    let filter = Arc::new(
+                        RegexBuilder::new(expression)
+                            .unicode(false)
+                            .build()
+                            .map_err(|_| {
+                                anyhow!(
+                                    "invalid regex syntax or size limit in allowlist for rule {}",
+                                    spec.id
+                                )
+                            })?,
+                    );
+                    shared_allowlists.insert(expression.clone(), Arc::clone(&filter));
+                    filter
+                };
+                regexes.push(filter);
+            }
+            let mut paths = Vec::new();
+            for expression in &group.paths {
+                let filter = if let Some(filter) = shared_exclusions.get(expression) {
+                    Arc::clone(filter)
+                } else {
+                    let filter = Arc::new(Regex::new(expression).map_err(|_| {
+                        anyhow!(
+                            "invalid regex syntax or size limit in allowlist path for rule {}",
+                            spec.id
+                        )
+                    })?);
+                    shared_exclusions.insert(expression.clone(), Arc::clone(&filter));
+                    filter
+                };
+                paths.push(filter);
+            }
+            let stopwords = if group.stopwords.is_empty() {
+                None
             } else {
-                let filter = Arc::new(
-                    RegexBuilder::new(expression)
-                        .unicode(false)
-                        .build()
-                        .map_err(|_| {
-                            anyhow!(
-                                "invalid regex syntax or size limit in allowlist for rule {}",
-                                spec.id
-                            )
-                        })?,
+                ensure!(
+                    group.stopwords.iter().all(|word| !word.is_empty()),
+                    "empty stopword for rule {}",
+                    spec.id
                 );
-                shared_allowlists.insert(expression.clone(), Arc::clone(&filter));
-                filter
+                let words = if let Some(words) = shared_stopwords.get(&group.stopwords) {
+                    Arc::clone(words)
+                } else {
+                    let words = Arc::new(
+                        AhoCorasick::builder()
+                            .ascii_case_insensitive(true)
+                            .build(&group.stopwords)
+                            .map_err(|_| {
+                                anyhow!("stopword automaton size limit for rule {}", spec.id)
+                            })?,
+                    );
+                    shared_stopwords.insert(group.stopwords.clone(), Arc::clone(&words));
+                    words
+                };
+                Some(words)
             };
-            allowlist.push(filter);
+            allowlist.push(CompiledAllowlist {
+                condition: group.condition,
+                target: group.target,
+                regexes,
+                paths,
+                stopwords,
+            });
         }
         let mut exclude_paths = Vec::new();
         for expression in &spec.exclude_paths {
@@ -248,18 +375,18 @@ fn generic_assignment_rules() -> Vec<RuleSpec> {
         id: format!("generic-credential-{syntax}"),
         name: "Literal assigned to a credential key".into(),
         pattern: format!("{key}{value}"),
-        secret_group: 1,
+        secret_group: Some(1),
         keywords: ["password", "passwd", "pwd", "secret", "api", "access", "auth", "client"]
             .into_iter().map(String::from).collect(),
         min_entropy: 0.0,
         confidence: Confidence::Medium,
         path: None,
-        allowlist: [
+        allowlist: vec![AllowlistSpec { regexes: [
             r"(?i)^(?:true|false|null|none|undefined)$",
             r"^\s*(?:\$|\{\{|<%|<|%[A-Z_]+%)",
             r"(?i)^(?:process\.env\.|(?:os\.)?environ\b|(?:getenv|env)\b|secrets\.|vars\.)",
             r"(?i)^(?:your[_ -].*|replace[_ -].*|insert[_ -].*|example|sample|dummy|placeholder|redacted|<redacted>)$",
-        ].into_iter().map(String::from).collect(),
+        ].into_iter().map(String::from).collect(), ..Default::default() }],
         exclude_paths: Vec::new(),
     }).collect()
 }
@@ -271,16 +398,16 @@ fn uri_password_rule() -> RuleSpec {
         id: "uri-userinfo-password".into(),
         name: "Password in URI authority userinfo".into(),
         pattern: r#"(?i)\b(?:postgres(?:ql)?|mysql|https?|rediss?)://[^:/@\s"'<>?#]*:([^/@\s"'<>?#]+)@(?:\[[0-9a-f:]+\]|[a-z0-9][a-z0-9.-]*)"#.into(),
-        secret_group: 1,
+        secret_group: Some(1),
         keywords: ["postgres", "mysql", "http", "redis"].into_iter().map(String::from).collect(),
         min_entropy: 0.0,
         confidence: Confidence::Medium,
         path: None,
-        allowlist: [
+        allowlist: vec![AllowlistSpec { regexes: [
             r"^(?:\$|\{\{|%[A-Z_]+%)",
             r"(?i)^(?:process\.env\.|(?:os\.)?environ\b|(?:getenv|env)\b|secrets\.|vars\.)",
             r"(?i)^(?:your[_ -].*|replace[_ -].*|insert[_ -].*|example|sample|dummy|placeholder|redacted|<redacted>)$",
-        ].into_iter().map(String::from).collect(),
+        ].into_iter().map(String::from).collect(), ..Default::default() }],
         exclude_paths: Vec::new(),
     }
 }
