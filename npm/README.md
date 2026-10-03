@@ -12,7 +12,7 @@ For the Rust library, source, rule provenance and measured benchmarks, see the
 ## Install and scan
 
 ```sh
-npm install --global keyspoor
+npm install --global https://github.com/majiayu000/keyspoor/releases/download/v0.1.1/keyspoor-0.1.1.tgz
 keyspoor scan . --format json
 keyspoor staged .
 keyspoor history .
@@ -20,16 +20,16 @@ keyspoor scan - --format jsonl
 keyspoor mcp --root /absolute/path/to/project
 ```
 
-Or run without a global installation:
-
-```sh
-npx keyspoor scan . --format sarif
-```
+The installable tarball is hosted on GitHub Releases. Publication to the npm
+registry is pending publisher authentication; `npm install -g keyspoor` is not
+available yet.
 
 The package bundles native binaries for Linux x64/ARM64 (GNU libc), macOS
 x64/ARM64 and Windows x64. Node.js 20 or later is required for the launcher.
 It has no install scripts, install-time binary downloads or runtime JavaScript
 dependencies. Alpine/musl and Windows ARM64 are not supported by these binaries.
+Linux builds use Ubuntu 24.04 and dynamically link glibc; older glibc systems
+are not guaranteed to run them. See the [release guide](https://github.com/majiayu000/keyspoor/blob/main/docs/RELEASING.md).
 Git must be installed for staged and history scans.
 
 Exit codes are **0** for a completed scan with no reported findings, **1** for a

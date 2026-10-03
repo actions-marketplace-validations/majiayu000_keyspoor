@@ -24,7 +24,8 @@ succeed, the workflow creates a GitHub release with these raw binary assets:
 | macOS Apple Silicon | `keyspoor-v0.1.1-aarch64-apple-darwin` | `macos-15` |
 | Windows x64 | `keyspoor-v0.1.1-x86_64-pc-windows-msvc.exe` | `windows-2025` |
 
-`SHA256SUMS` contains SHA-256 hashes of those five assets. On Linux, downloaded
+`LICENSE` and `THIRD_PARTY_NOTICES` accompany the binaries.
+`SHA256SUMS` contains SHA-256 hashes of those five binaries and license files. On Linux, downloaded
 files can be checked with `sha256sum --check SHA256SUMS`; on macOS, use
 `shasum -a 256 --check SHA256SUMS`. After downloading a Unix binary, mark it
 executable with `chmod +x`, then run `--version` before installation.
@@ -37,3 +38,22 @@ Runner labels follow [GitHub's hosted runner reference](https://docs.github.com/
 Official artifact actions are pinned to commits. Only the final release job has
 `contents: write`, using the workflow's temporary GitHub token. Registry
 credentials are not required by this workflow.
+
+## npm assembly
+
+Download the release files to a fresh directory, verify `SHA256SUMS`, then run:
+
+```sh
+node npm/scripts/stage.mjs /path/to/release-assets
+npm test --prefix npm
+npm pack --dry-run --json ./npm
+npm pack ./npm --pack-destination /path/to/release-assets
+```
+
+Verify the tarball contains five real native binaries, then install it in a
+temporary prefix and test `--version`, scan exits 0/1/2 and redaction. Upload
+the verified `.tgz` to the corresponding GitHub release. For registry
+publication, authenticate locally with `npm login`, then publish that exact
+tarball with `npm publish /path/to/keyspoor-0.1.1.tgz --access public`. Verify
+`npm view keyspoor` and a clean registry install before replacing pending
+publication notices with registry installation commands. Never commit tokens.

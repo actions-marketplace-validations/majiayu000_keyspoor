@@ -8,7 +8,7 @@ a reusable Rust library or a read-only MCP server.
 [Website](https://majiayu000.github.io/keyspoor/) ·
 [Rust API](https://docs.rs/keyspoor) ·
 [crates.io](https://crates.io/crates/keyspoor) ·
-[npm](https://www.npmjs.com/package/keyspoor) ·
+[npm distribution](npm/README.md) ·
 [Releases](https://github.com/majiayu000/keyspoor/releases) ·
 [简体中文](README.zh-CN.md)
 
@@ -17,12 +17,15 @@ a reusable Rust library or a read-only MCP server.
 cargo install keyspoor --locked
 
 # Or Node.js 20+: the npm package runs the native Rust CLI
-npm install -g keyspoor
+npm install -g https://github.com/majiayu000/keyspoor/releases/download/v0.1.1/keyspoor-0.1.1.tgz
 
 keyspoor scan . --format jsonl
 ```
 
-Initial release: **0.1.1**. The Rust API is pre-1.0 and may change. The npm
+The npm tarball is distributed through GitHub Releases; publication to the npm
+registry is pending publisher authentication.
+
+Current release: **0.1.1**. The Rust API is pre-1.0 and may change. The npm
 package bundles native binaries for macOS (Apple Silicon/Intel), Linux GNU
 (ARM64/x64) and Windows x64; it is a CLI launcher, not a JavaScript scanning SDK.
 There are no install hooks or runtime binary downloads.

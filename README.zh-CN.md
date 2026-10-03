@@ -6,7 +6,7 @@ JSON、JSONL 或 SARIF。既可作为原生 CLI 使用，也提供 Rust 库和�
 
 [English](README.md) · [官网](https://majiayu000.github.io/keyspoor/) ·
 [Rust API](https://docs.rs/keyspoor) · [crates.io](https://crates.io/crates/keyspoor) ·
-[npm](https://www.npmjs.com/package/keyspoor) ·
+[npm 安装包](npm/README.md) ·
 [发行版本](https://github.com/majiayu000/keyspoor/releases)
 
 ## 安装与使用
@@ -16,7 +16,7 @@ JSON、JSONL 或 SARIF。既可作为原生 CLI 使用，也提供 Rust 库和�
 cargo install keyspoor --locked
 
 # 或通过 Node.js 20+ 安装原生 Rust CLI
-npm install -g keyspoor
+npm install -g https://github.com/majiayu000/keyspoor/releases/download/v0.1.1/keyspoor-0.1.1.tgz
 
 keyspoor scan . --format jsonl
 keyspoor staged /path/to/repository
@@ -25,7 +25,9 @@ keyspoor scan . --format sarif
 keyspoor mcp --root /path/to/project
 ```
 
-初始版本为 **0.1.1**，Rust API 仍可能发生破坏性变更。npm 包内置 macOS
+npm tarball 通过 GitHub Releases 提供；npm registry 上传仍待发布账号登录。
+
+当前版本为 **0.1.1**，Rust API 仍可能发生破坏性变更。npm 包内置 macOS
 Apple Silicon/Intel、Linux GNU ARM64/x64、Windows x64 的原生二进制，
 没有安装脚本或运行时二进制下载；它是 CLI 启动器，不是 JavaScript SDK。
 也可从 [GitHub Releases](https://github.com/majiayu000/keyspoor/releases)
