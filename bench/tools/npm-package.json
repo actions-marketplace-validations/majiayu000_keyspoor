@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@secretlint/secretlint-rule-preset-recommend": "^13.0.6",
+    "secretlint": "^13.0.6"
+  }
+}

@@ -1,0 +1,18 @@
+Context-aware secret detection with provider verification and ENV.fetch rewrites.
+
+Usage: leakferret [OPTIONS] <COMMAND>
+
+Commands:
+  scan      Scan a path with regex pre-filter only (no classifier / verifier)
+  verify    Scan + offline-heuristic classify (no LLM call)
+  rewrite   Scan + classify + propose ENV-fetch rewrites for REAL findings
+  org       Scan every public repo owned by a GitHub user or organization
+  baseline  Manage the baseline file (`.leakferret-baseline.json`)
+  catalog   Manage the fixture catalog (load, refresh, info)
+  mcp       Start the MCP server on stdio
+
+Options:
+  -q, --quiet       Quiet (suppress informational tracing output)
+  -v, --verbose...  Verbose tracing (`-v` = info, `-vv` = debug, `-vvv` = trace)
+  -h, --help        Print help
+  -V, --version     Print version

@@ -1,0 +1,24 @@
+usage: scanner-rs scan git --repo <path> [OPTIONS]
+
+OPTIONS:
+    --repo=<path>             Repository path (also accepted as positional arg)
+    --rules=<path>            YAML rules file (default: default_rules.yaml next to binary)
+    --workers=<N>             Worker threads (default: auto)
+    --decode-depth=<N>        Max decode depth (default: 3)
+    --transforms=all|none|<list>  Transforms to enable (default: all)
+                              Comma-separated: base64, url (case-insensitive)
+    --execution-mode=direct|connector  Execution path (default: direct)
+    --anchors=manual|derived  Anchor mode (default: manual)
+    --debug                   Verbose stage stats to stderr
+    --debug=perf              Stage stats + pack execution timing breakdown
+    --null-sink               Drop all findings (measure scan overhead only)
+    --enrich-identities       Emit author/committer identity data
+
+FILE TYPE OPTIONS:
+    --scan-binary             Scan binary blobs instead of skipping [default: skip]
+    --skip-binary             Skip binary blobs (undo --scan-binary) [default: skip]
+
+OUTPUT OPTIONS:
+    --event-format=jsonl|text|json|sarif  Output format (default: jsonl)
+    --verbose                 Verbose output (text format only)
+    --help, -h                Show this help

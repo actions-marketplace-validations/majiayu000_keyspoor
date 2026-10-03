@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "binary_sha256": "d454d96bbb98fb5223c788afaa9fd5b2708a7c8605b729a1592d1c7c5509c5c2",
+  "payload_sha256": "6a25d1a46daa95cf9e5a7bc013b37a50076cf21d59a27952e222db944055fe4d",
+  "payload_bytes": 980,
+  "fresh_cli": {
+    "count": 10,
+    "median_ms": 35.564020450692624,
+    "p95_ms": 52.1096249576658,
+    "min_ms": 34.79445795528591,
+    "max_ms": 52.1096249576658
+  },
+  "persistent_startup_ms": 38.89591607730836,
+  "persistent_requests": {
+    "count": 100,
+    "median_ms": 0.05431246245279908,
+    "p95_ms": 0.3007500199601054,
+    "min_ms": 0.020834035240113735,
+    "max_ms": 0.8196249837055802
+  },
+  "fresh_output_bytes": [
+    144,
+    144,
+    144,
+    144,
+    144,
+    144,
+    144,
+    144,
+    144,
+    144
+  ],
+  "scope": "same binary, benign synthetic input; includes IPC and JSON; no token or cross-tool claim"
+}

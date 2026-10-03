@@ -1,0 +1,53 @@
+
+ █     █░ ██░ ██  ██▓  ██████  ██▓███  ▓█████  ██▀███    ██████ 
+▓█░ █ ░█░▓██░ ██▒▓██▒▒██    ▒ ▓██░  ██▒▓█   ▀ ▓██ ▒ ██▒▒██    ▒ 
+▒█░ █ ░█ ▒██▀▀██░▒██▒░ ▓██▄   ▓██░ ██▓▒▒███   ▓██ ░▄█ ▒░ ▓██▄   
+░█░ █ ░█ ░▓█ ░██ ░██░  ▒   ██▒▒██▄█▓▒ ▒▒▓█  ▄ ▒██▀▀█▄    ▒   ██▒
+░░██▒██▓ ░▓█▒░██▓░██░▒██████▒▒▒██▒ ░  ░░▒████▒░██▓ ▒██▒▒██████▒▒
+░ ▓░▒ ▒   ▒ ░░▒░▒░▓  ▒ ▒▓▒ ▒ ░▒▓▒░ ░  ░░░ ▒░ ░░ ▒▓ ░▒▓░▒ ▒▓▒ ▒ ░
+  ▒ ░ ░   ▒ ░▒░ ░ ▒ ░░ ░▒  ░ ░░▒ ░      ░ ░  ░  ░▒ ░ ▒░░ ░▒  ░ ░
+  ░   ░   ░  ░░ ░ ▒ ░░  ░  ░  ░░          ░     ░░   ░ ░  ░  ░  
+    ░     ░  ░  ░ ░        ░              ░  ░   ░           ░  
+                                                                
+                                                           2.2.1
+
+usage: whispers [-h] [--info] [--version] [--init] [-c CONFIG] [-o OUTPUT]
+                [-l LOG] [--debug] [-e EXITCODE] [-f FILES] [-F XFILES]
+                [-g GROUPS] [-G XGROUPS] [-r RULES] [-R XRULES] [-s SEVERITY]
+                [-S XSEVERITY]
+                [src ...]
+
+Identify secrets in static structured text.
+
+positional arguments:
+  src                   target file or directory
+
+options:
+  -h, --help            show this help message and exit
+  --info                show extended help and exit
+  --version             show version and exit
+  --init                make config and exit
+  -c CONFIG, --config CONFIG
+                        config filename
+  -o OUTPUT, --output OUTPUT
+                        output filename
+  -l LOG, --log LOG     log filename
+  --debug               show debug log
+  -e EXITCODE, --exitcode EXITCODE
+                        exit code on success
+  -f FILES, --files FILES
+                        csv of globs for including files
+  -F XFILES, --xfiles XFILES
+                        regex for excluding files
+  -g GROUPS, --groups GROUPS
+                        csv of rule groups to report (see --info)
+  -G XGROUPS, --xgroups XGROUPS
+                        csv of rule groups to exclude (see --info)
+  -r RULES, --rules RULES
+                        csv of rule IDs to report (see --info)
+  -R XRULES, --xrules XRULES
+                        csv of rule IDs to exclude (see --info)
+  -s SEVERITY, --severity SEVERITY
+                        csv of severity levels to report (see --info)
+  -S XSEVERITY, --xseverity XSEVERITY
+                        csv of severity levels to exclude (see --info)

@@ -1,0 +1,32 @@
+File system secret scanner in Rust
+
+Usage: duroc_hog [OPTIONS] <PATH>
+
+Arguments:
+  <PATH>  Sets the path of the directory or file to scan.
+
+Options:
+  -r, --regex <REGEX>
+          Sets a custom regex JSON file
+      --norecursive
+          Disable recursive scanning of all subdirectories underneath the supplied path
+  -v, --verbose...
+          Sets the level of debugging information
+      --entropy
+          Enables entropy scanning
+      --default_entropy_threshold <DEFAULT_ENTROPY_THRESHOLD>
+          Default entropy threshold (0.6 by default) [default: 0.6]
+  -z, --unzip
+          Recursively scans archives (ZIP and TAR) in memory (dangerous)
+      --caseinsensitive
+          Sets the case insensitive flag for all regexes
+  -o, --outputfile <OUTPUT>
+          Sets the path to write the scanner results to (stdout by default)
+      --prettyprint
+          Outputs the JSON in human readable format
+  -a, --allowlist <ALLOWLIST>
+          Sets a custom allowlist JSON file
+  -h, --help
+          Print help
+  -V, --version
+          Print version

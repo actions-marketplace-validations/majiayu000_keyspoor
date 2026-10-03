@@ -1,0 +1,73 @@
+Scan a path with regex pre-filter only (no classifier / verifier)
+
+Usage: leakferret scan [OPTIONS] [PATH]
+
+Arguments:
+  [PATH]
+          Path to scan
+          
+          [default: .]
+
+Options:
+      --git
+          Scan git history instead of the working tree. Every added or modified blob between
+          `--since` and `--until` is fed through the regex pre-filter
+
+  -q, --quiet
+          Quiet (suppress informational tracing output)
+
+      --since <REV>
+          Start revision for `--git` (e.g. `HEAD~10`, `v1.0.0`, a SHA). Defaults to the root commit
+
+  -v, --verbose...
+          Verbose tracing (`-v` = info, `-vv` = debug, `-vvv` = trace)
+
+      --until <REV>
+          End revision for `--git`. Defaults to `HEAD`
+
+      --max-depth <N>
+          Cap on the number of commits walked. Safety valve for huge histories (Linux-kernel-sized
+          repos). Only applies with `--git`
+
+      --all
+          Scan every branch and tag's history, not just HEAD — catches secrets on un-merged
+          branches. Requires `--git`; overrides `--since`/`--until`
+
+  -f, --format <FORMAT>
+          Output format
+          
+          [default: pretty]
+          [possible values: pretty, json, sarif]
+
+      --show-fixtures
+          Include FIXTURE-classified findings in the output
+
+      --exclude [<GLOB>...]
+          Glob patterns to exclude (in addition to .gitignore)
+
+      --only [<PATH>...]
+          Limit scan to these specific files (pre-commit hook mode)
+
+      --only-verified
+          Only emit findings the verifier confirmed live (trufflehog `--only-verified` parity).
+          Implies running the verifier even on the cheap `scan` command, and filters the output to
+          verified findings only. On `verify`, this is equivalent to passing `--verify-mode
+          only-verified`
+
+      --fail-on <LEVEL>
+          Make the CLI exit non-zero when findings at this level are present. Omitted keeps the
+          historical behaviour (exit 1 only on a REAL finding for `scan`, or per `--verify-mode` for
+          `verify`). Use `--fail-on any` in a pre-commit hook or CI to block on every detected
+          secret; pair it with `--verify-mode none` to stay fully offline
+
+          Possible values:
+          - none:     Never exit non-zero on findings
+          - any:      Exit non-zero if any non-fixture finding is present (real or unknown)
+          - real:     Exit non-zero only on findings classified real
+          - verified: Exit non-zero only on findings verified live against the provider
+
+  -h, --help
+          Print help (see a summary with '-h')
+
+  -V, --version
+          Print version

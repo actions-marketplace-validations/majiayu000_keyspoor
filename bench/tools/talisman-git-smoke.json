@@ -1,0 +1,1 @@
+{"location_precision": "file", "findings": [{"path": "config.conf", "category": "filecontent", "commits": [], "severity": "high", "kind": "failure_list"}], "upstream_exit_code": 1}

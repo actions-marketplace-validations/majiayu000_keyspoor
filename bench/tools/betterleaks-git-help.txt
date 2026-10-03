@@ -1,0 +1,57 @@
+scan git repositories for secrets
+
+Usage:
+  betterleaks git [flags] [repo]
+
+Flags:
+      --git-workers int   number of parallel git log workers (0 = single process)
+  -h, --help              help for git
+      --log-opts string   git log options
+      --platform string   the target platform used to generate links (github, gitlab)
+      --pre-commit        scan using git diff
+      --staged            scan staged commits (good for pre-commit)
+
+Global Flags:
+  -b, --baseline-path string          path to baseline with issues that can be ignored
+      --confidence string             minimum confidence to include (low, medium, high)
+  -c, --config string                 config file path
+                                      order of precedence:
+                                      1. --config/-c
+                                      2. env var BETTERLEAKS_CONFIG or GITLEAKS_CONFIG
+                                      3. env var BETTERLEAKS_CONFIG_TOML or GITLEAKS_CONFIG_TOML with the file content
+                                      4. (target path)/.betterleaks.toml or .gitleaks.toml
+                                      If none of the four options are used, then the default config will be used
+      --diagnostics string            enable diagnostics (http OR comma-separated list: cpu,mem,trace,rules,rules-csv). cpu=CPU prof, mem=memory prof, trace=exec tracing, rules=rule timings text, rules-csv=rule timings CSV, http=serve via net/http/pprof
+      --diagnostics-dir string        directory to store diagnostics output files when not using http mode (defaults to ./diagnostics)
+      --disable-rule strings          disable specific rules by id (repeatable; shorthand: -dr)
+      --enable-rule strings           only enable specific rules by id
+      --exit-code int                 exit code when leaks have been encountered (default 1)
+      --experiments string            comma-separated list of experimental features to enable
+  -i, --gitleaks-ignore-path string   path to .betterleaksignore or .gitleaksignore file or folder containing one (default ".")
+      --ignore-gitleaks-allow         ignore gitleaks:allow and betterleaks:allow comments
+      --isolate-rule strings          only enable specific rules by id (repeatable; shorthand: -ir)
+      --legacy-print                  use legacy key/value verbose finding format (requires --verbose)
+  -l, --log-level string              log level (trace, debug, info, warn, error, fatal) (default "info")
+      --match-context string          context around match: L (lines), C (columns/characters). e.g. 10L, 100C, -2C,+4C
+      --max-archive-depth int         allow scanning into nested archives up to this depth (default 8)
+      --max-decode-depth int          allow recursive decoding up to this depth (default 5)
+      --max-target-megabytes int      files larger than this will be skipped
+      --no-banner                     suppress banner
+      --no-color                      turn off color in terminal output
+      --redact uint[=100]             redact secrets from logs and stdout. To redact only parts of the secret just apply a percent value from 0..100. For example --redact=20 (default 100%)
+      --regex-engine string           regex engine (stdlib, re2) (default "re2")
+  -f, --report-format string          output format (json, csv, junit, sarif, template; validate supports pretty or jsonl)
+  -r, --report-path string            report file (use "-" for stdout)
+      --report-template string        template file used to generate the report (implies --report-format=template)
+      --timeout int                   set a timeout for gitleaks commands in seconds (default "0", no timeout is set)
+      --validation                    enable validation of findings against live APIs
+      --validation-debug              include validation HTTP debug metadata in output
+      --validation-env-vars strings   comma-separated env var names the validation env(...) binding may read (repeat flag to add more); unset means env() is disabled
+      --validation-extract-empty      include empty values from extractors in output
+      --validation-max-requests int   maximum validation requests sent to each provider target (0 = unlimited)
+      --validation-rps float          global validation requests per second (0 = unlimited)
+      --validation-rps-rule strings   rule-specific validation request rate as RULE=RPS (repeatable)
+      --validation-status string      comma-separated list of validation statuses to include: valid, needs_validation, invalid, revoked, error, unknown, none (none = rules without validation)
+      --validation-timeout duration   per-request timeout for validation (default 10s)
+      --validation-workers int        number of concurrent validation workers (default 10)
+  -v, --verbose                       show verbose output from scan

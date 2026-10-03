@@ -1,0 +1,23 @@
+usage: bench/tools/source/scratch-scanner-rs/target/release/scanner-rs scan <source> [OPTIONS]
+       bench/tools/source/scratch-scanner-rs/target/release/scanner-rs store <command> [OPTIONS]
+
+COMMANDS:
+    scan   Run a scan
+    store  Query the findings database
+
+SCAN SOURCES:
+    fs    Scan filesystem path(s)
+    git   Scan git repository history
+
+STORE COMMANDS:
+    list-runs       List completed scan runs
+    list-findings   List findings for a specific run
+    diff            Compare two runs
+    list-secrets    List unique secrets
+
+EXAMPLES:
+    bench/tools/source/scratch-scanner-rs/target/release/scanner-rs scan fs --path /src
+    bench/tools/source/scratch-scanner-rs/target/release/scanner-rs scan git --repo /repos/myproject
+    bench/tools/source/scratch-scanner-rs/target/release/scanner-rs store list-runs --store-dir .scanner-store
+    bench/tools/source/scratch-scanner-rs/target/release/scanner-rs store list-findings --store-dir .scanner-store --run <hex-id>
+    bench/tools/source/scratch-scanner-rs/target/release/scanner-rs store diff --store-dir .scanner-store --run-a <hex-id> --run-b <hex-id>

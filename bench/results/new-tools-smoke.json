@@ -1,0 +1,2847 @@
+{
+  "schema_version": 1,
+  "timestamp_utc": "2026-10-02T18:05:41Z",
+  "hardware": {
+    "system": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
+    "python": "3.14.7",
+    "logical_cpus": 12,
+    "memory_bytes": "103079215104",
+    "cpu": "Apple M2 Max"
+  },
+  "manifest_sha256": "3adca1adfc8e93042951f1a7f96d3f241c7f3078173025536c993d833f5c6569",
+  "corpus_manifest_sha256": "c452eb6df615404aa8143d91f346fbe3a547a79e5e9836862559149909e250c3",
+  "method": {
+    "offline": true,
+    "repeats": 1,
+    "timeout_seconds": 30.0,
+    "cache": "OS cache uncontrolled; warmup before repeats",
+    "scoring": "one-to-one location; exact/overlap byte span else line"
+  },
+  "tools": [
+    {
+      "id": "gitleaks",
+      "status": "available",
+      "version": "v8.30.1",
+      "source_url": "https://github.com/gitleaks/gitleaks",
+      "asset_url": "https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_darwin_arm64.tar.gz",
+      "commit_or_digest": "sha256:b40ab0ae55c505963e365f271a8d3846efbc170aa17f2607f13df610a9aeb6a5",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/gitleaks",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/gitleaks",
+          "dir",
+          "{input}",
+          "--report-format",
+          "json",
+          "--report-path",
+          "{output}",
+          "--redact",
+          "--no-banner"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/gitleaks",
+          "git",
+          "{input}",
+          "--report-format",
+          "json",
+          "--report-path",
+          "{output}",
+          "--redact",
+          "--no-banner"
+        ],
+        "staged": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/gitleaks",
+          "git",
+          "{input}",
+          "--staged",
+          "--report-format",
+          "json",
+          "--report-path",
+          "{output}",
+          "--redact",
+          "--no-banner"
+        ]
+      },
+      "parser": "gitleaks",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/gitleaks",
+        "version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "8.30.1"
+    },
+    {
+      "id": "trufflehog",
+      "status": "available",
+      "version": "v3.97.9",
+      "source_url": "https://github.com/trufflesecurity/trufflehog",
+      "asset_url": "https://github.com/trufflesecurity/trufflehog/releases/download/v3.97.9/trufflehog_3.97.9_darwin_arm64.tar.gz",
+      "commit_or_digest": "sha256:3d25c178fe1a2563687b22547adcaebcf08cc8a607315c6741fe396c597951f7",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/trufflehog",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/trufflehog",
+          "filesystem",
+          "{input}",
+          "--no-verification",
+          "--no-update",
+          "--json",
+          "--fail-on-scan-errors"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/trufflehog",
+          "git",
+          "file://{input}",
+          "--no-verification",
+          "--no-update",
+          "--json",
+          "--fail-on-scan-errors"
+        ]
+      },
+      "parser": "trufflehog",
+      "accepted_exit_codes": [
+        0
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/trufflehog",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "trufflehog 3.97.9"
+    },
+    {
+      "id": "kingfisher",
+      "status": "available",
+      "version": "v2.9.1",
+      "source_url": "https://github.com/mongodb/kingfisher",
+      "asset_url": "https://github.com/mongodb/kingfisher/releases/download/v2.9.1/kingfisher-darwin-arm64.tgz",
+      "commit_or_digest": "sha256:0218b6fc1560cffa9a7e04b74a1e17371ef3fa6c78f0bd1d586f5d2893d84cff",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/kingfisher",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/kingfisher",
+          "scan",
+          "{input}",
+          "--no-validate",
+          "--no-update-check",
+          "--git-history",
+          "none",
+          "--format",
+          "sarif",
+          "--output",
+          "{output}",
+          "--quiet"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/kingfisher",
+          "scan",
+          "{input}",
+          "--no-validate",
+          "--no-update-check",
+          "--git-history",
+          "full",
+          "--format",
+          "sarif",
+          "--output",
+          "{output}",
+          "--quiet"
+        ],
+        "staged": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/kingfisher",
+          "scan",
+          "{input}",
+          "--no-validate",
+          "--no-update-check",
+          "--git-history",
+          "none",
+          "--format",
+          "sarif",
+          "--output",
+          "{output}",
+          "--quiet",
+          "--staged"
+        ]
+      },
+      "parser": "sarif",
+      "accepted_exit_codes": [
+        0,
+        200
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/kingfisher",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "kingfisher 2.9.1",
+      "exit_code_evidence": "https://github.com/mongodb/kingfisher/blob/v2.9.1/src/main.rs#L1369"
+    },
+    {
+      "id": "betterleaks",
+      "status": "available",
+      "version": "v1.9.0",
+      "source_url": "https://github.com/betterleaks/betterleaks",
+      "asset_url": "https://github.com/betterleaks/betterleaks/releases/download/v1.9.0/betterleaks_1.9.0_darwin_arm64.tar.gz",
+      "commit_or_digest": "sha256:83dd7eaab13d44a1e8e347a17064cdef153a1478db473276d41b38d55613d3f2",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/betterleaks",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/betterleaks",
+          "dir",
+          "{input}",
+          "--report-format",
+          "json",
+          "--report-path",
+          "{output}",
+          "--redact",
+          "--no-banner"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/betterleaks",
+          "git",
+          "{input}",
+          "--report-format",
+          "json",
+          "--report-path",
+          "{output}",
+          "--redact",
+          "--no-banner"
+        ],
+        "staged": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/betterleaks",
+          "git",
+          "{input}",
+          "--staged",
+          "--report-format",
+          "json",
+          "--report-path",
+          "{output}",
+          "--redact",
+          "--no-banner"
+        ]
+      },
+      "parser": "gitleaks",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/betterleaks",
+        "version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "1.9.0"
+    },
+    {
+      "id": "titus",
+      "status": "available",
+      "version": "v1.2.10",
+      "source_url": "https://github.com/praetorian-inc/titus",
+      "asset_url": "https://github.com/praetorian-inc/titus/releases/download/v1.2.10/titus-darwin-arm64",
+      "commit_or_digest": "sha256:1501333f62becae4d4f9cbbe6edeaade4e77e4a7c74a1b6616c9fe6ae5b419ec",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/titus",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/titus",
+          "scan",
+          "{input}",
+          "--accessibility",
+          "private",
+          "--format",
+          "sarif",
+          "--output",
+          ":memory:",
+          "--quiet"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/titus",
+          "scan",
+          "{input}",
+          "--accessibility",
+          "private",
+          "--format",
+          "sarif",
+          "--output",
+          ":memory:",
+          "--quiet",
+          "--git"
+        ]
+      },
+      "parser": "sarif",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/titus",
+        "version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "Titus v1.2.10 (Go port of NoseyParker)\n\n  ______ ____ ______ __  __ _____\n /_  __//  _//_  __// / / // ___/\n  / /   / /   / /  / / / / \\__ \\\n / /  _/ /   / /  / /_/ / ___/ /\n/_/  /___/  /_/   \\____/ /____/\n There's always something.\n Praetorian Security, Inc."
+    },
+    {
+      "id": "ripsecrets",
+      "status": "available",
+      "version": "v0.1.11",
+      "source_url": "https://github.com/sirwart/ripsecrets",
+      "asset_url": "https://github.com/sirwart/ripsecrets/releases/download/v0.1.11/ripsecrets-0.1.11-aarch64-apple-darwin.tar.gz",
+      "commit_or_digest": "sha256:b2c822742e8cbf355ba0cb4cc690c3cd8fdc9ec1916c8148f27bd9098cb7aee4",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/ripsecrets",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/ripsecrets",
+          "{input}"
+        ]
+      },
+      "parser": "ripsecrets",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/ripsecrets",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "ripsecrets 0.1.11"
+    },
+    {
+      "id": "talisman",
+      "status": "adapter_pending",
+      "version": "v1.37.0",
+      "source_url": "https://github.com/thoughtworks/talisman",
+      "asset_url": "https://github.com/thoughtworks/talisman/releases/download/v1.37.0/talisman_darwin_arm64",
+      "commit_or_digest": "sha256:4806746b2ba0190941f0606853990b4da6eb7df2d64c261212a6aa66eb6b15c2",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/talisman",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {},
+      "parser": "talisman",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 2,
+      "notes": "--help convention exits 2. Git-history-focused; pattern filesystem mode requires adapter.",
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/talisman",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "talisman 1.37.0",
+      "reason": "CLI --help works (exit 2 convention); pattern/git report adapter not yet exercised."
+    },
+    {
+      "id": "trivy",
+      "status": "available",
+      "version": "v0.75.0",
+      "source_url": "https://github.com/aquasecurity/trivy",
+      "asset_url": "https://github.com/aquasecurity/trivy/releases/download/v0.75.0/trivy_0.75.0_macOS-ARM64.tar.gz",
+      "commit_or_digest": "sha256:4a77108cccf8e55c8d6823e1e759939a622277e66cd0daa3c1fc621ed69e4568",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/trivy",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/trivy",
+          "fs",
+          "--scanners",
+          "secret",
+          "--offline-scan",
+          "--skip-db-update",
+          "--skip-java-db-update",
+          "--format",
+          "sarif",
+          "--output",
+          "{output}",
+          "{input}"
+        ]
+      },
+      "parser": "sarif",
+      "accepted_exit_codes": [
+        0
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/trivy",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "Version: 0.75.0"
+    },
+    {
+      "id": "leakferret",
+      "status": "available",
+      "version": "v0.1.9",
+      "source_url": "https://github.com/leakferrethq/leakferret",
+      "asset_url": "https://github.com/leakferrethq/leakferret/releases/download/v0.1.9/leakferret-0.1.9-aarch64-apple-darwin.tar.gz",
+      "commit_or_digest": "sha256:363b1da65bf34d2c89c37aa2e00eaa03d49c8595cc5b8bb752a344dacf21d7da",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/leakferret",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/leakferret",
+          "scan",
+          "{input}",
+          "--format",
+          "sarif",
+          "--quiet"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/leakferret",
+          "scan",
+          "{input}",
+          "--format",
+          "sarif",
+          "--quiet",
+          "--git"
+        ]
+      },
+      "parser": "sarif",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/leakferret",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "leakferret 0.1.9"
+    },
+    {
+      "id": "noseyparker",
+      "status": "available",
+      "version": "v0.24.0",
+      "source_url": "https://github.com/praetorian-inc/noseyparker",
+      "asset_url": "https://github.com/praetorian-inc/noseyparker/releases/download/v0.24.0/noseyparker-v0.24.0-aarch64-apple-darwin.tar.gz",
+      "commit_or_digest": "sha256:b19f983d586a738f127bc8c53ef1331055010db4926ac1789791f717fcc107b7",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/noseyparker",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "python3",
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/noseyparker_adapter.py",
+          "fs",
+          "{input}",
+          "{output}"
+        ],
+        "git": [
+          "python3",
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/noseyparker_adapter.py",
+          "git",
+          "{input}",
+          "{output}"
+        ]
+      },
+      "parser": "sarif",
+      "accepted_exit_codes": [
+        0
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "notes": "Fresh datastore per invocation; includes scan and SARIF reporting cost.",
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/noseyparker",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "noseyparker 0.24.0\n\nBuild Configuration:\n\n    Build Timestamp:    2025-05-08T21:09:00.215428000Z\n\n    Commit Timestamp:   2025-05-08T17:04:47.000000000-04:00\n    Commit Branch:      HEAD\n    Commit SHA:         61fa4ca67e4ded1b47b3b9ecce618ae91f1ff2fe\n\n    Cargo Features:     color_backtrace,default,disable_trace,github,log,mimalloc,parquet,release\n    Debug:              true\n    Optimization:       3\n    Target Triple:      aarch64-apple-darwin\n\nBuild System:\n\n    OS:                 Darwin\n    OS Version:         macOS 13.7.5 Ventura\n\n    CPU Vendor:         Apple\n    CPU Brand:          Apple M1 (Virtual)\n    CPU Cores:          6\n\n    rustc Version:      1.86.0\n    rustc Channel:      stable\n    rustc Host Triple:  aarch64-apple-darwin\n    rustc Commit Date:  2025-03-31\n    rustc Commit SHA:   05f9846f893b09a1be1fc8560e33fc3c815cfecb\n    rustc LLVM Version: 19.1"
+    },
+    {
+      "id": "rusty-hog",
+      "status": "runtime_failed",
+      "version": "v1.0.11",
+      "source_url": "https://github.com/newrelic/rusty-hog",
+      "asset_url": "https://github.com/newrelic/rusty-hog/releases/download/v1.0.11/rustyhogs-darwin-duroc_hog-1.0.11.zip",
+      "commit_or_digest": "sha256:a23da7c53602d28bfc154be8dd1096b90faecae64fe29236eae896627968df8f",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/duroc_hog",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {},
+      "parser": "rusty_hog",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": -6,
+      "reason": "dyld[65584]: Library not loaded: /usr/local/opt/openssl@1.1/lib/libssl.1.1.dylib\n  Referenced from: <B71E1ABE-70AF-3529-931D-6B2D533B0329> /Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/rusty-hog/darwin_releases/duroc_hog\n  Reason: tried: '/usr/local/opt/openssl@1.1/lib/libssl.1.1.dylib' (no such file), '/System/Volumes/Preboot/Cryptexes/OS/usr/local/opt/openssl@1.1/lib/libssl.1.1.dylib' (no such file), '/usr/local/opt/openssl@1.1/lib/libssl.1.1.dylib' (no such file), '/usr/local/lib/libssl.1.1.dylib' (no such file), '/usr/lib/libssl.1.1.dylib' (no such file, not in dyld cache)\n"
+    },
+    {
+      "id": "detect-secrets",
+      "status": "available",
+      "version": "1.5.0",
+      "source_url": "https://github.com/Yelp/detect-secrets",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/detect-secrets",
+      "help_exit_code": 0,
+      "accepted_exit_codes": [
+        0
+      ],
+      "offline": true,
+      "install_command": "uv pip install --python bench/tools/venvs/python/bin/python detect-secrets==1.5.0",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/detect-secrets",
+          "scan",
+          "--all-files",
+          "--no-verify",
+          "{input}"
+        ]
+      },
+      "parser": "detect_secrets",
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/detect-secrets",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "1.5.0"
+    },
+    {
+      "id": "deepsecrets",
+      "status": "available",
+      "version": "2.2.0",
+      "source_url": "https://github.com/ntoskernel/deepsecrets",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/deepsecrets",
+      "help_exit_code": 0,
+      "accepted_exit_codes": [
+        0
+      ],
+      "offline": true,
+      "install_command": "uv pip install --python bench/tools/venvs/python/bin/python deepsecrets==2.2.0",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/deepsecrets",
+          "--target-dir",
+          "{input}",
+          "--outfile",
+          "{output}",
+          "--outformat",
+          "sarif",
+          "--ci",
+          "--process-count",
+          "2"
+        ]
+      },
+      "parser": "sarif",
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/deepsecrets",
+        "--version"
+      ],
+      "version_exit_code": 2,
+      "version_output": "usage: deepsecrets [-h] --target-dir TARGET_DIR\n                   [--regex-rules [REGEX_RULES ...]]\n                   [--regex-candidate-scoring-rules [REGEX_CANDIDATE_SCORING_RULES ...]]\n                   [--hashed-values [HASHED_VALUES ...]]\n                   [--semantic-analysis [SEMANTIC_ANALYSIS ...]]\n                   [--variable-scoring-rules [VARIABLE_SCORING_RULES ...]]\n                   [--excluded-paths [EXCLUDED_PATHS ...]] [--skip-bundles]\n                   [--deep-max-size DEEP_MAX_SIZE]\n                   [--confidence-level {all,low,medium,high,very-high}]\n                   [--false-findings [FALSE_FINDINGS ...]] [-v]\n                   [--reflect-findings-in-return-code]\n                   [--process-count PROCESS_COUNT]\n                   [--max-file-size MAX_FILE_SIZE]\n                   [--multiprocessing-context {spawn,fork,forkserver}]\n                   [--ci | --no-ci] --outfile OUTFILE\n                   [--outformat {json,sarif,dojo-sarif}] [--disable-"
+    },
+    {
+      "id": "whispers",
+      "status": "available",
+      "version": "2.2.1",
+      "source_url": "https://github.com/Skyscanner/whispers",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/whispers",
+      "help_exit_code": 0,
+      "accepted_exit_codes": [
+        0
+      ],
+      "offline": true,
+      "install_command": "uv pip install --python bench/tools/venvs/python/bin/python whispers==2.2.1",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/whispers",
+          "{input}",
+          "--output",
+          "{output}"
+        ]
+      },
+      "parser": "whispers",
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/whispers",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "2.2.1"
+    },
+    {
+      "id": "secretlint",
+      "status": "available",
+      "version": "13.0.6",
+      "source_url": "https://github.com/secretlint/secretlint",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/npm/node_modules/.bin/secretlint",
+      "help_exit_code": 0,
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "install_command": "npm install --prefix bench/tools/npm secretlint@13.0.6 @secretlint/secretlint-rule-preset-recommend",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/npm/node_modules/.bin/secretlint",
+          "{input}/**/*",
+          "--format",
+          "json",
+          "--secretlintrc",
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secretlintrc.json"
+        ]
+      },
+      "parser": "secretlint",
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/npm/node_modules/.bin/secretlint",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "13.0.6"
+    },
+    {
+      "id": "keyhog",
+      "status": "available",
+      "version": "0.5.86",
+      "source_url": "https://github.com/santhreal/keyhog",
+      "commit_or_digest": "c14d5538c2759e3ea299a02ec095d172025abd37",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/keyhog/target/release/keyhog",
+      "install_command": "cargo build --manifest-path bench/tools/source/keyhog/Cargo.toml --release --locked -j 2",
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/keyhog/target/release/keyhog",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "KeyHog v0.5.86\nCommit: c14d5538c2759e3ea299a02ec095d172025abd37\nDetector Set: 934 (934-dc43f6629978321b)\nBuild Target: aarch64-macos\nML Model Version: moe-v1-246a05b92bec9aa3\nML Model Card: recorded 2026-07-15; features 55; synthetic F1 0.971 / P 0.945 / R 0.999; real F1 0.832 / P 0.753 / R 0.931 / recall@0.40 0.938; zero-recall detectors 2/32; six-scanner differential unavailable",
+      "parser": "sarif",
+      "offline": true,
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "notes": "Default portable release build; explicit CPU backend disables calibration requirement and GPU; no network verification.",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/keyhog/target/release/keyhog",
+          "scan",
+          "{input}",
+          "--format",
+          "sarif",
+          "--no-verify",
+          "--backend",
+          "cpu",
+          "--quiet"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/keyhog/target/release/keyhog",
+          "scan",
+          "--git-history",
+          "{input}",
+          "--format",
+          "sarif",
+          "--no-verify",
+          "--backend",
+          "cpu",
+          "--quiet"
+        ]
+      }
+    },
+    {
+      "id": "git-secrets",
+      "status": "available",
+      "version": "HEAD",
+      "source_url": "https://github.com/awslabs/git-secrets",
+      "commit_or_digest": "7d6b970cbd3c216353cb22b383b70c150140662e",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/git-secrets/git-secrets",
+      "install_command": "git clone --depth 1 https://github.com/awslabs/git-secrets bench/tools/source/git-secrets",
+      "parser": "git_secrets",
+      "offline": true,
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "notes": "Official --register-aws pattern set in temporary isolated config; removes provider to avoid reading user AWS credentials; stderr finding records forwarded stdout.",
+      "commands": {
+        "fs": [
+          "python3",
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/git_secrets_adapter.py",
+          "fs",
+          "{input}"
+        ],
+        "git": [
+          "python3",
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/git_secrets_adapter.py",
+          "git",
+          "{input}"
+        ],
+        "staged": [
+          "python3",
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/git_secrets_adapter.py",
+          "staged",
+          "{input}"
+        ]
+      }
+    },
+    {
+      "id": "credential-digger",
+      "status": "runtime_failed",
+      "source_url": "https://github.com/SAP-archive/credential-digger",
+      "commit_or_digest": "21f89283400168e2c454b57467291a248b571a3c",
+      "reason": "Installed but CLI ImportError: cannot import TFRobertaForSequenceClassification from transformers.",
+      "install_command": "uv pip install --python bench/tools/venvs/credentialdigger/bin/python ./bench/tools/source/credential-digger",
+      "commands": {},
+      "offline": true
+    },
+    {
+      "id": "scratch-scanner-rs",
+      "status": "build_failed",
+      "source_url": "https://github.com/ahrav/scratch-scanner-rs",
+      "commit_or_digest": "3fb8740fb576a9859c84b7a5a08f3bbae06a9f05",
+      "reason": "Source build exit 101: missing sibling Gossip-rs/crates/gossip-connectors path dependency.",
+      "install_command": "cargo build --release --locked -j 2",
+      "commands": {},
+      "offline": true
+    },
+    {
+      "id": "deepfence-secretscanner",
+      "status": "build_failed",
+      "source_url": "https://github.com/deepfence/SecretScanner",
+      "commit_or_digest": "5fa8aee4882ab8352dda2628d58eed283c1f966a",
+      "reason": "Source build exit 1: go.mod replacement ../YaraHunter missing.",
+      "install_command": "go build -p 2 -o ../../binaries/SecretScanner .",
+      "commands": {},
+      "offline": true
+    },
+    {
+      "id": "ggshield",
+      "status": "external_service_required",
+      "source_url": "https://github.com/GitGuardian/ggshield",
+      "reason": "Open CLI invokes proprietary authenticated cloud detection; cannot participate in offline no-credentials benchmark.",
+      "commands": {},
+      "offline": false
+    },
+    {
+      "id": "secrets-patterns-db",
+      "status": "not_executable",
+      "source_url": "https://github.com/mazen160/secrets-patterns-db",
+      "reason": "Rule database, not a standalone scanning engine.",
+      "commands": {},
+      "offline": true
+    }
+  ],
+  "datasets": {
+    "quality": {
+      "path": "quality",
+      "mode": "fs"
+    },
+    "capabilities": {
+      "path": "capabilities",
+      "mode": "fs",
+      "archives": [
+        {
+          "path": "capabilities/archive.zip",
+          "member": "nested/config.conf",
+          "provider": "github-pat",
+          "candidate_sha256": "b398812423072225b313600dd692dad498f4086cf13a7cb84fca3d6131f992a8"
+        },
+        {
+          "path": "capabilities/archive.tar.gz",
+          "member": "nested/config.conf",
+          "provider": "github-pat",
+          "candidate_sha256": "b398812423072225b313600dd692dad498f4086cf13a7cb84fca3d6131f992a8"
+        }
+      ]
+    },
+    "git_history": {
+      "path": "git-repo",
+      "mode": "git",
+      "commits": 3
+    },
+    "staged": {
+      "path": "git-repo",
+      "mode": "staged"
+    },
+    "git_worktree": {
+      "path": "git-repo",
+      "mode": "fs"
+    }
+  },
+  "results": [
+    {
+      "tool": "gitleaks",
+      "dataset": "quality",
+      "mode": "fs",
+      "input_bytes": 2721,
+      "input_files": 44,
+      "worktree_content_sha256": "d06745d4356819c905f5556f9247505c4d02194125d65392e4ee119b0355125b",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.29671904200222343,
+          "user_seconds": 0.33242299999999997,
+          "system_seconds": 0.028776999999999997,
+          "peak_rss_bytes": 79462400,
+          "stdout_bytes": 0,
+          "stderr_bytes": 78,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "550c6b72412d51608de89ddc960d927ac209cb4665942b0d136c03d85c7778b4",
+          "complete": true,
+          "findings_count": 31,
+          "locations_sha256": "677756b2dcb135b53754780ccea7ac392e61c864f21f320ecc523ceabc23c1e1",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.29962420905940235,
+          "user_seconds": 0.3066,
+          "system_seconds": 0.021047,
+          "peak_rss_bytes": 77217792,
+          "stdout_bytes": 0,
+          "stderr_bytes": 78,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "68a1f7e28da56f38bb49c98cc712242c6d7843821ab22c3d4871fd7ea4da8e0a",
+          "complete": true,
+          "findings_count": 31,
+          "locations_sha256": "677756b2dcb135b53754780ccea7ac392e61c864f21f320ecc523ceabc23c1e1",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.2869479580549523,
+          "user_seconds": 0.313833,
+          "system_seconds": 0.02352,
+          "peak_rss_bytes": 74350592,
+          "stdout_bytes": 0,
+          "stderr_bytes": 78,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "fa6e56739cd1c626ec66cea22327469f7d8b83a7fe00ba6de791f47bd27e7973",
+          "complete": true,
+          "findings_count": 31,
+          "locations_sha256": "677756b2dcb135b53754780ccea7ac392e61c864f21f320ecc523ceabc23c1e1",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/gitleaks",
+        "dir",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-smoke/quality",
+        "--report-format",
+        "json",
+        "--report-path",
+        "/var/folders/58/pj_81qw13l59j103s0njbw1c0000gn/T/secret-benchmark-chlgrzkk/report.json",
+        "--redact",
+        "--no-banner"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.29671904200222343,
+        "median_seconds": 0.2869479580549523,
+        "min_seconds": 0.2869479580549523,
+        "max_seconds": 0.2869479580549523,
+        "mib_per_second": 0.009043269840743936,
+        "max_peak_rss_bytes": 74350592
+      },
+      "quality": {
+        "tp": 31,
+        "fp": 0,
+        "fn": 3,
+        "negative_labels_flagged": 0,
+        "tn": 10,
+        "positive_labels": 34,
+        "negative_labels": 10,
+        "precision": 1.0,
+        "recall": 0.9117647058823529,
+        "f1": 0.9538461538461539,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 0,
+          "line_only": 31
+        },
+        "by_group": {
+          "common": {
+            "tp": 27,
+            "total": 27,
+            "recall": 1.0
+          },
+          "generic": {
+            "tp": 4,
+            "total": 7,
+            "recall": 0.5714285714285714
+          }
+        },
+        "by_provider": {
+          "aws-access-key": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "github-pat": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "gitlab-pat": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "slack-bot": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "stripe-secret": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "google-api": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "sendgrid-api": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "npm-token": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "twilio-api": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "generic": {
+            "tp": 4,
+            "total": 7,
+            "recall": 0.5714285714285714
+          }
+        },
+        "missed_label_ids": [
+          "quality-00030",
+          "quality-00031",
+          "quality-00033"
+        ]
+      }
+    },
+    {
+      "tool": "gitleaks",
+      "dataset": "git_history",
+      "mode": "git",
+      "input_bytes": null,
+      "input_files": 2,
+      "worktree_content_sha256": "af4d948ec701ac170353fa762bb733c13f7dd93471034da560a9a3358e308ac0",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.30438570806290954,
+          "user_seconds": 0.283171,
+          "system_seconds": 0.028513999999999998,
+          "peak_rss_bytes": 69419008,
+          "stdout_bytes": 0,
+          "stderr_bytes": 107,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "c7445a07a0b2f8e3ba97cefdd4be00c40d7d24c8c588c0a919240b82fc3f7ce0",
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "a129f0993f83ab772a686f9784420cc742812e4ccb7d6a0b1c0bdd3cf4e3e6c6",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.3091061660088599,
+          "user_seconds": 0.28484,
+          "system_seconds": 0.031546,
+          "peak_rss_bytes": 71647232,
+          "stdout_bytes": 0,
+          "stderr_bytes": 107,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "c121c62cebe7c1a3c397bf00fe7bcce993117157ac33a526c71fd7a5efb2433e",
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "a129f0993f83ab772a686f9784420cc742812e4ccb7d6a0b1c0bdd3cf4e3e6c6",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.3021073329728097,
+          "user_seconds": 0.280007,
+          "system_seconds": 0.026501999999999998,
+          "peak_rss_bytes": 75005952,
+          "stdout_bytes": 0,
+          "stderr_bytes": 107,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "731d0ae842de78da9824bc4f30922c75c75e23d0d7d7f710d3c231f2eddb6eab",
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "a129f0993f83ab772a686f9784420cc742812e4ccb7d6a0b1c0bdd3cf4e3e6c6",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/gitleaks",
+        "git",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-smoke/git-repo",
+        "--report-format",
+        "json",
+        "--report-path",
+        "/var/folders/58/pj_81qw13l59j103s0njbw1c0000gn/T/secret-benchmark-577zoir4/report.json",
+        "--redact",
+        "--no-banner"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.30438570806290954,
+        "median_seconds": 0.3021073329728097,
+        "min_seconds": 0.3021073329728097,
+        "max_seconds": 0.3021073329728097,
+        "mib_per_second": null,
+        "max_peak_rss_bytes": 75005952
+      },
+      "quality": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "negative_labels_flagged": 0,
+        "tn": 0,
+        "positive_labels": 1,
+        "negative_labels": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 0,
+          "line_only": 1
+        },
+        "by_group": {
+          "history": {
+            "tp": 1,
+            "total": 1,
+            "recall": 1.0
+          }
+        },
+        "by_provider": {
+          "github-pat": {
+            "tp": 1,
+            "total": 1,
+            "recall": 1.0
+          }
+        },
+        "missed_label_ids": []
+      }
+    },
+    {
+      "tool": "gitleaks",
+      "dataset": "staged",
+      "mode": "staged",
+      "input_bytes": null,
+      "input_files": 2,
+      "worktree_content_sha256": "af4d948ec701ac170353fa762bb733c13f7dd93471034da560a9a3358e308ac0",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.2912085419520736,
+          "user_seconds": 0.27652899999999997,
+          "system_seconds": 0.020161,
+          "peak_rss_bytes": 70074368,
+          "stdout_bytes": 0,
+          "stderr_bytes": 105,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "fbae2fbf2aa89877200c56d1bfbc43e943b5cf37e8ac276375d811f77aae073c",
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "dd629b0ef968af8cf361be6db74ca0a0834eb770e6e39ec28cbe5da027c07d3c",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.2874117080355063,
+          "user_seconds": 0.274806,
+          "system_seconds": 0.020562999999999998,
+          "peak_rss_bytes": 68059136,
+          "stdout_bytes": 0,
+          "stderr_bytes": 105,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e9a2d97dd2d279686b867a78d916b5f749f29e24ec52ea90c66bf9c0051e1db3",
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "dd629b0ef968af8cf361be6db74ca0a0834eb770e6e39ec28cbe5da027c07d3c",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.28764520899858326,
+          "user_seconds": 0.276041,
+          "system_seconds": 0.019641,
+          "peak_rss_bytes": 71909376,
+          "stdout_bytes": 0,
+          "stderr_bytes": 105,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "67d0a37436680d62bfea6c62dbf0e9aa4b203aa874dd43ffdc38e70bce6f61f2",
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "dd629b0ef968af8cf361be6db74ca0a0834eb770e6e39ec28cbe5da027c07d3c",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/gitleaks",
+        "git",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-smoke/git-repo",
+        "--staged",
+        "--report-format",
+        "json",
+        "--report-path",
+        "/var/folders/58/pj_81qw13l59j103s0njbw1c0000gn/T/secret-benchmark-942omeg1/report.json",
+        "--redact",
+        "--no-banner"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.2912085419520736,
+        "median_seconds": 0.28764520899858326,
+        "min_seconds": 0.28764520899858326,
+        "max_seconds": 0.28764520899858326,
+        "mib_per_second": null,
+        "max_peak_rss_bytes": 71909376
+      },
+      "quality": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "negative_labels_flagged": 0,
+        "tn": 0,
+        "positive_labels": 1,
+        "negative_labels": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 0,
+          "line_only": 1
+        },
+        "by_group": {
+          "staged": {
+            "tp": 1,
+            "total": 1,
+            "recall": 1.0
+          }
+        },
+        "by_provider": {
+          "github-pat": {
+            "tp": 1,
+            "total": 1,
+            "recall": 1.0
+          }
+        },
+        "missed_label_ids": []
+      }
+    },
+    {
+      "tool": "kingfisher",
+      "dataset": "quality",
+      "mode": "fs",
+      "input_bytes": 2721,
+      "input_files": 44,
+      "worktree_content_sha256": "d06745d4356819c905f5556f9247505c4d02194125d65392e4ee119b0355125b",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 200,
+          "wall_seconds": 0.48569179198239,
+          "user_seconds": 0.44320099999999996,
+          "system_seconds": 0.07528,
+          "peak_rss_bytes": 191135744,
+          "stdout_bytes": 0,
+          "stderr_bytes": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 8,
+          "locations_sha256": "75074e45b297a045caa30b6ef6626e2be03006da9e43e8d92572d770ca826ef3",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 200,
+          "wall_seconds": 0.5801809160038829,
+          "user_seconds": 0.49074199999999996,
+          "system_seconds": 0.039885,
+          "peak_rss_bytes": 193691648,
+          "stdout_bytes": 0,
+          "stderr_bytes": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 8,
+          "locations_sha256": "3da4053902594af14ae4397ef43579acc111a0f7f692e1a17b714cb8edef23ae",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 200,
+          "wall_seconds": 0.4026301660342142,
+          "user_seconds": 0.430241,
+          "system_seconds": 0.037129999999999996,
+          "peak_rss_bytes": 193560576,
+          "stdout_bytes": 0,
+          "stderr_bytes": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 8,
+          "locations_sha256": "a47c52970362fde00113f1cabe50ec966e106cf505b605a86eba0ab0caf3dd8f",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "nondeterministic",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/kingfisher",
+        "scan",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-smoke/quality",
+        "--no-validate",
+        "--no-update-check",
+        "--git-history",
+        "none",
+        "--format",
+        "sarif",
+        "--output",
+        "/var/folders/58/pj_81qw13l59j103s0njbw1c0000gn/T/secret-benchmark-j57ey65p/report.json",
+        "--quiet"
+      ]
+    },
+    {
+      "tool": "kingfisher",
+      "dataset": "git_history",
+      "mode": "git",
+      "input_bytes": null,
+      "input_files": 2,
+      "worktree_content_sha256": "af4d948ec701ac170353fa762bb733c13f7dd93471034da560a9a3358e308ac0",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 200,
+          "wall_seconds": 0.45645466609857976,
+          "user_seconds": 0.386748,
+          "system_seconds": 0.062311,
+          "peak_rss_bytes": 131694592,
+          "stdout_bytes": 0,
+          "stderr_bytes": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 3,
+          "locations_sha256": "89b048c9e5a122ba8af388a95b06a4f3a2bd1b0435ca5b07b47e186c51cee5fd",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 200,
+          "wall_seconds": 0.45352000009734184,
+          "user_seconds": 0.38761999999999996,
+          "system_seconds": 0.056819999999999996,
+          "peak_rss_bytes": 132546560,
+          "stdout_bytes": 0,
+          "stderr_bytes": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 3,
+          "locations_sha256": "89b048c9e5a122ba8af388a95b06a4f3a2bd1b0435ca5b07b47e186c51cee5fd",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 200,
+          "wall_seconds": 0.44770329096354544,
+          "user_seconds": 0.380447,
+          "system_seconds": 0.056951999999999996,
+          "peak_rss_bytes": 133316608,
+          "stdout_bytes": 0,
+          "stderr_bytes": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 3,
+          "locations_sha256": "89b048c9e5a122ba8af388a95b06a4f3a2bd1b0435ca5b07b47e186c51cee5fd",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/kingfisher",
+        "scan",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-smoke/git-repo",
+        "--no-validate",
+        "--no-update-check",
+        "--git-history",
+        "full",
+        "--format",
+        "sarif",
+        "--output",
+        "/var/folders/58/pj_81qw13l59j103s0njbw1c0000gn/T/secret-benchmark-z2q8wh_5/report.json",
+        "--quiet"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.45645466609857976,
+        "median_seconds": 0.44770329096354544,
+        "min_seconds": 0.44770329096354544,
+        "max_seconds": 0.44770329096354544,
+        "mib_per_second": null,
+        "max_peak_rss_bytes": 133316608
+      },
+      "quality": {
+        "tp": 1,
+        "fp": 2,
+        "fn": 0,
+        "negative_labels_flagged": 0,
+        "tn": 0,
+        "positive_labels": 1,
+        "negative_labels": 0,
+        "precision": 0.3333333333333333,
+        "recall": 1.0,
+        "f1": 0.5,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 0,
+          "line_only": 1
+        },
+        "by_group": {
+          "history": {
+            "tp": 1,
+            "total": 1,
+            "recall": 1.0
+          }
+        },
+        "by_provider": {
+          "github-pat": {
+            "tp": 1,
+            "total": 1,
+            "recall": 1.0
+          }
+        },
+        "missed_label_ids": []
+      }
+    },
+    {
+      "tool": "kingfisher",
+      "dataset": "staged",
+      "mode": "staged",
+      "input_bytes": null,
+      "input_files": 2,
+      "worktree_content_sha256": "af4d948ec701ac170353fa762bb733c13f7dd93471034da560a9a3358e308ac0",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 200,
+          "wall_seconds": 0.4868474999675527,
+          "user_seconds": 0.381301,
+          "system_seconds": 0.068927,
+          "peak_rss_bytes": 131940352,
+          "stdout_bytes": 0,
+          "stderr_bytes": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "67ac4f269ada736b648afd21b92a48ef957feaf37f77912b57b78c5ac81317a6",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 200,
+          "wall_seconds": 0.4815806249389425,
+          "user_seconds": 0.382666,
+          "system_seconds": 0.06547599999999999,
+          "peak_rss_bytes": 130056192,
+          "stdout_bytes": 0,
+          "stderr_bytes": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "67ac4f269ada736b648afd21b92a48ef957feaf37f77912b57b78c5ac81317a6",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 200,
+          "wall_seconds": 0.48433079093229026,
+          "user_seconds": 0.38398899999999997,
+          "system_seconds": 0.065731,
+          "peak_rss_bytes": 128647168,
+          "stdout_bytes": 0,
+          "stderr_bytes": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "67ac4f269ada736b648afd21b92a48ef957feaf37f77912b57b78c5ac81317a6",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/kingfisher",
+        "scan",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-smoke/git-repo",
+        "--no-validate",
+        "--no-update-check",
+        "--git-history",
+        "none",
+        "--format",
+        "sarif",
+        "--output",
+        "/var/folders/58/pj_81qw13l59j103s0njbw1c0000gn/T/secret-benchmark-6zt8qgu1/report.json",
+        "--quiet",
+        "--staged"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.4868474999675527,
+        "median_seconds": 0.48433079093229026,
+        "min_seconds": 0.48433079093229026,
+        "max_seconds": 0.48433079093229026,
+        "mib_per_second": null,
+        "max_peak_rss_bytes": 128647168
+      },
+      "quality": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "negative_labels_flagged": 0,
+        "tn": 0,
+        "positive_labels": 1,
+        "negative_labels": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 0,
+          "line_only": 1
+        },
+        "by_group": {
+          "staged": {
+            "tp": 1,
+            "total": 1,
+            "recall": 1.0
+          }
+        },
+        "by_provider": {
+          "github-pat": {
+            "tp": 1,
+            "total": 1,
+            "recall": 1.0
+          }
+        },
+        "missed_label_ids": []
+      }
+    },
+    {
+      "tool": "betterleaks",
+      "dataset": "quality",
+      "mode": "fs",
+      "input_bytes": 2721,
+      "input_files": 44,
+      "worktree_content_sha256": "d06745d4356819c905f5556f9247505c4d02194125d65392e4ee119b0355125b",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.21637712500523776,
+          "user_seconds": 0.839324,
+          "system_seconds": 0.051959,
+          "peak_rss_bytes": 91160576,
+          "stdout_bytes": 0,
+          "stderr_bytes": 77,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "882303e33e42c35d754703bdfadd1a568360817c9ef6ad670e98d9c828e3fc8b",
+          "complete": true,
+          "findings_count": 34,
+          "locations_sha256": "881cbe1e4e9e31c4857b61aded12efb2d68b186ae1ea4ec50cb906ff1d8bc4ef",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.16387170902453363,
+          "user_seconds": 0.5135419999999999,
+          "system_seconds": 0.043759,
+          "peak_rss_bytes": 85573632,
+          "stdout_bytes": 0,
+          "stderr_bytes": 77,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "8fc3ecf690a934270043030adab49b56beb7a2c6b99180dbfebf7b4454d1be6f",
+          "complete": true,
+          "findings_count": 34,
+          "locations_sha256": "881cbe1e4e9e31c4857b61aded12efb2d68b186ae1ea4ec50cb906ff1d8bc4ef",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.1890183340292424,
+          "user_seconds": 0.729216,
+          "system_seconds": 0.044323999999999995,
+          "peak_rss_bytes": 84443136,
+          "stdout_bytes": 0,
+          "stderr_bytes": 77,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "487afbde38520e11fddd21686d61f49cc459c40ffee3d366cd4d7a221fa76bbb",
+          "complete": true,
+          "findings_count": 34,
+          "locations_sha256": "881cbe1e4e9e31c4857b61aded12efb2d68b186ae1ea4ec50cb906ff1d8bc4ef",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/betterleaks",
+        "dir",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-smoke/quality",
+        "--report-format",
+        "json",
+        "--report-path",
+        "/var/folders/58/pj_81qw13l59j103s0njbw1c0000gn/T/secret-benchmark-ff39xlw9/report.json",
+        "--redact",
+        "--no-banner"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.21637712500523776,
+        "median_seconds": 0.1890183340292424,
+        "min_seconds": 0.1890183340292424,
+        "max_seconds": 0.1890183340292424,
+        "mib_per_second": 0.01372855087454083,
+        "max_peak_rss_bytes": 84443136
+      },
+      "quality": {
+        "tp": 33,
+        "fp": 1,
+        "fn": 1,
+        "negative_labels_flagged": 1,
+        "tn": 9,
+        "positive_labels": 34,
+        "negative_labels": 10,
+        "precision": 0.9705882352941176,
+        "recall": 0.9705882352941176,
+        "f1": 0.9705882352941176,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 0,
+          "line_only": 33
+        },
+        "by_group": {
+          "common": {
+            "tp": 27,
+            "total": 27,
+            "recall": 1.0
+          },
+          "generic": {
+            "tp": 6,
+            "total": 7,
+            "recall": 0.8571428571428571
+          }
+        },
+        "by_provider": {
+          "aws-access-key": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "github-pat": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "gitlab-pat": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "slack-bot": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "stripe-secret": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "google-api": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "sendgrid-api": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "npm-token": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "twilio-api": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "generic": {
+            "tp": 6,
+            "total": 7,
+            "recall": 0.8571428571428571
+          }
+        },
+        "missed_label_ids": [
+          "quality-00030"
+        ]
+      }
+    },
+    {
+      "tool": "betterleaks",
+      "dataset": "git_history",
+      "mode": "git",
+      "input_bytes": null,
+      "input_files": 2,
+      "worktree_content_sha256": "af4d948ec701ac170353fa762bb733c13f7dd93471034da560a9a3358e308ac0",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.06563170801382512,
+          "user_seconds": 0.043731,
+          "system_seconds": 0.023538999999999997,
+          "peak_rss_bytes": 38371328,
+          "stdout_bytes": 0,
+          "stderr_bytes": 78,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "5964eedfa3505ff361d8d50402b03ced53e1999651a1a232374f0d18586e2c84",
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "a129f0993f83ab772a686f9784420cc742812e4ccb7d6a0b1c0bdd3cf4e3e6c6",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.0675340830348432,
+          "user_seconds": 0.042925,
+          "system_seconds": 0.02148,
+          "peak_rss_bytes": 38371328,
+          "stdout_bytes": 0,
+          "stderr_bytes": 78,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e63e469d1103274490eafbefc6440744a2cd3d7509fab023f230a801f5fe370d",
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "a129f0993f83ab772a686f9784420cc742812e4ccb7d6a0b1c0bdd3cf4e3e6c6",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.06702404201496392,
+          "user_seconds": 0.044378,
+          "system_seconds": 0.022437,
+          "peak_rss_bytes": 37945344,
+          "stdout_bytes": 0,
+          "stderr_bytes": 78,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "4044a07df582f298bbf8ab63cf5712c2ca38fddc325dceb28df175268debab2c",
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "a129f0993f83ab772a686f9784420cc742812e4ccb7d6a0b1c0bdd3cf4e3e6c6",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/betterleaks",
+        "git",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-smoke/git-repo",
+        "--report-format",
+        "json",
+        "--report-path",
+        "/var/folders/58/pj_81qw13l59j103s0njbw1c0000gn/T/secret-benchmark-osx62ke8/report.json",
+        "--redact",
+        "--no-banner"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.06563170801382512,
+        "median_seconds": 0.06702404201496392,
+        "min_seconds": 0.06702404201496392,
+        "max_seconds": 0.06702404201496392,
+        "mib_per_second": null,
+        "max_peak_rss_bytes": 37945344
+      },
+      "quality": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "negative_labels_flagged": 0,
+        "tn": 0,
+        "positive_labels": 1,
+        "negative_labels": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 0,
+          "line_only": 1
+        },
+        "by_group": {
+          "history": {
+            "tp": 1,
+            "total": 1,
+            "recall": 1.0
+          }
+        },
+        "by_provider": {
+          "github-pat": {
+            "tp": 1,
+            "total": 1,
+            "recall": 1.0
+          }
+        },
+        "missed_label_ids": []
+      }
+    },
+    {
+      "tool": "betterleaks",
+      "dataset": "staged",
+      "mode": "staged",
+      "input_bytes": null,
+      "input_files": 2,
+      "worktree_content_sha256": "af4d948ec701ac170353fa762bb733c13f7dd93471034da560a9a3358e308ac0",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.0724624169524759,
+          "user_seconds": 0.05697,
+          "system_seconds": 0.017558999999999998,
+          "peak_rss_bytes": 42188800,
+          "stdout_bytes": 0,
+          "stderr_bytes": 76,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "ab08e8f3978e68b12780025e858cf361d32a40638ef52bbce40124dd55d608d0",
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "dd629b0ef968af8cf361be6db74ca0a0834eb770e6e39ec28cbe5da027c07d3c",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.07360062492080033,
+          "user_seconds": 0.057333999999999996,
+          "system_seconds": 0.017658999999999998,
+          "peak_rss_bytes": 42500096,
+          "stdout_bytes": 0,
+          "stderr_bytes": 76,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "ce30c2379eb5f830ee4d384f08da9d64a69321af77702eb760ed7583cf1651e7",
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "dd629b0ef968af8cf361be6db74ca0a0834eb770e6e39ec28cbe5da027c07d3c",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.07402824994642287,
+          "user_seconds": 0.05746,
+          "system_seconds": 0.017388999999999998,
+          "peak_rss_bytes": 42401792,
+          "stdout_bytes": 0,
+          "stderr_bytes": 76,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "3b283e8b4058b8c56cd62d339710ad63f97f43e881893db9aea549de1336cb71",
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "dd629b0ef968af8cf361be6db74ca0a0834eb770e6e39ec28cbe5da027c07d3c",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/betterleaks",
+        "git",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-smoke/git-repo",
+        "--staged",
+        "--report-format",
+        "json",
+        "--report-path",
+        "/var/folders/58/pj_81qw13l59j103s0njbw1c0000gn/T/secret-benchmark-i17ofewr/report.json",
+        "--redact",
+        "--no-banner"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.0724624169524759,
+        "median_seconds": 0.07402824994642287,
+        "min_seconds": 0.07402824994642287,
+        "max_seconds": 0.07402824994642287,
+        "mib_per_second": null,
+        "max_peak_rss_bytes": 42401792
+      },
+      "quality": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "negative_labels_flagged": 0,
+        "tn": 0,
+        "positive_labels": 1,
+        "negative_labels": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 0,
+          "line_only": 1
+        },
+        "by_group": {
+          "staged": {
+            "tp": 1,
+            "total": 1,
+            "recall": 1.0
+          }
+        },
+        "by_provider": {
+          "github-pat": {
+            "tp": 1,
+            "total": 1,
+            "recall": 1.0
+          }
+        },
+        "missed_label_ids": []
+      }
+    },
+    {
+      "tool": "noseyparker",
+      "dataset": "quality",
+      "mode": "fs",
+      "input_bytes": 2721,
+      "input_files": 44,
+      "worktree_content_sha256": "d06745d4356819c905f5556f9247505c4d02194125d65392e4ee119b0355125b",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.46403404197189957,
+          "user_seconds": 0.36330999999999997,
+          "system_seconds": 0.078135,
+          "peak_rss_bytes": 259702784,
+          "stdout_bytes": 0,
+          "stderr_bytes": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 28,
+          "locations_sha256": "f7aa875032be4542cfcfa531224e66abf1adf3bf4dab9dd306fb8f0a66a2e7ea",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.41718312492594123,
+          "user_seconds": 0.36561699999999997,
+          "system_seconds": 0.053856999999999995,
+          "peak_rss_bytes": 259489792,
+          "stdout_bytes": 0,
+          "stderr_bytes": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 28,
+          "locations_sha256": "f7aa875032be4542cfcfa531224e66abf1adf3bf4dab9dd306fb8f0a66a2e7ea",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.4113277499563992,
+          "user_seconds": 0.361197,
+          "system_seconds": 0.053398,
+          "peak_rss_bytes": 259588096,
+          "stdout_bytes": 0,
+          "stderr_bytes": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 28,
+          "locations_sha256": "f7aa875032be4542cfcfa531224e66abf1adf3bf4dab9dd306fb8f0a66a2e7ea",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "python3",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/noseyparker_adapter.py",
+        "fs",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-smoke/quality",
+        "/var/folders/58/pj_81qw13l59j103s0njbw1c0000gn/T/secret-benchmark-2itzte21/report.json"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.46403404197189957,
+        "median_seconds": 0.4113277499563992,
+        "min_seconds": 0.4113277499563992,
+        "max_seconds": 0.4113277499563992,
+        "mib_per_second": 0.006308710791373719,
+        "max_peak_rss_bytes": 259588096
+      },
+      "quality": {
+        "tp": 26,
+        "fp": 2,
+        "fn": 8,
+        "negative_labels_flagged": 2,
+        "tn": 8,
+        "positive_labels": 34,
+        "negative_labels": 10,
+        "precision": 0.9285714285714286,
+        "recall": 0.7647058823529411,
+        "f1": 0.8387096774193549,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 0,
+          "line_only": 26
+        },
+        "by_group": {
+          "common": {
+            "tp": 21,
+            "total": 27,
+            "recall": 0.7777777777777778
+          },
+          "generic": {
+            "tp": 5,
+            "total": 7,
+            "recall": 0.7142857142857143
+          }
+        },
+        "by_provider": {
+          "aws-access-key": {
+            "tp": 0,
+            "total": 3,
+            "recall": 0.0
+          },
+          "github-pat": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "gitlab-pat": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "slack-bot": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "stripe-secret": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "google-api": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "sendgrid-api": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "npm-token": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "twilio-api": {
+            "tp": 0,
+            "total": 3,
+            "recall": 0.0
+          },
+          "generic": {
+            "tp": 5,
+            "total": 7,
+            "recall": 0.7142857142857143
+          }
+        },
+        "missed_label_ids": [
+          "quality-00000",
+          "quality-00001",
+          "quality-00002",
+          "quality-00024",
+          "quality-00025",
+          "quality-00026",
+          "quality-00030",
+          "quality-00032"
+        ]
+      }
+    },
+    {
+      "tool": "noseyparker",
+      "dataset": "git_history",
+      "mode": "git",
+      "input_bytes": null,
+      "input_files": 2,
+      "worktree_content_sha256": "af4d948ec701ac170353fa762bb733c13f7dd93471034da560a9a3358e308ac0",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.423214792041108,
+          "user_seconds": 0.36360499999999996,
+          "system_seconds": 0.056429999999999994,
+          "peak_rss_bytes": 257835008,
+          "stdout_bytes": 0,
+          "stderr_bytes": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 4,
+          "locations_sha256": "9d7ecac904f079d23468022882e2976499500289fb1aa08a032162dcee6a6e8c",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.413381666992791,
+          "user_seconds": 0.362708,
+          "system_seconds": 0.055147999999999996,
+          "peak_rss_bytes": 260194304,
+          "stdout_bytes": 0,
+          "stderr_bytes": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 4,
+          "locations_sha256": "9d7ecac904f079d23468022882e2976499500289fb1aa08a032162dcee6a6e8c",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.41127666691318154,
+          "user_seconds": 0.360326,
+          "system_seconds": 0.056885,
+          "peak_rss_bytes": 258228224,
+          "stdout_bytes": 0,
+          "stderr_bytes": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 4,
+          "locations_sha256": "9d7ecac904f079d23468022882e2976499500289fb1aa08a032162dcee6a6e8c",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "python3",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/noseyparker_adapter.py",
+        "git",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-smoke/git-repo",
+        "/var/folders/58/pj_81qw13l59j103s0njbw1c0000gn/T/secret-benchmark-rlaf7d0h/report.json"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.423214792041108,
+        "median_seconds": 0.41127666691318154,
+        "min_seconds": 0.41127666691318154,
+        "max_seconds": 0.41127666691318154,
+        "mib_per_second": null,
+        "max_peak_rss_bytes": 258228224
+      },
+      "quality": {
+        "tp": 1,
+        "fp": 3,
+        "fn": 0,
+        "negative_labels_flagged": 0,
+        "tn": 0,
+        "positive_labels": 1,
+        "negative_labels": 0,
+        "precision": 0.25,
+        "recall": 1.0,
+        "f1": 0.4,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 0,
+          "line_only": 1
+        },
+        "by_group": {
+          "history": {
+            "tp": 1,
+            "total": 1,
+            "recall": 1.0
+          }
+        },
+        "by_provider": {
+          "github-pat": {
+            "tp": 1,
+            "total": 1,
+            "recall": 1.0
+          }
+        },
+        "missed_label_ids": []
+      }
+    },
+    {
+      "tool": "noseyparker",
+      "dataset": "staged",
+      "status": "unsupported",
+      "reason": "no tested staged command"
+    },
+    {
+      "tool": "keyhog",
+      "dataset": "quality",
+      "mode": "fs",
+      "input_bytes": 2721,
+      "input_files": 44,
+      "worktree_content_sha256": "d06745d4356819c905f5556f9247505c4d02194125d65392e4ee119b0355125b",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 1.316155374981463,
+          "user_seconds": 1.157323,
+          "system_seconds": 0.133795,
+          "peak_rss_bytes": 77496320,
+          "stdout_bytes": 28530,
+          "stderr_bytes": 0,
+          "stdout_sha256": "2b0c293f3f9814782819d0146bde68c762e3d532da01049c518ed2ac6c2be4e8",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 13,
+          "locations_sha256": "84c683357882d87e50e75e0589da49023c87ff050f67bf7540da00324afd24d5",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.3048673329176381,
+          "user_seconds": 0.277955,
+          "system_seconds": 0.027021999999999997,
+          "peak_rss_bytes": 73236480,
+          "stdout_bytes": 28530,
+          "stderr_bytes": 0,
+          "stdout_sha256": "2b0c293f3f9814782819d0146bde68c762e3d532da01049c518ed2ac6c2be4e8",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 13,
+          "locations_sha256": "84c683357882d87e50e75e0589da49023c87ff050f67bf7540da00324afd24d5",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.3121642500627786,
+          "user_seconds": 0.278767,
+          "system_seconds": 0.026521,
+          "peak_rss_bytes": 73154560,
+          "stdout_bytes": 28530,
+          "stderr_bytes": 0,
+          "stdout_sha256": "2b0c293f3f9814782819d0146bde68c762e3d532da01049c518ed2ac6c2be4e8",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 13,
+          "locations_sha256": "84c683357882d87e50e75e0589da49023c87ff050f67bf7540da00324afd24d5",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/keyhog/target/release/keyhog",
+        "scan",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-smoke/quality",
+        "--format",
+        "sarif",
+        "--no-verify",
+        "--backend",
+        "cpu",
+        "--quiet"
+      ],
+      "summary": {
+        "cold_process_seconds": 1.316155374981463,
+        "median_seconds": 0.3121642500627786,
+        "min_seconds": 0.3121642500627786,
+        "max_seconds": 0.3121642500627786,
+        "mib_per_second": 0.008312764240042037,
+        "max_peak_rss_bytes": 73154560
+      },
+      "quality": {
+        "tp": 13,
+        "fp": 0,
+        "fn": 21,
+        "negative_labels_flagged": 0,
+        "tn": 10,
+        "positive_labels": 34,
+        "negative_labels": 10,
+        "precision": 1.0,
+        "recall": 0.38235294117647056,
+        "f1": 0.5531914893617021,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 0,
+          "line_only": 13
+        },
+        "by_group": {
+          "common": {
+            "tp": 7,
+            "total": 27,
+            "recall": 0.25925925925925924
+          },
+          "generic": {
+            "tp": 6,
+            "total": 7,
+            "recall": 0.8571428571428571
+          }
+        },
+        "by_provider": {
+          "aws-access-key": {
+            "tp": 1,
+            "total": 3,
+            "recall": 0.3333333333333333
+          },
+          "github-pat": {
+            "tp": 0,
+            "total": 3,
+            "recall": 0.0
+          },
+          "gitlab-pat": {
+            "tp": 1,
+            "total": 3,
+            "recall": 0.3333333333333333
+          },
+          "slack-bot": {
+            "tp": 1,
+            "total": 3,
+            "recall": 0.3333333333333333
+          },
+          "stripe-secret": {
+            "tp": 1,
+            "total": 3,
+            "recall": 0.3333333333333333
+          },
+          "google-api": {
+            "tp": 1,
+            "total": 3,
+            "recall": 0.3333333333333333
+          },
+          "sendgrid-api": {
+            "tp": 1,
+            "total": 3,
+            "recall": 0.3333333333333333
+          },
+          "npm-token": {
+            "tp": 0,
+            "total": 3,
+            "recall": 0.0
+          },
+          "twilio-api": {
+            "tp": 1,
+            "total": 3,
+            "recall": 0.3333333333333333
+          },
+          "generic": {
+            "tp": 6,
+            "total": 7,
+            "recall": 0.8571428571428571
+          }
+        },
+        "missed_label_ids": [
+          "quality-00000",
+          "quality-00001",
+          "quality-00003",
+          "quality-00004",
+          "quality-00005",
+          "quality-00006",
+          "quality-00007",
+          "quality-00009",
+          "quality-00010",
+          "quality-00012",
+          "quality-00013",
+          "quality-00015",
+          "quality-00016",
+          "quality-00018",
+          "quality-00019",
+          "quality-00021",
+          "quality-00022",
+          "quality-00023",
+          "quality-00024",
+          "quality-00025",
+          "quality-00030"
+        ]
+      }
+    },
+    {
+      "tool": "keyhog",
+      "dataset": "git_history",
+      "mode": "git",
+      "input_bytes": null,
+      "input_files": 2,
+      "worktree_content_sha256": "af4d948ec701ac170353fa762bb733c13f7dd93471034da560a9a3358e308ac0",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.3136902080150321,
+          "user_seconds": 0.26522999999999997,
+          "system_seconds": 0.038887,
+          "peak_rss_bytes": 64913408,
+          "stdout_bytes": 1407,
+          "stderr_bytes": 0,
+          "stdout_sha256": "f29a68d00dcc4ed546652f9544cfa7512d7652070a859c23ae99da3bb837dfbf",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.2911169169237837,
+          "user_seconds": 0.25546199999999997,
+          "system_seconds": 0.036148,
+          "peak_rss_bytes": 64585728,
+          "stdout_bytes": 1407,
+          "stderr_bytes": 0,
+          "stdout_sha256": "f29a68d00dcc4ed546652f9544cfa7512d7652070a859c23ae99da3bb837dfbf",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.29808816697914153,
+          "user_seconds": 0.258172,
+          "system_seconds": 0.039069,
+          "peak_rss_bytes": 74235904,
+          "stdout_bytes": 1407,
+          "stderr_bytes": 0,
+          "stdout_sha256": "f29a68d00dcc4ed546652f9544cfa7512d7652070a859c23ae99da3bb837dfbf",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/keyhog/target/release/keyhog",
+        "scan",
+        "--git-history",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-smoke/git-repo",
+        "--format",
+        "sarif",
+        "--no-verify",
+        "--backend",
+        "cpu",
+        "--quiet"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.3136902080150321,
+        "median_seconds": 0.29808816697914153,
+        "min_seconds": 0.29808816697914153,
+        "max_seconds": 0.29808816697914153,
+        "mib_per_second": null,
+        "max_peak_rss_bytes": 74235904
+      },
+      "quality": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 1,
+        "negative_labels_flagged": 0,
+        "tn": 0,
+        "positive_labels": 1,
+        "negative_labels": 0,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 0,
+          "line_only": 0
+        },
+        "by_group": {
+          "history": {
+            "tp": 0,
+            "total": 1,
+            "recall": 0.0
+          }
+        },
+        "by_provider": {
+          "github-pat": {
+            "tp": 0,
+            "total": 1,
+            "recall": 0.0
+          }
+        },
+        "missed_label_ids": [
+          "git_history-00050"
+        ]
+      }
+    },
+    {
+      "tool": "keyhog",
+      "dataset": "staged",
+      "status": "unsupported",
+      "reason": "no tested staged command"
+    },
+    {
+      "tool": "git-secrets",
+      "dataset": "quality",
+      "mode": "fs",
+      "input_bytes": 2721,
+      "input_files": 44,
+      "worktree_content_sha256": "d06745d4356819c905f5556f9247505c4d02194125d65392e4ee119b0355125b",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.47506162500940263,
+          "user_seconds": 0.194016,
+          "system_seconds": 0.196676,
+          "peak_rss_bytes": 19070976,
+          "stdout_bytes": 1009,
+          "stderr_bytes": 0,
+          "stdout_sha256": "b19e2dd97f9eaeb2dec1ec3f22313c035f96e8f5d07b7d70c3933e0087bb0faa",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 3,
+          "locations_sha256": "bccbb088da671895242d977b2e2836c8c21fe36bb7c6873fa46e82c4af1aefc5",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.4493329160613939,
+          "user_seconds": 0.190378,
+          "system_seconds": 0.188608,
+          "peak_rss_bytes": 19038208,
+          "stdout_bytes": 1009,
+          "stderr_bytes": 0,
+          "stdout_sha256": "b19e2dd97f9eaeb2dec1ec3f22313c035f96e8f5d07b7d70c3933e0087bb0faa",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 3,
+          "locations_sha256": "bccbb088da671895242d977b2e2836c8c21fe36bb7c6873fa46e82c4af1aefc5",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.4395953749772161,
+          "user_seconds": 0.18609199999999998,
+          "system_seconds": 0.182201,
+          "peak_rss_bytes": 19185664,
+          "stdout_bytes": 1009,
+          "stderr_bytes": 0,
+          "stdout_sha256": "b19e2dd97f9eaeb2dec1ec3f22313c035f96e8f5d07b7d70c3933e0087bb0faa",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 3,
+          "locations_sha256": "bccbb088da671895242d977b2e2836c8c21fe36bb7c6873fa46e82c4af1aefc5",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "python3",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/git_secrets_adapter.py",
+        "fs",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-smoke/quality"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.47506162500940263,
+        "median_seconds": 0.4395953749772161,
+        "min_seconds": 0.4395953749772161,
+        "max_seconds": 0.4395953749772161,
+        "mib_per_second": 0.005903037116975811,
+        "max_peak_rss_bytes": 19185664
+      },
+      "quality": {
+        "tp": 3,
+        "fp": 0,
+        "fn": 31,
+        "negative_labels_flagged": 0,
+        "tn": 10,
+        "positive_labels": 34,
+        "negative_labels": 10,
+        "precision": 1.0,
+        "recall": 0.08823529411764706,
+        "f1": 0.1621621621621622,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 0,
+          "line_only": 3
+        },
+        "by_group": {
+          "common": {
+            "tp": 3,
+            "total": 27,
+            "recall": 0.1111111111111111
+          },
+          "generic": {
+            "tp": 0,
+            "total": 7,
+            "recall": 0.0
+          }
+        },
+        "by_provider": {
+          "aws-access-key": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "github-pat": {
+            "tp": 0,
+            "total": 3,
+            "recall": 0.0
+          },
+          "gitlab-pat": {
+            "tp": 0,
+            "total": 3,
+            "recall": 0.0
+          },
+          "slack-bot": {
+            "tp": 0,
+            "total": 3,
+            "recall": 0.0
+          },
+          "stripe-secret": {
+            "tp": 0,
+            "total": 3,
+            "recall": 0.0
+          },
+          "google-api": {
+            "tp": 0,
+            "total": 3,
+            "recall": 0.0
+          },
+          "sendgrid-api": {
+            "tp": 0,
+            "total": 3,
+            "recall": 0.0
+          },
+          "npm-token": {
+            "tp": 0,
+            "total": 3,
+            "recall": 0.0
+          },
+          "twilio-api": {
+            "tp": 0,
+            "total": 3,
+            "recall": 0.0
+          },
+          "generic": {
+            "tp": 0,
+            "total": 7,
+            "recall": 0.0
+          }
+        },
+        "missed_label_ids": [
+          "quality-00003",
+          "quality-00004",
+          "quality-00005",
+          "quality-00006",
+          "quality-00007",
+          "quality-00008",
+          "quality-00009",
+          "quality-00010",
+          "quality-00011",
+          "quality-00012",
+          "quality-00013",
+          "quality-00014",
+          "quality-00015",
+          "quality-00016",
+          "quality-00017",
+          "quality-00018",
+          "quality-00019",
+          "quality-00020",
+          "quality-00021",
+          "quality-00022",
+          "quality-00023",
+          "quality-00024",
+          "quality-00025",
+          "quality-00026",
+          "quality-00027",
+          "quality-00028",
+          "quality-00029",
+          "quality-00030",
+          "quality-00031",
+          "quality-00032",
+          "quality-00033"
+        ]
+      }
+    },
+    {
+      "tool": "git-secrets",
+      "dataset": "git_history",
+      "mode": "git",
+      "input_bytes": null,
+      "input_files": 2,
+      "worktree_content_sha256": "af4d948ec701ac170353fa762bb733c13f7dd93471034da560a9a3358e308ac0",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.43792291602585465,
+          "user_seconds": 0.198739,
+          "system_seconds": 0.187327,
+          "peak_rss_bytes": 19120128,
+          "stdout_bytes": 0,
+          "stderr_bytes": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.4556415829574689,
+          "user_seconds": 0.204807,
+          "system_seconds": 0.197286,
+          "peak_rss_bytes": 19283968,
+          "stdout_bytes": 0,
+          "stderr_bytes": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.45293458306696266,
+          "user_seconds": 0.201364,
+          "system_seconds": 0.191651,
+          "peak_rss_bytes": 19169280,
+          "stdout_bytes": 0,
+          "stderr_bytes": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "python3",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/git_secrets_adapter.py",
+        "git",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-smoke/git-repo"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.43792291602585465,
+        "median_seconds": 0.45293458306696266,
+        "min_seconds": 0.45293458306696266,
+        "max_seconds": 0.45293458306696266,
+        "mib_per_second": null,
+        "max_peak_rss_bytes": 19169280
+      },
+      "quality": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 1,
+        "negative_labels_flagged": 0,
+        "tn": 0,
+        "positive_labels": 1,
+        "negative_labels": 0,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 0,
+          "line_only": 0
+        },
+        "by_group": {
+          "history": {
+            "tp": 0,
+            "total": 1,
+            "recall": 0.0
+          }
+        },
+        "by_provider": {
+          "github-pat": {
+            "tp": 0,
+            "total": 1,
+            "recall": 0.0
+          }
+        },
+        "missed_label_ids": [
+          "git_history-00050"
+        ]
+      }
+    },
+    {
+      "tool": "git-secrets",
+      "dataset": "staged",
+      "mode": "staged",
+      "input_bytes": null,
+      "input_files": 2,
+      "worktree_content_sha256": "af4d948ec701ac170353fa762bb733c13f7dd93471034da560a9a3358e308ac0",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.4509137909626588,
+          "user_seconds": 0.18947,
+          "system_seconds": 0.18489999999999998,
+          "peak_rss_bytes": 19300352,
+          "stdout_bytes": 0,
+          "stderr_bytes": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.45373091707006097,
+          "user_seconds": 0.18850899999999998,
+          "system_seconds": 0.18240599999999998,
+          "peak_rss_bytes": 19070976,
+          "stdout_bytes": 0,
+          "stderr_bytes": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.45999162504449487,
+          "user_seconds": 0.190914,
+          "system_seconds": 0.187003,
+          "peak_rss_bytes": 19218432,
+          "stdout_bytes": 0,
+          "stderr_bytes": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "python3",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/git_secrets_adapter.py",
+        "staged",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-smoke/git-repo"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.4509137909626588,
+        "median_seconds": 0.45999162504449487,
+        "min_seconds": 0.45999162504449487,
+        "max_seconds": 0.45999162504449487,
+        "mib_per_second": null,
+        "max_peak_rss_bytes": 19218432
+      },
+      "quality": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 1,
+        "negative_labels_flagged": 0,
+        "tn": 0,
+        "positive_labels": 1,
+        "negative_labels": 0,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 0,
+          "line_only": 0
+        },
+        "by_group": {
+          "staged": {
+            "tp": 0,
+            "total": 1,
+            "recall": 0.0
+          }
+        },
+        "by_provider": {
+          "github-pat": {
+            "tp": 0,
+            "total": 1,
+            "recall": 0.0
+          }
+        },
+        "missed_label_ids": [
+          "staged-00051"
+        ]
+      }
+    }
+  ]
+}

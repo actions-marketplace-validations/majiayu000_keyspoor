@@ -1,0 +1,5034 @@
+{
+  "schema_version": 1,
+  "timestamp_utc": "2026-10-02T18:46:12Z",
+  "hardware": {
+    "system": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
+    "python": "3.14.7",
+    "logical_cpus": 12,
+    "memory_bytes": "103079215104",
+    "cpu": "Apple M2 Max"
+  },
+  "runner_sha256": "3bb472f15bf265682023b7eec188344b838fd3cb234cada947cd35c396cb40b3",
+  "manifest_sha256": "693b0c913a169fa472b3aced7572feb94bb25267766332dcb0015c0277d4200e",
+  "corpus_manifest_sha256": "9f3abca6ae710c0ac7377ba9b5fbfc01c03af26ec343d8b92a3c6635b0375712",
+  "method": {
+    "corpus_role": "regression",
+    "quality_interpretation": "Synthetic regression/diagnostic corpus, not an independent holdout; real-source dataset is unlabelled.",
+    "offline": true,
+    "repeats": 3,
+    "timeout_seconds": 60.0,
+    "cache": "OS cache uncontrolled; warmup before repeats",
+    "scoring": "one-to-one location; exact/overlap byte span else line"
+  },
+  "tools": [
+    {
+      "id": "secret-scan",
+      "status": "available",
+      "version": "0.1.0",
+      "source_url": "local independent implementation",
+      "commit_or_digest": "d454d96bbb98fb5223c788afaa9fd5b2708a7c8605b729a1592d1c7c5509c5c2",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+      "offline": true,
+      "parser": "secret_scan",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+          "scan",
+          "{input}",
+          "--format",
+          "json"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+          "history",
+          "{input}",
+          "--format",
+          "json"
+        ],
+        "staged": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+          "staged",
+          "{input}",
+          "--format",
+          "json"
+        ]
+      },
+      "notes": "Independent final Rust implementation; fixes informed by regression findings."
+    },
+    {
+      "id": "gitleaks",
+      "status": "available",
+      "version": "v8.30.1",
+      "source_url": "https://github.com/gitleaks/gitleaks",
+      "asset_url": "https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_darwin_arm64.tar.gz",
+      "commit_or_digest": "sha256:b40ab0ae55c505963e365f271a8d3846efbc170aa17f2607f13df610a9aeb6a5",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/gitleaks",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/gitleaks",
+          "dir",
+          "{input}",
+          "--report-format",
+          "json",
+          "--report-path",
+          "{output}",
+          "--redact",
+          "--no-banner"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/gitleaks",
+          "git",
+          "{input}",
+          "--report-format",
+          "json",
+          "--report-path",
+          "{output}",
+          "--redact",
+          "--no-banner"
+        ],
+        "staged": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/gitleaks",
+          "git",
+          "{input}",
+          "--staged",
+          "--report-format",
+          "json",
+          "--report-path",
+          "{output}",
+          "--redact",
+          "--no-banner"
+        ]
+      },
+      "parser": "gitleaks",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/gitleaks",
+        "version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "8.30.1"
+    },
+    {
+      "id": "trufflehog",
+      "status": "available",
+      "version": "v3.97.9",
+      "source_url": "https://github.com/trufflesecurity/trufflehog",
+      "asset_url": "https://github.com/trufflesecurity/trufflehog/releases/download/v3.97.9/trufflehog_3.97.9_darwin_arm64.tar.gz",
+      "commit_or_digest": "sha256:3d25c178fe1a2563687b22547adcaebcf08cc8a607315c6741fe396c597951f7",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/trufflehog",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/trufflehog",
+          "filesystem",
+          "{input}",
+          "--no-verification",
+          "--no-update",
+          "--json",
+          "--fail-on-scan-errors"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/trufflehog",
+          "git",
+          "file://{input}",
+          "--no-verification",
+          "--no-update",
+          "--json",
+          "--fail-on-scan-errors"
+        ]
+      },
+      "parser": "trufflehog",
+      "accepted_exit_codes": [
+        0
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/trufflehog",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "trufflehog 3.97.9"
+    },
+    {
+      "id": "kingfisher",
+      "status": "available",
+      "version": "v2.9.1",
+      "source_url": "https://github.com/mongodb/kingfisher",
+      "asset_url": "https://github.com/mongodb/kingfisher/releases/download/v2.9.1/kingfisher-darwin-arm64.tgz",
+      "commit_or_digest": "sha256:0218b6fc1560cffa9a7e04b74a1e17371ef3fa6c78f0bd1d586f5d2893d84cff",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/kingfisher",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/kingfisher",
+          "scan",
+          "{input}",
+          "--no-validate",
+          "--no-update-check",
+          "--git-history",
+          "none",
+          "--format",
+          "sarif",
+          "--output",
+          "{output}",
+          "--quiet",
+          "--no-dedup"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/kingfisher",
+          "scan",
+          "{input}",
+          "--no-validate",
+          "--no-update-check",
+          "--git-history",
+          "full",
+          "--format",
+          "sarif",
+          "--output",
+          "{output}",
+          "--quiet",
+          "--no-dedup"
+        ],
+        "staged": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/kingfisher",
+          "scan",
+          "{input}",
+          "--no-validate",
+          "--no-update-check",
+          "--git-history",
+          "none",
+          "--format",
+          "sarif",
+          "--output",
+          "{output}",
+          "--quiet",
+          "--staged",
+          "--no-dedup"
+        ]
+      },
+      "parser": "sarif",
+      "accepted_exit_codes": [
+        0,
+        200
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/kingfisher",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "kingfisher 2.9.1",
+      "exit_code_evidence": "https://github.com/mongodb/kingfisher/blob/v2.9.1/src/main.rs#L1369",
+      "notes": "--no-dedup preserves all occurrences for occurrence-level ground-truth comparison; default dedup may choose nondeterministic representative locations."
+    },
+    {
+      "id": "betterleaks",
+      "status": "available",
+      "version": "v1.9.0",
+      "source_url": "https://github.com/betterleaks/betterleaks",
+      "asset_url": "https://github.com/betterleaks/betterleaks/releases/download/v1.9.0/betterleaks_1.9.0_darwin_arm64.tar.gz",
+      "commit_or_digest": "sha256:83dd7eaab13d44a1e8e347a17064cdef153a1478db473276d41b38d55613d3f2",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/betterleaks",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/betterleaks",
+          "dir",
+          "{input}",
+          "--report-format",
+          "json",
+          "--report-path",
+          "{output}",
+          "--redact",
+          "--no-banner"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/betterleaks",
+          "git",
+          "{input}",
+          "--report-format",
+          "json",
+          "--report-path",
+          "{output}",
+          "--redact",
+          "--no-banner"
+        ],
+        "staged": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/betterleaks",
+          "git",
+          "{input}",
+          "--staged",
+          "--report-format",
+          "json",
+          "--report-path",
+          "{output}",
+          "--redact",
+          "--no-banner"
+        ]
+      },
+      "parser": "gitleaks",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/betterleaks",
+        "version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "1.9.0"
+    },
+    {
+      "id": "titus",
+      "status": "available",
+      "version": "v1.2.10",
+      "source_url": "https://github.com/praetorian-inc/titus",
+      "asset_url": "https://github.com/praetorian-inc/titus/releases/download/v1.2.10/titus-darwin-arm64",
+      "commit_or_digest": "sha256:1501333f62becae4d4f9cbbe6edeaade4e77e4a7c74a1b6616c9fe6ae5b419ec",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/titus",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/titus",
+          "scan",
+          "{input}",
+          "--accessibility",
+          "private",
+          "--format",
+          "sarif",
+          "--output",
+          ":memory:",
+          "--quiet"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/titus",
+          "scan",
+          "{input}",
+          "--accessibility",
+          "private",
+          "--format",
+          "sarif",
+          "--output",
+          ":memory:",
+          "--quiet",
+          "--git"
+        ]
+      },
+      "parser": "sarif",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/titus",
+        "version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "Titus v1.2.10 (Go port of NoseyParker)\n\n  ______ ____ ______ __  __ _____\n /_  __//  _//_  __// / / // ___/\n  / /   / /   / /  / / / / \\__ \\\n / /  _/ /   / /  / /_/ / ___/ /\n/_/  /___/  /_/   \\____/ /____/\n There's always something.\n Praetorian Security, Inc."
+    },
+    {
+      "id": "ripsecrets",
+      "status": "available",
+      "version": "v0.1.11",
+      "source_url": "https://github.com/sirwart/ripsecrets",
+      "asset_url": "https://github.com/sirwart/ripsecrets/releases/download/v0.1.11/ripsecrets-0.1.11-aarch64-apple-darwin.tar.gz",
+      "commit_or_digest": "sha256:b2c822742e8cbf355ba0cb4cc690c3cd8fdc9ec1916c8148f27bd9098cb7aee4",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/ripsecrets",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/ripsecrets",
+          "{input}"
+        ]
+      },
+      "parser": "ripsecrets",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/ripsecrets",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "ripsecrets 0.1.11"
+    },
+    {
+      "id": "talisman",
+      "status": "available",
+      "version": "v1.37.0",
+      "source_url": "https://github.com/thoughtworks/talisman",
+      "asset_url": "https://github.com/thoughtworks/talisman/releases/download/v1.37.0/talisman_darwin_arm64",
+      "commit_or_digest": "sha256:4806746b2ba0190941f0606853990b4da6eb7df2d64c261212a6aa66eb6b15c2",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/talisman",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "git": [
+          "python3",
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/talisman_adapter.py",
+          "git",
+          "{input}"
+        ],
+        "staged": [
+          "python3",
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/talisman_adapter.py",
+          "staged",
+          "{input}"
+        ]
+      },
+      "parser": "normalized",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 2,
+      "notes": "Native report lacks structured lines. Findings omit line. Git JSON scan, staged native pre-commit table mapped to exact staged filenames; no working-tree substitution.",
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/talisman",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "talisman 1.37.0",
+      "reason": "CLI --help works (exit 2 convention); pattern/git report adapter not yet exercised.",
+      "command": [
+        "python3",
+        "bench/tools/talisman_adapter.py",
+        "{input}"
+      ],
+      "localization": "file",
+      "smoke": {
+        "git": {
+          "exit_code": 1,
+          "finding_count": 1
+        },
+        "staged": {
+          "exit_code": 1,
+          "finding_count": 1
+        },
+        "corpus": "bench/corpus-smoke/git-repo"
+      }
+    },
+    {
+      "id": "trivy",
+      "status": "available",
+      "version": "v0.75.0",
+      "source_url": "https://github.com/aquasecurity/trivy",
+      "asset_url": "https://github.com/aquasecurity/trivy/releases/download/v0.75.0/trivy_0.75.0_macOS-ARM64.tar.gz",
+      "commit_or_digest": "sha256:4a77108cccf8e55c8d6823e1e759939a622277e66cd0daa3c1fc621ed69e4568",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/trivy",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/trivy",
+          "fs",
+          "--scanners",
+          "secret",
+          "--offline-scan",
+          "--skip-db-update",
+          "--skip-java-db-update",
+          "--format",
+          "sarif",
+          "--output",
+          "{output}",
+          "{input}"
+        ]
+      },
+      "parser": "sarif",
+      "accepted_exit_codes": [
+        0
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/trivy",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "Version: 0.75.0"
+    },
+    {
+      "id": "leakferret",
+      "status": "available",
+      "version": "v0.1.9",
+      "source_url": "https://github.com/leakferrethq/leakferret",
+      "asset_url": "https://github.com/leakferrethq/leakferret/releases/download/v0.1.9/leakferret-0.1.9-aarch64-apple-darwin.tar.gz",
+      "commit_or_digest": "sha256:363b1da65bf34d2c89c37aa2e00eaa03d49c8595cc5b8bb752a344dacf21d7da",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/leakferret",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/leakferret",
+          "scan",
+          "{input}",
+          "--format",
+          "sarif",
+          "--quiet"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/leakferret",
+          "scan",
+          "{input}",
+          "--format",
+          "sarif",
+          "--quiet",
+          "--git"
+        ]
+      },
+      "parser": "sarif",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/leakferret",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "leakferret 0.1.9"
+    },
+    {
+      "id": "noseyparker",
+      "status": "available",
+      "version": "v0.24.0",
+      "source_url": "https://github.com/praetorian-inc/noseyparker",
+      "asset_url": "https://github.com/praetorian-inc/noseyparker/releases/download/v0.24.0/noseyparker-v0.24.0-aarch64-apple-darwin.tar.gz",
+      "commit_or_digest": "sha256:b19f983d586a738f127bc8c53ef1331055010db4926ac1789791f717fcc107b7",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/noseyparker",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "python3",
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/noseyparker_adapter.py",
+          "fs",
+          "{input}",
+          "{output}"
+        ],
+        "git": [
+          "python3",
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/noseyparker_adapter.py",
+          "git",
+          "{input}",
+          "{output}"
+        ]
+      },
+      "parser": "sarif",
+      "accepted_exit_codes": [
+        0
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "notes": "Fresh datastore per invocation; includes scan and SARIF reporting cost.",
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/noseyparker",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "noseyparker 0.24.0\n\nBuild Configuration:\n\n    Build Timestamp:    2025-05-08T21:09:00.215428000Z\n\n    Commit Timestamp:   2025-05-08T17:04:47.000000000-04:00\n    Commit Branch:      HEAD\n    Commit SHA:         61fa4ca67e4ded1b47b3b9ecce618ae91f1ff2fe\n\n    Cargo Features:     color_backtrace,default,disable_trace,github,log,mimalloc,parquet,release\n    Debug:              true\n    Optimization:       3\n    Target Triple:      aarch64-apple-darwin\n\nBuild System:\n\n    OS:                 Darwin\n    OS Version:         macOS 13.7.5 Ventura\n\n    CPU Vendor:         Apple\n    CPU Brand:          Apple M1 (Virtual)\n    CPU Cores:          6\n\n    rustc Version:      1.86.0\n    rustc Channel:      stable\n    rustc Host Triple:  aarch64-apple-darwin\n    rustc Commit Date:  2025-03-31\n    rustc Commit SHA:   05f9846f893b09a1be1fc8560e33fc3c815cfecb\n    rustc LLVM Version: 19.1"
+    },
+    {
+      "id": "rusty-hog",
+      "status": "available",
+      "version": "1.0.11",
+      "source_url": "https://github.com/newrelic/rusty-hog",
+      "asset_url": "https://github.com/newrelic/rusty-hog/releases/download/v1.0.11/rustyhogs-darwin-duroc_hog-1.0.11.zip",
+      "commit_or_digest": "9da595ad204f017cff576ffac5bce7f2bed1be2f",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/rusty-hog-build/target/release/duroc_hog",
+      "install_command": "cargo build --release --locked -j 2 --bin duroc_hog",
+      "commands": {
+        "fs": [
+          "python3",
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/rusty_hog_adapter.py",
+          "{input}"
+        ]
+      },
+      "parser": "normalized",
+      "accepted_exit_codes": [
+        0
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "reason": "dyld[65584]: Library not loaded: /usr/local/opt/openssl@1.1/lib/libssl.1.1.dylib\n  Referenced from: <B71E1ABE-70AF-3529-931D-6B2D533B0329> /Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/rusty-hog/darwin_releases/duroc_hog\n  Reason: tried: '/usr/local/opt/openssl@1.1/lib/libssl.1.1.dylib' (no such file), '/System/Volumes/Preboot/Cryptexes/OS/usr/local/opt/openssl@1.1/lib/libssl.1.1.dylib' (no such file), '/usr/local/opt/openssl@1.1/lib/libssl.1.1.dylib' (no such file), '/usr/local/lib/libssl.1.1.dylib' (no such file), '/usr/lib/libssl.1.1.dylib' (no such file, not in dyld cache)\n",
+      "binary_sha256": "6e25262ff480ac836336f64b159c5380eadb3ab496f6183b6b6185e9771cc486",
+      "source_folder": "rusty-hog-build",
+      "dependency_lock": "bench/tools/rusty-hog-Cargo.lock",
+      "dependency_lock_sha256": "8dee6e9ab5fc0688bc0392b8b9013c426d0ddfa3e96808dc8c228be25b0542c8",
+      "notes": "Official old macOS binary failed OpenSSL1.1 dylib; pinned current source built successfully without source modification. Adapter rejects missing/invalid JSON because native CLI logs some scan errors yet exits0.",
+      "smoke": {
+        "dataset": "quality",
+        "exit_code": 0,
+        "findings": 29
+      }
+    },
+    {
+      "id": "detect-secrets",
+      "status": "available",
+      "version": "1.5.0",
+      "source_url": "https://github.com/Yelp/detect-secrets",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/detect-secrets",
+      "help_exit_code": 0,
+      "accepted_exit_codes": [
+        0
+      ],
+      "offline": true,
+      "install_command": "uv pip install --python bench/tools/venvs/python/bin/python detect-secrets==1.5.0",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/detect-secrets",
+          "scan",
+          "--all-files",
+          "--no-verify",
+          "{input}"
+        ]
+      },
+      "parser": "detect_secrets",
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/detect-secrets",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "1.5.0",
+      "dependency_lock_sha256": "d513026775b6aabf6624264748d09c46277e9e91f9b22a4786869201334f0ed7"
+    },
+    {
+      "id": "deepsecrets",
+      "status": "available",
+      "version": "2.2.0",
+      "source_url": "https://github.com/ntoskernel/deepsecrets",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/deepsecrets",
+      "help_exit_code": 0,
+      "accepted_exit_codes": [
+        0
+      ],
+      "offline": true,
+      "install_command": "uv pip install --python bench/tools/venvs/python/bin/python deepsecrets==2.2.0",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/deepsecrets",
+          "--target-dir",
+          "{input}",
+          "--outfile",
+          "{output}",
+          "--outformat",
+          "sarif",
+          "--ci",
+          "--process-count",
+          "2"
+        ]
+      },
+      "parser": "sarif",
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/deepsecrets",
+        "--version"
+      ],
+      "version_exit_code": 2,
+      "version_output": "usage: deepsecrets [-h] --target-dir TARGET_DIR\n                   [--regex-rules [REGEX_RULES ...]]\n                   [--regex-candidate-scoring-rules [REGEX_CANDIDATE_SCORING_RULES ...]]\n                   [--hashed-values [HASHED_VALUES ...]]\n                   [--semantic-analysis [SEMANTIC_ANALYSIS ...]]\n                   [--variable-scoring-rules [VARIABLE_SCORING_RULES ...]]\n                   [--excluded-paths [EXCLUDED_PATHS ...]] [--skip-bundles]\n                   [--deep-max-size DEEP_MAX_SIZE]\n                   [--confidence-level {all,low,medium,high,very-high}]\n                   [--false-findings [FALSE_FINDINGS ...]] [-v]\n                   [--reflect-findings-in-return-code]\n                   [--process-count PROCESS_COUNT]\n                   [--max-file-size MAX_FILE_SIZE]\n                   [--multiprocessing-context {spawn,fork,forkserver}]\n                   [--ci | --no-ci] --outfile OUTFILE\n                   [--outformat {json,sarif,dojo-sarif}] [--disable-",
+      "dependency_lock_sha256": "d513026775b6aabf6624264748d09c46277e9e91f9b22a4786869201334f0ed7"
+    },
+    {
+      "id": "whispers",
+      "status": "available",
+      "version": "2.2.1",
+      "source_url": "https://github.com/Skyscanner/whispers",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/whispers",
+      "help_exit_code": 0,
+      "accepted_exit_codes": [
+        0
+      ],
+      "offline": true,
+      "install_command": "uv pip install --python bench/tools/venvs/python/bin/python whispers==2.2.1",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/whispers",
+          "{input}",
+          "--output",
+          "{output}"
+        ]
+      },
+      "parser": "whispers",
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/whispers",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "2.2.1",
+      "dependency_lock_sha256": "d513026775b6aabf6624264748d09c46277e9e91f9b22a4786869201334f0ed7"
+    },
+    {
+      "id": "secretlint",
+      "status": "available",
+      "version": "13.0.6",
+      "source_url": "https://github.com/secretlint/secretlint",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/npm/node_modules/.bin/secretlint",
+      "help_exit_code": 0,
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "install_command": "npm install --prefix bench/tools/npm secretlint@13.0.6 @secretlint/secretlint-rule-preset-recommend",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/npm/node_modules/.bin/secretlint",
+          "{input}/**/*",
+          "--format",
+          "json",
+          "--secretlintrc",
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secretlintrc.json",
+          "--no-gitignore"
+        ]
+      },
+      "parser": "secretlint",
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/npm/node_modules/.bin/secretlint",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "13.0.6",
+      "dependency_lock_sha256": "bd565245096d05bc70486fff55ddf8d2f478862f3291135d052ec32ac98d758a",
+      "notes": " Explicit --no-gitignore prevents generated corpus parent repository exclusions."
+    },
+    {
+      "id": "keyhog",
+      "status": "available",
+      "version": "0.5.86",
+      "source_url": "https://github.com/santhreal/keyhog",
+      "commit_or_digest": "c14d5538c2759e3ea299a02ec095d172025abd37",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/keyhog/target/release/keyhog",
+      "install_command": "cargo build --manifest-path bench/tools/source/keyhog/Cargo.toml --release --locked -j 2",
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/keyhog/target/release/keyhog",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "KeyHog v0.5.86\nCommit: c14d5538c2759e3ea299a02ec095d172025abd37\nDetector Set: 934 (934-dc43f6629978321b)\nBuild Target: aarch64-macos\nML Model Version: moe-v1-246a05b92bec9aa3\nML Model Card: recorded 2026-07-15; features 55; synthetic F1 0.971 / P 0.945 / R 0.999; real F1 0.832 / P 0.753 / R 0.931 / recall@0.40 0.938; zero-recall detectors 2/32; six-scanner differential unavailable",
+      "parser": "sarif",
+      "offline": true,
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "notes": "Default portable release build; explicit CPU backend disables calibration requirement and GPU; no network verification.",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/keyhog/target/release/keyhog",
+          "scan",
+          "{input}",
+          "--format",
+          "sarif",
+          "--no-verify",
+          "--backend",
+          "cpu",
+          "--quiet"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/keyhog/target/release/keyhog",
+          "scan",
+          "--git-history",
+          "{input}",
+          "--format",
+          "sarif",
+          "--no-verify",
+          "--backend",
+          "cpu",
+          "--quiet"
+        ]
+      }
+    },
+    {
+      "id": "git-secrets",
+      "status": "available",
+      "version": "HEAD",
+      "source_url": "https://github.com/awslabs/git-secrets",
+      "commit_or_digest": "7d6b970cbd3c216353cb22b383b70c150140662e",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/git-secrets/git-secrets",
+      "install_command": "git clone --depth 1 https://github.com/awslabs/git-secrets bench/tools/source/git-secrets",
+      "parser": "git_secrets",
+      "offline": true,
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "notes": "Official --register-aws pattern set in temporary isolated config; removes provider to avoid reading user AWS credentials; stderr finding records forwarded stdout.",
+      "commands": {
+        "fs": [
+          "python3",
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/git_secrets_adapter.py",
+          "fs",
+          "{input}"
+        ],
+        "git": [
+          "python3",
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/git_secrets_adapter.py",
+          "git",
+          "{input}"
+        ],
+        "staged": [
+          "python3",
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/git_secrets_adapter.py",
+          "staged",
+          "{input}"
+        ]
+      }
+    },
+    {
+      "id": "credential-digger",
+      "status": "available",
+      "source_url": "https://github.com/SAP-archive/credential-digger",
+      "commit_or_digest": "21f89283400168e2c454b57467291a248b571a3c",
+      "reason": "Installed but CLI ImportError: cannot import TFRobertaForSequenceClassification from transformers.",
+      "install_command": "uv pip install --python bench/tools/venvs/credentialdigger/bin/python ./bench/tools/source/credential-digger",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/credentialdigger/bin/python",
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/credentialdigger_adapter.py",
+          "{input}"
+        ]
+      },
+      "offline": true,
+      "install_adjustments": [
+        "uv pip install --python bench/tools/venvs/credentialdigger/bin/python 'transformers<5'",
+        "uv pip install --python bench/tools/venvs/credentialdigger/bin/python 'setuptools<81'"
+      ],
+      "help_exit_code": 0,
+      "command": [
+        "bench/tools/venvs/credentialdigger/bin/python",
+        "bench/tools/credentialdigger_adapter.py",
+        "{input}"
+      ],
+      "parser": "normalized",
+      "accepted_exit_codes": [
+        0
+      ],
+      "notes": "Official ui/backend/rules.yml, SDK fresh in-memory SQLite, models=None/similarity=False; no ML false-positive model claims. Import compatibility pins transformers4.57.6 + setuptools80.10.2 are in the lock.",
+      "smoke": {
+        "exit_code": 0,
+        "finding_count": 8,
+        "dataset": "bench/corpus-smoke/quality"
+      },
+      "dependency_lock": "bench/tools/credentialdigger-requirements.lock",
+      "dependency_lock_sha256": "434be7ef28d272dffb0cae05f187f049be951d3414baabbdf5610304ed1146f5"
+    },
+    {
+      "id": "scratch-scanner-rs",
+      "status": "available",
+      "source_url": "https://github.com/ahrav/scratch-scanner-rs",
+      "commit_or_digest": "3fb8740fb576a9859c84b7a5a08f3bbae06a9f05",
+      "reason": "Source build exit 101: missing sibling Gossip-rs/crates/gossip-connectors path dependency.",
+      "install_command": "BOOST_ROOT=<tools>/source/boost_1_88_0 cargo build --release --locked -j 2",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/target/release/scanner-rs",
+          "scan",
+          "fs",
+          "{input}",
+          "--rules=/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/default_rules.yaml",
+          "--event-format=sarif"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/target/release/scanner-rs",
+          "scan",
+          "git",
+          "{input}",
+          "--rules=/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/default_rules.yaml",
+          "--event-format=sarif"
+        ]
+      },
+      "offline": true,
+      "version": "0.1.0",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/target/release/scanner-rs",
+      "binary_sha256": "a0e4b5edd1a2417ab6a808f78e4ab3585e500809a7e661d998dd129143753079",
+      "parser": "sarif",
+      "accepted_exit_codes": [
+        0
+      ],
+      "source_dependencies": [
+        {
+          "repository": "https://github.com/ahrav/Gossip-rs",
+          "commit": "7e632d795e09b51c3c43e816bb188e8d816ee5a6",
+          "path": "bench/tools/source/Gossip-rs",
+          "selection": "last commit before scanner commit timestamp; same vectorscan-rs-sys0.0.5"
+        }
+      ],
+      "native_dependencies": [
+        {
+          "name": "Boost headers",
+          "version": "1.88.0",
+          "url": "https://archives.boost.io/release/1.88.0/source/boost_1_88_0.tar.gz",
+          "sha256": "3621533e820dcab1e8012afd583c0c73cf0f77694952b81352bf38c1488f9cb4"
+        }
+      ],
+      "smoke": {
+        "fs": {
+          "exit_code": 0,
+          "findings": 52
+        },
+        "git": {
+          "exit_code": 0,
+          "findings": 2
+        }
+      },
+      "help_exit_code": 0,
+      "notes": "Source unchanged. Missing sibling fixed with contemporaneous pinned Gossip commit; latest sibling conflicts native hs versions. Boost headers installed only under bench/tools/source."
+    },
+    {
+      "id": "deepfence-secretscanner",
+      "status": "build_failed",
+      "source_url": "https://github.com/deepfence/SecretScanner",
+      "commit_or_digest": "5fa8aee4882ab8352dda2628d58eed283c1f966a",
+      "reason": "Retried after cloning YaraHunter and initializing both agent-plugins-grpc submodules. Go build then fails pkg-config yara: package not found. Official YARA v4.5.8 source has configure.ac but no generated configure; official latest5 releases publish no tarball assets. Local bootstrap attempted and fails autoreconf: command not found. No global packages or upstream source edits applied.",
+      "install_command": "go build -p 2 -o ../../binaries/SecretScanner .",
+      "commands": {},
+      "offline": true,
+      "source_dependencies": [
+        {
+          "repository": "https://github.com/deepfence/YaraHunter",
+          "commit": "8cb5a008056a407cf5a273fabb0ecf6626acd50e"
+        }
+      ],
+      "build_evidence": [
+        "bench/tools/deepfence-build-retry.log",
+        "bench/tools/yara-bootstrap.log"
+      ],
+      "native_dependencies": [
+        {
+          "name": "YARA",
+          "version": "4.5.8",
+          "url": "https://codeload.github.com/VirusTotal/yara/tar.gz/refs/tags/v4.5.8",
+          "sha256": "c322414975ff6f701149856613afdcd92a7e6939c284c798ae3c85618197efaa",
+          "status": "source downloaded; bootstrap blocked by missing autoreconf"
+        }
+      ]
+    },
+    {
+      "id": "ggshield",
+      "status": "external_service_required",
+      "source_url": "https://github.com/GitGuardian/ggshield",
+      "reason": "Open CLI invokes proprietary authenticated cloud detection; cannot participate in offline no-credentials benchmark.",
+      "commands": {},
+      "offline": false
+    },
+    {
+      "id": "secrets-patterns-db",
+      "status": "not_executable",
+      "source_url": "https://github.com/mazen160/secrets-patterns-db",
+      "reason": "Rule database, not a standalone scanning engine.",
+      "commands": {},
+      "offline": true
+    }
+  ],
+  "datasets": {
+    "quality": {
+      "path": "quality",
+      "mode": "fs"
+    },
+    "capabilities": {
+      "path": "capabilities",
+      "mode": "fs",
+      "archives": [
+        {
+          "path": "capabilities/archive.zip",
+          "member": "nested/config.conf",
+          "provider": "github-pat",
+          "candidate_sha256": "b398812423072225b313600dd692dad498f4086cf13a7cb84fca3d6131f992a8"
+        },
+        {
+          "path": "capabilities/archive.tar.gz",
+          "member": "nested/config.conf",
+          "provider": "github-pat",
+          "candidate_sha256": "b398812423072225b313600dd692dad498f4086cf13a7cb84fca3d6131f992a8"
+        }
+      ]
+    },
+    "throughput-1mib": {
+      "path": "throughput/1mib",
+      "mode": "fs",
+      "bytes": 1048576,
+      "content": "deterministic-repetitive-source-like-text",
+      "warm_cache_expected": true,
+      "files": 4
+    },
+    "throughput-16mib": {
+      "path": "throughput/16mib",
+      "mode": "fs",
+      "bytes": 16777216,
+      "content": "deterministic-repetitive-source-like-text",
+      "warm_cache_expected": true,
+      "files": 64
+    },
+    "throughput-128mib": {
+      "path": "throughput/128mib",
+      "mode": "fs",
+      "bytes": 134217728,
+      "content": "deterministic-repetitive-source-like-text",
+      "warm_cache_expected": true,
+      "files": 512
+    },
+    "git_history": {
+      "path": "git-repo",
+      "mode": "git",
+      "commits": 3
+    },
+    "staged": {
+      "path": "git-repo",
+      "mode": "staged"
+    },
+    "git_worktree": {
+      "path": "git-repo",
+      "mode": "fs"
+    },
+    "real-regex": {
+      "path": "real-regex",
+      "mode": "fs",
+      "labelled": false,
+      "source_url": "https://github.com/rust-lang/regex",
+      "requested_ref": "master",
+      "commit": "72d650cb0a880a01ab6dc2137c0888e8f89740f7",
+      "archive_url": "https://codeload.github.com/rust-lang/regex/tar.gz/72d650cb0a880a01ab6dc2137c0888e8f89740f7",
+      "archive_sha256": "dfcbe868c5d58eef95c7cb6a2ccc137a02724023484cf28601c57249fd40951a",
+      "bytes": 8434814,
+      "quality_note": "Unlabelled public source: report detection counts only, never precision or false-positive rates."
+    }
+  },
+  "results": [
+    {
+      "tool": "talisman",
+      "dataset": "quality",
+      "status": "unsupported",
+      "reason": "no tested fs command"
+    },
+    {
+      "tool": "talisman",
+      "dataset": "capabilities",
+      "status": "unsupported",
+      "reason": "no tested fs command"
+    },
+    {
+      "tool": "talisman",
+      "dataset": "throughput-1mib",
+      "status": "unsupported",
+      "reason": "no tested fs command"
+    },
+    {
+      "tool": "talisman",
+      "dataset": "throughput-16mib",
+      "status": "unsupported",
+      "reason": "no tested fs command"
+    },
+    {
+      "tool": "talisman",
+      "dataset": "throughput-128mib",
+      "status": "unsupported",
+      "reason": "no tested fs command"
+    },
+    {
+      "tool": "talisman",
+      "dataset": "git_history",
+      "mode": "git",
+      "input_bytes": null,
+      "input_files": 2,
+      "worktree_content_sha256": "9a11f857c6008a54207c122c7be646dc6d1f83e103e7cb95f3b0d1ecc11994d9",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.1263079169439152,
+          "user_seconds": 0.081271,
+          "system_seconds": 0.057623999999999995,
+          "peak_rss_bytes": 21577728,
+          "stdout_bytes": 199,
+          "stderr_bytes": 0,
+          "stdout_sha256": "0f885babc92c0bd1891aab44761c21681f41d73eb454b52266a83a8fc8d57e80",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 199,
+          "parsed_output_sha256": "0f885babc92c0bd1891aab44761c21681f41d73eb454b52266a83a8fc8d57e80",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "bde480e918337362fc899ae1ae64230f41fabe6753b8b7c4e57f745865f1881d",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.11880770802963525,
+          "user_seconds": 0.075721,
+          "system_seconds": 0.056387,
+          "peak_rss_bytes": 21708800,
+          "stdout_bytes": 199,
+          "stderr_bytes": 0,
+          "stdout_sha256": "0f885babc92c0bd1891aab44761c21681f41d73eb454b52266a83a8fc8d57e80",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 199,
+          "parsed_output_sha256": "0f885babc92c0bd1891aab44761c21681f41d73eb454b52266a83a8fc8d57e80",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "bde480e918337362fc899ae1ae64230f41fabe6753b8b7c4e57f745865f1881d",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.12076299998443574,
+          "user_seconds": 0.07760399999999999,
+          "system_seconds": 0.057161,
+          "peak_rss_bytes": 22069248,
+          "stdout_bytes": 199,
+          "stderr_bytes": 0,
+          "stdout_sha256": "0f885babc92c0bd1891aab44761c21681f41d73eb454b52266a83a8fc8d57e80",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 199,
+          "parsed_output_sha256": "0f885babc92c0bd1891aab44761c21681f41d73eb454b52266a83a8fc8d57e80",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "bde480e918337362fc899ae1ae64230f41fabe6753b8b7c4e57f745865f1881d",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.12170458293985575,
+          "user_seconds": 0.07633,
+          "system_seconds": 0.055228,
+          "peak_rss_bytes": 21479424,
+          "stdout_bytes": 199,
+          "stderr_bytes": 0,
+          "stdout_sha256": "0f885babc92c0bd1891aab44761c21681f41d73eb454b52266a83a8fc8d57e80",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 199,
+          "parsed_output_sha256": "0f885babc92c0bd1891aab44761c21681f41d73eb454b52266a83a8fc8d57e80",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "bde480e918337362fc899ae1ae64230f41fabe6753b8b7c4e57f745865f1881d",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.12012604100164026,
+          "user_seconds": 0.076387,
+          "system_seconds": 0.057525,
+          "peak_rss_bytes": 21577728,
+          "stdout_bytes": 199,
+          "stderr_bytes": 0,
+          "stdout_sha256": "0f885babc92c0bd1891aab44761c21681f41d73eb454b52266a83a8fc8d57e80",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 199,
+          "parsed_output_sha256": "0f885babc92c0bd1891aab44761c21681f41d73eb454b52266a83a8fc8d57e80",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "bde480e918337362fc899ae1ae64230f41fabe6753b8b7c4e57f745865f1881d",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "python3",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/talisman_adapter.py",
+        "git",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/git-repo"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.1263079169439152,
+        "median_seconds": 0.12076299998443574,
+        "min_seconds": 0.12012604100164026,
+        "max_seconds": 0.12170458293985575,
+        "mib_per_second": null,
+        "max_peak_rss_bytes": 22069248
+      },
+      "file_level_quality": {
+        "expected_positive_files": 1,
+        "detected_positive_files": 1,
+        "missed_positive_files": [],
+        "other_reported_files": [],
+        "note": "File-level evidence only; cannot establish byte/line accuracy or distinguish index from worktree content at the same path."
+      }
+    },
+    {
+      "tool": "talisman",
+      "dataset": "staged",
+      "mode": "staged",
+      "input_bytes": null,
+      "input_files": 2,
+      "worktree_content_sha256": "9a11f857c6008a54207c122c7be646dc6d1f83e103e7cb95f3b0d1ecc11994d9",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.1947188340127468,
+          "user_seconds": 0.088049,
+          "system_seconds": 0.06998499999999999,
+          "peak_rss_bytes": 19742720,
+          "stdout_bytes": 114,
+          "stderr_bytes": 0,
+          "stdout_sha256": "5430c52cfb87deb9c925602dd6332a7b7864ac5999effddeff8abfc5744513f8",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 114,
+          "parsed_output_sha256": "5430c52cfb87deb9c925602dd6332a7b7864ac5999effddeff8abfc5744513f8",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "a64f39b732a124df3676d8d46f898bc4d84d54bd374704ce62c9dfe9afff6e69",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.182808208046481,
+          "user_seconds": 0.09157499999999999,
+          "system_seconds": 0.069265,
+          "peak_rss_bytes": 20365312,
+          "stdout_bytes": 114,
+          "stderr_bytes": 0,
+          "stdout_sha256": "5430c52cfb87deb9c925602dd6332a7b7864ac5999effddeff8abfc5744513f8",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 114,
+          "parsed_output_sha256": "5430c52cfb87deb9c925602dd6332a7b7864ac5999effddeff8abfc5744513f8",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "a64f39b732a124df3676d8d46f898bc4d84d54bd374704ce62c9dfe9afff6e69",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.16297962493263185,
+          "user_seconds": 0.08506,
+          "system_seconds": 0.058174,
+          "peak_rss_bytes": 20004864,
+          "stdout_bytes": 114,
+          "stderr_bytes": 0,
+          "stdout_sha256": "5430c52cfb87deb9c925602dd6332a7b7864ac5999effddeff8abfc5744513f8",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 114,
+          "parsed_output_sha256": "5430c52cfb87deb9c925602dd6332a7b7864ac5999effddeff8abfc5744513f8",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "a64f39b732a124df3676d8d46f898bc4d84d54bd374704ce62c9dfe9afff6e69",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.17177083296701312,
+          "user_seconds": 0.08725,
+          "system_seconds": 0.065284,
+          "peak_rss_bytes": 19644416,
+          "stdout_bytes": 114,
+          "stderr_bytes": 0,
+          "stdout_sha256": "5430c52cfb87deb9c925602dd6332a7b7864ac5999effddeff8abfc5744513f8",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 114,
+          "parsed_output_sha256": "5430c52cfb87deb9c925602dd6332a7b7864ac5999effddeff8abfc5744513f8",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "a64f39b732a124df3676d8d46f898bc4d84d54bd374704ce62c9dfe9afff6e69",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 1,
+          "wall_seconds": 0.16029079200234264,
+          "user_seconds": 0.083449,
+          "system_seconds": 0.056514999999999996,
+          "peak_rss_bytes": 20414464,
+          "stdout_bytes": 114,
+          "stderr_bytes": 0,
+          "stdout_sha256": "5430c52cfb87deb9c925602dd6332a7b7864ac5999effddeff8abfc5744513f8",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 114,
+          "parsed_output_sha256": "5430c52cfb87deb9c925602dd6332a7b7864ac5999effddeff8abfc5744513f8",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "a64f39b732a124df3676d8d46f898bc4d84d54bd374704ce62c9dfe9afff6e69",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "python3",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/talisman_adapter.py",
+        "staged",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/git-repo"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.1947188340127468,
+        "median_seconds": 0.16297962493263185,
+        "min_seconds": 0.16029079200234264,
+        "max_seconds": 0.17177083296701312,
+        "mib_per_second": null,
+        "max_peak_rss_bytes": 20414464
+      },
+      "file_level_quality": {
+        "expected_positive_files": 1,
+        "detected_positive_files": 1,
+        "missed_positive_files": [],
+        "other_reported_files": [],
+        "note": "File-level evidence only; cannot establish byte/line accuracy or distinguish index from worktree content at the same path."
+      }
+    },
+    {
+      "tool": "talisman",
+      "dataset": "real-regex",
+      "status": "unsupported",
+      "reason": "no tested fs command"
+    },
+    {
+      "tool": "rusty-hog",
+      "dataset": "quality",
+      "mode": "fs",
+      "input_bytes": 2721,
+      "input_files": 44,
+      "worktree_content_sha256": "d06745d4356819c905f5556f9247505c4d02194125d65392e4ee119b0355125b",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.08641091699246317,
+          "user_seconds": 0.065867,
+          "system_seconds": 0.015404999999999999,
+          "peak_rss_bytes": 33701888,
+          "stdout_bytes": 4916,
+          "stderr_bytes": 0,
+          "stdout_sha256": "08338b5d65ca2eb766440e4f997a21bac13a5b27f1a0df502474afcebd3d74e5",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 4916,
+          "parsed_output_sha256": "08338b5d65ca2eb766440e4f997a21bac13a5b27f1a0df502474afcebd3d74e5",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 29,
+          "locations_sha256": "5ef07ebc4a1d664cdf728fdb96fa3f78324d0cf7abaf0b3b49251739fa614efe",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.08711508300621063,
+          "user_seconds": 0.06631,
+          "system_seconds": 0.014577999999999999,
+          "peak_rss_bytes": 33570816,
+          "stdout_bytes": 4916,
+          "stderr_bytes": 0,
+          "stdout_sha256": "6c306371042d3a1439ccb08b64dc182bc9aae8744233a77ea04420a0cb05fb75",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 4916,
+          "parsed_output_sha256": "6c306371042d3a1439ccb08b64dc182bc9aae8744233a77ea04420a0cb05fb75",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 29,
+          "locations_sha256": "5ef07ebc4a1d664cdf728fdb96fa3f78324d0cf7abaf0b3b49251739fa614efe",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.08854500006418675,
+          "user_seconds": 0.06744599999999999,
+          "system_seconds": 0.015035999999999999,
+          "peak_rss_bytes": 34684928,
+          "stdout_bytes": 4916,
+          "stderr_bytes": 0,
+          "stdout_sha256": "2699a404669e66fed20abf959ff266d5299f215e2e22f969d3903fe6d6264ac9",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 4916,
+          "parsed_output_sha256": "2699a404669e66fed20abf959ff266d5299f215e2e22f969d3903fe6d6264ac9",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 29,
+          "locations_sha256": "5ef07ebc4a1d664cdf728fdb96fa3f78324d0cf7abaf0b3b49251739fa614efe",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.08542416605632752,
+          "user_seconds": 0.06568,
+          "system_seconds": 0.01436,
+          "peak_rss_bytes": 31703040,
+          "stdout_bytes": 4916,
+          "stderr_bytes": 0,
+          "stdout_sha256": "48853f6e366f3009cca1a3a40449ebfa7bb8b95b7c837a6a7cb36e1943dba812",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 4916,
+          "parsed_output_sha256": "48853f6e366f3009cca1a3a40449ebfa7bb8b95b7c837a6a7cb36e1943dba812",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 29,
+          "locations_sha256": "5ef07ebc4a1d664cdf728fdb96fa3f78324d0cf7abaf0b3b49251739fa614efe",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.0899126660078764,
+          "user_seconds": 0.06683399999999999,
+          "system_seconds": 0.017128,
+          "peak_rss_bytes": 35389440,
+          "stdout_bytes": 4916,
+          "stderr_bytes": 0,
+          "stdout_sha256": "86a7260b29cdcfba74e3fe8ab6b1797dca868cf80b7fded70d6e5e105dd2d1e5",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 4916,
+          "parsed_output_sha256": "86a7260b29cdcfba74e3fe8ab6b1797dca868cf80b7fded70d6e5e105dd2d1e5",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 29,
+          "locations_sha256": "5ef07ebc4a1d664cdf728fdb96fa3f78324d0cf7abaf0b3b49251739fa614efe",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "python3",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/rusty_hog_adapter.py",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/quality"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.08641091699246317,
+        "median_seconds": 0.08854500006418675,
+        "min_seconds": 0.08542416605632752,
+        "max_seconds": 0.0899126660078764,
+        "mib_per_second": 0.02930654258354864,
+        "max_peak_rss_bytes": 35389440
+      },
+      "quality": {
+        "tp": 17,
+        "fp": 0,
+        "fn": 17,
+        "negative_labels_flagged": 0,
+        "tn": 10,
+        "positive_labels": 34,
+        "negative_labels": 10,
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6666666666666666,
+        "duplicate_findings": 12,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 0,
+          "line_only": 17
+        },
+        "by_group": {
+          "common": {
+            "tp": 15,
+            "total": 27,
+            "recall": 0.5555555555555556
+          },
+          "generic": {
+            "tp": 2,
+            "total": 7,
+            "recall": 0.2857142857142857
+          }
+        },
+        "by_provider": {
+          "aws-access-key": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "github-pat": {
+            "tp": 0,
+            "total": 3,
+            "recall": 0.0
+          },
+          "gitlab-pat": {
+            "tp": 0,
+            "total": 3,
+            "recall": 0.0
+          },
+          "slack-bot": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "stripe-secret": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "google-api": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "sendgrid-api": {
+            "tp": 0,
+            "total": 3,
+            "recall": 0.0
+          },
+          "npm-token": {
+            "tp": 0,
+            "total": 3,
+            "recall": 0.0
+          },
+          "twilio-api": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "generic": {
+            "tp": 2,
+            "total": 7,
+            "recall": 0.2857142857142857
+          }
+        },
+        "missed_label_ids": [
+          "quality-00003",
+          "quality-00004",
+          "quality-00005",
+          "quality-00006",
+          "quality-00007",
+          "quality-00008",
+          "quality-00018",
+          "quality-00019",
+          "quality-00020",
+          "quality-00021",
+          "quality-00022",
+          "quality-00023",
+          "quality-00027",
+          "quality-00030",
+          "quality-00031",
+          "quality-00032",
+          "quality-00033"
+        ]
+      }
+    },
+    {
+      "tool": "rusty-hog",
+      "dataset": "capabilities",
+      "mode": "fs",
+      "input_bytes": 66417,
+      "input_files": 8,
+      "worktree_content_sha256": "068943d0f4d0c1c47713e9c8c054ccbff2714f8123cf3d60919b8d6ddf293bd5",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.08636208309326321,
+          "user_seconds": 0.065816,
+          "system_seconds": 0.015236,
+          "peak_rss_bytes": 35536896,
+          "stdout_bytes": 35,
+          "stderr_bytes": 0,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.08606850006617606,
+          "user_seconds": 0.065997,
+          "system_seconds": 0.014223,
+          "peak_rss_bytes": 32374784,
+          "stdout_bytes": 35,
+          "stderr_bytes": 0,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.08634754200465977,
+          "user_seconds": 0.06558599999999999,
+          "system_seconds": 0.01521,
+          "peak_rss_bytes": 36372480,
+          "stdout_bytes": 35,
+          "stderr_bytes": 0,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.08614566596224904,
+          "user_seconds": 0.066063,
+          "system_seconds": 0.014143999999999999,
+          "peak_rss_bytes": 32473088,
+          "stdout_bytes": 35,
+          "stderr_bytes": 0,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.08557550003752112,
+          "user_seconds": 0.06534899999999999,
+          "system_seconds": 0.014405,
+          "peak_rss_bytes": 33734656,
+          "stdout_bytes": 35,
+          "stderr_bytes": 0,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "python3",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/rusty_hog_adapter.py",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/capabilities"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.08636208309326321,
+        "median_seconds": 0.08614566596224904,
+        "min_seconds": 0.08557550003752112,
+        "max_seconds": 0.08634754200465977,
+        "mib_per_second": 0.7352684126965946,
+        "max_peak_rss_bytes": 36372480
+      },
+      "archive_probes": [
+        {
+          "path": "capabilities/archive.zip",
+          "member": "nested/config.conf",
+          "reported_archive": false,
+          "reported_member": false,
+          "evidence": "location only; no decoded span or credential validity claim"
+        },
+        {
+          "path": "capabilities/archive.tar.gz",
+          "member": "nested/config.conf",
+          "reported_archive": false,
+          "reported_member": false,
+          "evidence": "location only; no decoded span or credential validity claim"
+        }
+      ],
+      "excluded_unscored_archive_findings": 0,
+      "quality": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 6,
+        "negative_labels_flagged": 0,
+        "tn": 0,
+        "positive_labels": 6,
+        "negative_labels": 0,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 0,
+          "line_only": 0
+        },
+        "by_group": {
+          "capability": {
+            "tp": 0,
+            "total": 6,
+            "recall": 0.0
+          }
+        },
+        "by_provider": {
+          "github-pat": {
+            "tp": 0,
+            "total": 5,
+            "recall": 0.0
+          },
+          "private-key": {
+            "tp": 0,
+            "total": 1,
+            "recall": 0.0
+          }
+        },
+        "missed_label_ids": [
+          "capabilities-00044",
+          "capabilities-00045",
+          "capabilities-00046",
+          "capabilities-00047",
+          "capabilities-00048",
+          "capabilities-00049"
+        ]
+      }
+    },
+    {
+      "tool": "rusty-hog",
+      "dataset": "throughput-1mib",
+      "mode": "fs",
+      "input_bytes": 1048576,
+      "input_files": 4,
+      "worktree_content_sha256": "02c5d6a26d681106821057a0381f563fbf29e4dbe02a5268485d9af6524c3823",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.14881970803253353,
+          "user_seconds": 0.12351,
+          "system_seconds": 0.017079999999999998,
+          "peak_rss_bytes": 34586624,
+          "stdout_bytes": 35,
+          "stderr_bytes": 0,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.14591445808764547,
+          "user_seconds": 0.122482,
+          "system_seconds": 0.016162,
+          "peak_rss_bytes": 34062336,
+          "stdout_bytes": 35,
+          "stderr_bytes": 0,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.3137815409572795,
+          "user_seconds": 0.16502699999999998,
+          "system_seconds": 0.027365999999999998,
+          "peak_rss_bytes": 33734656,
+          "stdout_bytes": 35,
+          "stderr_bytes": 0,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.16015795909333974,
+          "user_seconds": 0.12149099999999999,
+          "system_seconds": 0.018552,
+          "peak_rss_bytes": 34766848,
+          "stdout_bytes": 35,
+          "stderr_bytes": 0,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.14443858398590237,
+          "user_seconds": 0.122318,
+          "system_seconds": 0.015581,
+          "peak_rss_bytes": 34013184,
+          "stdout_bytes": 35,
+          "stderr_bytes": 0,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "python3",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/rusty_hog_adapter.py",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/1mib"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.14881970803253353,
+        "median_seconds": 0.16015795909333974,
+        "min_seconds": 0.14443858398590237,
+        "max_seconds": 0.3137815409572795,
+        "mib_per_second": 6.243835808479565,
+        "max_peak_rss_bytes": 34766848
+      },
+      "quality": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 1,
+        "negative_labels_flagged": 0,
+        "tn": 0,
+        "positive_labels": 1,
+        "negative_labels": 0,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 0,
+          "line_only": 0
+        },
+        "by_group": {
+          "throughput": {
+            "tp": 0,
+            "total": 1,
+            "recall": 0.0
+          }
+        },
+        "by_provider": {
+          "github-pat": {
+            "tp": 0,
+            "total": 1,
+            "recall": 0.0
+          }
+        },
+        "missed_label_ids": [
+          "throughput-1mib-00050"
+        ]
+      }
+    },
+    {
+      "tool": "rusty-hog",
+      "dataset": "throughput-16mib",
+      "mode": "fs",
+      "input_bytes": 16777216,
+      "input_files": 64,
+      "worktree_content_sha256": "483a0b1e1a788aeb54823995effff1ff43206798a3b3286ee2917fb496d4c6b2",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.9921431250404567,
+          "user_seconds": 0.9477009999999999,
+          "system_seconds": 0.027871,
+          "peak_rss_bytes": 32227328,
+          "stdout_bytes": 35,
+          "stderr_bytes": 0,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 1.0081739170709625,
+          "user_seconds": 0.9639019999999999,
+          "system_seconds": 0.028543,
+          "peak_rss_bytes": 34668544,
+          "stdout_bytes": 35,
+          "stderr_bytes": 0,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.9806814169278368,
+          "user_seconds": 0.94034,
+          "system_seconds": 0.026246,
+          "peak_rss_bytes": 36945920,
+          "stdout_bytes": 35,
+          "stderr_bytes": 0,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 1.3823760419618338,
+          "user_seconds": 1.1548559999999999,
+          "system_seconds": 0.035012999999999996,
+          "peak_rss_bytes": 36913152,
+          "stdout_bytes": 35,
+          "stderr_bytes": 0,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 1.00061824999284,
+          "user_seconds": 0.9519559999999999,
+          "system_seconds": 0.029036,
+          "peak_rss_bytes": 35602432,
+          "stdout_bytes": 35,
+          "stderr_bytes": 0,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "python3",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/rusty_hog_adapter.py",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.9921431250404567,
+        "median_seconds": 1.00061824999284,
+        "min_seconds": 0.9806814169278368,
+        "max_seconds": 1.3823760419618338,
+        "mib_per_second": 15.990114112064706,
+        "max_peak_rss_bytes": 36945920
+      },
+      "quality": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 16,
+        "negative_labels_flagged": 0,
+        "tn": 0,
+        "positive_labels": 16,
+        "negative_labels": 0,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 0,
+          "line_only": 0
+        },
+        "by_group": {
+          "throughput": {
+            "tp": 0,
+            "total": 16,
+            "recall": 0.0
+          }
+        },
+        "by_provider": {
+          "github-pat": {
+            "tp": 0,
+            "total": 16,
+            "recall": 0.0
+          }
+        },
+        "missed_label_ids": [
+          "throughput-16mib-00051",
+          "throughput-16mib-00052",
+          "throughput-16mib-00053",
+          "throughput-16mib-00054",
+          "throughput-16mib-00055",
+          "throughput-16mib-00056",
+          "throughput-16mib-00057",
+          "throughput-16mib-00058",
+          "throughput-16mib-00059",
+          "throughput-16mib-00060",
+          "throughput-16mib-00061",
+          "throughput-16mib-00062",
+          "throughput-16mib-00063",
+          "throughput-16mib-00064",
+          "throughput-16mib-00065",
+          "throughput-16mib-00066"
+        ]
+      }
+    },
+    {
+      "tool": "rusty-hog",
+      "dataset": "throughput-128mib",
+      "mode": "fs",
+      "input_bytes": 134217728,
+      "input_files": 512,
+      "worktree_content_sha256": "e29b0c3af9715995799f828ad66918365ba8de1ae0299730745cf4d162cc21dc",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 7.236099916044623,
+          "user_seconds": 6.925512,
+          "system_seconds": 0.135876,
+          "peak_rss_bytes": 36159488,
+          "stdout_bytes": 35,
+          "stderr_bytes": 0,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 7.373137167072855,
+          "user_seconds": 7.142582,
+          "system_seconds": 0.12726099999999999,
+          "peak_rss_bytes": 36061184,
+          "stdout_bytes": 35,
+          "stderr_bytes": 0,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 7.0988637920236215,
+          "user_seconds": 6.898585,
+          "system_seconds": 0.116079,
+          "peak_rss_bytes": 35143680,
+          "stdout_bytes": 35,
+          "stderr_bytes": 0,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 7.192188834073022,
+          "user_seconds": 6.977578,
+          "system_seconds": 0.123502,
+          "peak_rss_bytes": 34897920,
+          "stdout_bytes": 35,
+          "stderr_bytes": 0,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 7.137800708063878,
+          "user_seconds": 6.946912,
+          "system_seconds": 0.118687,
+          "peak_rss_bytes": 35078144,
+          "stdout_bytes": 35,
+          "stderr_bytes": 0,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "python3",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/rusty_hog_adapter.py",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib"
+      ],
+      "summary": {
+        "cold_process_seconds": 7.236099916044623,
+        "median_seconds": 7.137800708063878,
+        "min_seconds": 7.0988637920236215,
+        "max_seconds": 7.192188834073022,
+        "mib_per_second": 17.93269457010658,
+        "max_peak_rss_bytes": 35143680
+      },
+      "quality": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 128,
+        "negative_labels_flagged": 0,
+        "tn": 0,
+        "positive_labels": 128,
+        "negative_labels": 0,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 0,
+          "line_only": 0
+        },
+        "by_group": {
+          "throughput": {
+            "tp": 0,
+            "total": 128,
+            "recall": 0.0
+          }
+        },
+        "by_provider": {
+          "github-pat": {
+            "tp": 0,
+            "total": 128,
+            "recall": 0.0
+          }
+        },
+        "missed_label_ids": [
+          "throughput-128mib-00067",
+          "throughput-128mib-00068",
+          "throughput-128mib-00069",
+          "throughput-128mib-00070",
+          "throughput-128mib-00071",
+          "throughput-128mib-00072",
+          "throughput-128mib-00073",
+          "throughput-128mib-00074",
+          "throughput-128mib-00075",
+          "throughput-128mib-00076",
+          "throughput-128mib-00077",
+          "throughput-128mib-00078",
+          "throughput-128mib-00079",
+          "throughput-128mib-00080",
+          "throughput-128mib-00081",
+          "throughput-128mib-00082",
+          "throughput-128mib-00083",
+          "throughput-128mib-00084",
+          "throughput-128mib-00085",
+          "throughput-128mib-00086",
+          "throughput-128mib-00087",
+          "throughput-128mib-00088",
+          "throughput-128mib-00089",
+          "throughput-128mib-00090",
+          "throughput-128mib-00091",
+          "throughput-128mib-00092",
+          "throughput-128mib-00093",
+          "throughput-128mib-00094",
+          "throughput-128mib-00095",
+          "throughput-128mib-00096",
+          "throughput-128mib-00097",
+          "throughput-128mib-00098",
+          "throughput-128mib-00099",
+          "throughput-128mib-00100",
+          "throughput-128mib-00101",
+          "throughput-128mib-00102",
+          "throughput-128mib-00103",
+          "throughput-128mib-00104",
+          "throughput-128mib-00105",
+          "throughput-128mib-00106",
+          "throughput-128mib-00107",
+          "throughput-128mib-00108",
+          "throughput-128mib-00109",
+          "throughput-128mib-00110",
+          "throughput-128mib-00111",
+          "throughput-128mib-00112",
+          "throughput-128mib-00113",
+          "throughput-128mib-00114",
+          "throughput-128mib-00115",
+          "throughput-128mib-00116",
+          "throughput-128mib-00117",
+          "throughput-128mib-00118",
+          "throughput-128mib-00119",
+          "throughput-128mib-00120",
+          "throughput-128mib-00121",
+          "throughput-128mib-00122",
+          "throughput-128mib-00123",
+          "throughput-128mib-00124",
+          "throughput-128mib-00125",
+          "throughput-128mib-00126",
+          "throughput-128mib-00127",
+          "throughput-128mib-00128",
+          "throughput-128mib-00129",
+          "throughput-128mib-00130",
+          "throughput-128mib-00131",
+          "throughput-128mib-00132",
+          "throughput-128mib-00133",
+          "throughput-128mib-00134",
+          "throughput-128mib-00135",
+          "throughput-128mib-00136",
+          "throughput-128mib-00137",
+          "throughput-128mib-00138",
+          "throughput-128mib-00139",
+          "throughput-128mib-00140",
+          "throughput-128mib-00141",
+          "throughput-128mib-00142",
+          "throughput-128mib-00143",
+          "throughput-128mib-00144",
+          "throughput-128mib-00145",
+          "throughput-128mib-00146",
+          "throughput-128mib-00147",
+          "throughput-128mib-00148",
+          "throughput-128mib-00149",
+          "throughput-128mib-00150",
+          "throughput-128mib-00151",
+          "throughput-128mib-00152",
+          "throughput-128mib-00153",
+          "throughput-128mib-00154",
+          "throughput-128mib-00155",
+          "throughput-128mib-00156",
+          "throughput-128mib-00157",
+          "throughput-128mib-00158",
+          "throughput-128mib-00159",
+          "throughput-128mib-00160",
+          "throughput-128mib-00161",
+          "throughput-128mib-00162",
+          "throughput-128mib-00163",
+          "throughput-128mib-00164",
+          "throughput-128mib-00165",
+          "throughput-128mib-00166",
+          "throughput-128mib-00167",
+          "throughput-128mib-00168",
+          "throughput-128mib-00169",
+          "throughput-128mib-00170",
+          "throughput-128mib-00171",
+          "throughput-128mib-00172",
+          "throughput-128mib-00173",
+          "throughput-128mib-00174",
+          "throughput-128mib-00175",
+          "throughput-128mib-00176",
+          "throughput-128mib-00177",
+          "throughput-128mib-00178",
+          "throughput-128mib-00179",
+          "throughput-128mib-00180",
+          "throughput-128mib-00181",
+          "throughput-128mib-00182",
+          "throughput-128mib-00183",
+          "throughput-128mib-00184",
+          "throughput-128mib-00185",
+          "throughput-128mib-00186",
+          "throughput-128mib-00187",
+          "throughput-128mib-00188",
+          "throughput-128mib-00189",
+          "throughput-128mib-00190",
+          "throughput-128mib-00191",
+          "throughput-128mib-00192",
+          "throughput-128mib-00193",
+          "throughput-128mib-00194"
+        ]
+      }
+    },
+    {
+      "tool": "rusty-hog",
+      "dataset": "git_history",
+      "status": "unsupported",
+      "reason": "no tested git command"
+    },
+    {
+      "tool": "rusty-hog",
+      "dataset": "staged",
+      "status": "unsupported",
+      "reason": "no tested staged command"
+    },
+    {
+      "tool": "rusty-hog",
+      "dataset": "real-regex",
+      "mode": "fs",
+      "input_bytes": 8434814,
+      "input_files": 451,
+      "worktree_content_sha256": "c404bcbf4f1517a017b133211ac33b80ab26a348af0f03158ef13b3b09e30c1d",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.6816377500072122,
+          "user_seconds": 0.636185,
+          "system_seconds": 0.032764,
+          "peak_rss_bytes": 36732928,
+          "stdout_bytes": 2091,
+          "stderr_bytes": 0,
+          "stdout_sha256": "97ea4ab2ddb2fbcf2e1f44cfad7e0a5a8c97e7c888f3c0a7bbbac308ddbf6664",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 2091,
+          "parsed_output_sha256": "97ea4ab2ddb2fbcf2e1f44cfad7e0a5a8c97e7c888f3c0a7bbbac308ddbf6664",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 13,
+          "locations_sha256": "3dc331a49bde81fa5428f8b0cb6b0eb4b837a5ad8ac3dea51cfe2218da8911f5",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.6760663330787793,
+          "user_seconds": 0.632347,
+          "system_seconds": 0.032583,
+          "peak_rss_bytes": 40091648,
+          "stdout_bytes": 2091,
+          "stderr_bytes": 0,
+          "stdout_sha256": "6a627700a9c4076788bda75d9d8f97333135a7ea3e020677e4720a806e8d884c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 2091,
+          "parsed_output_sha256": "6a627700a9c4076788bda75d9d8f97333135a7ea3e020677e4720a806e8d884c",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 13,
+          "locations_sha256": "3dc331a49bde81fa5428f8b0cb6b0eb4b837a5ad8ac3dea51cfe2218da8911f5",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.6926972499350086,
+          "user_seconds": 0.646753,
+          "system_seconds": 0.033455,
+          "peak_rss_bytes": 36110336,
+          "stdout_bytes": 2091,
+          "stderr_bytes": 0,
+          "stdout_sha256": "b069764886e73520fe270ecb5ef19e1123784352ae8d57ace972646e9dd5c273",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 2091,
+          "parsed_output_sha256": "b069764886e73520fe270ecb5ef19e1123784352ae8d57ace972646e9dd5c273",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 13,
+          "locations_sha256": "3dc331a49bde81fa5428f8b0cb6b0eb4b837a5ad8ac3dea51cfe2218da8911f5",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.6870851670391858,
+          "user_seconds": 0.6419349999999999,
+          "system_seconds": 0.034180999999999996,
+          "peak_rss_bytes": 37371904,
+          "stdout_bytes": 2091,
+          "stderr_bytes": 0,
+          "stdout_sha256": "7a5c9b62af0fa6d66e169f8396d91e4f7581e25571dacc37dea11de149838101",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 2091,
+          "parsed_output_sha256": "7a5c9b62af0fa6d66e169f8396d91e4f7581e25571dacc37dea11de149838101",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 13,
+          "locations_sha256": "3dc331a49bde81fa5428f8b0cb6b0eb4b837a5ad8ac3dea51cfe2218da8911f5",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.6888429999817163,
+          "user_seconds": 0.6451169999999999,
+          "system_seconds": 0.032211,
+          "peak_rss_bytes": 35209216,
+          "stdout_bytes": 2091,
+          "stderr_bytes": 0,
+          "stdout_sha256": "6936832b81a277c6ff2992821a083c4df442afdc5064cec2c467d54da28525d5",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "parsed_output_bytes": 2091,
+          "parsed_output_sha256": "6936832b81a277c6ff2992821a083c4df442afdc5064cec2c467d54da28525d5",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 13,
+          "locations_sha256": "3dc331a49bde81fa5428f8b0cb6b0eb4b837a5ad8ac3dea51cfe2218da8911f5",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "python3",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/rusty_hog_adapter.py",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.6816377500072122,
+        "median_seconds": 0.6888429999817163,
+        "min_seconds": 0.6870851670391858,
+        "max_seconds": 0.6926972499350086,
+        "mib_per_second": 11.677647120864084,
+        "max_peak_rss_bytes": 37371904
+      }
+    },
+    {
+      "tool": "credential-digger",
+      "dataset": "quality",
+      "mode": "fs",
+      "input_bytes": 2721,
+      "input_files": 44,
+      "worktree_content_sha256": "d06745d4356819c905f5556f9247505c4d02194125d65392e4ee119b0355125b",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 5.7547938749194145,
+          "user_seconds": 4.931656,
+          "system_seconds": 0.740174,
+          "peak_rss_bytes": 673333248,
+          "stdout_bytes": 594,
+          "stderr_bytes": 553,
+          "stdout_sha256": "a33b7c275f0570a2753154a57d21d1706023e31256fea58ff567da52e805358d",
+          "stderr_sha256": "7e72fe2ffea2125e933a36b300299374278b6ba4addce966c5a1b3101ffaf477",
+          "parsed_output_bytes": 594,
+          "parsed_output_sha256": "a33b7c275f0570a2753154a57d21d1706023e31256fea58ff567da52e805358d",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 8,
+          "locations_sha256": "593561f35e54ade1d7a08d55cdd53ec0359e812e7e85500dc7af439e856e3c7f",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 5.679091041907668,
+          "user_seconds": 4.875737,
+          "system_seconds": 0.7398239999999999,
+          "peak_rss_bytes": 672415744,
+          "stdout_bytes": 594,
+          "stderr_bytes": 553,
+          "stdout_sha256": "a33b7c275f0570a2753154a57d21d1706023e31256fea58ff567da52e805358d",
+          "stderr_sha256": "7e72fe2ffea2125e933a36b300299374278b6ba4addce966c5a1b3101ffaf477",
+          "parsed_output_bytes": 594,
+          "parsed_output_sha256": "a33b7c275f0570a2753154a57d21d1706023e31256fea58ff567da52e805358d",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 8,
+          "locations_sha256": "593561f35e54ade1d7a08d55cdd53ec0359e812e7e85500dc7af439e856e3c7f",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 5.620848749997094,
+          "user_seconds": 4.84021,
+          "system_seconds": 0.717201,
+          "peak_rss_bytes": 674070528,
+          "stdout_bytes": 594,
+          "stderr_bytes": 553,
+          "stdout_sha256": "a33b7c275f0570a2753154a57d21d1706023e31256fea58ff567da52e805358d",
+          "stderr_sha256": "7e72fe2ffea2125e933a36b300299374278b6ba4addce966c5a1b3101ffaf477",
+          "parsed_output_bytes": 594,
+          "parsed_output_sha256": "a33b7c275f0570a2753154a57d21d1706023e31256fea58ff567da52e805358d",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 8,
+          "locations_sha256": "593561f35e54ade1d7a08d55cdd53ec0359e812e7e85500dc7af439e856e3c7f",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 6.010015374980867,
+          "user_seconds": 5.011458,
+          "system_seconds": 0.758455,
+          "peak_rss_bytes": 673005568,
+          "stdout_bytes": 594,
+          "stderr_bytes": 553,
+          "stdout_sha256": "a33b7c275f0570a2753154a57d21d1706023e31256fea58ff567da52e805358d",
+          "stderr_sha256": "7e72fe2ffea2125e933a36b300299374278b6ba4addce966c5a1b3101ffaf477",
+          "parsed_output_bytes": 594,
+          "parsed_output_sha256": "a33b7c275f0570a2753154a57d21d1706023e31256fea58ff567da52e805358d",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 8,
+          "locations_sha256": "593561f35e54ade1d7a08d55cdd53ec0359e812e7e85500dc7af439e856e3c7f",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 5.565886290976778,
+          "user_seconds": 4.787239,
+          "system_seconds": 0.715355,
+          "peak_rss_bytes": 675135488,
+          "stdout_bytes": 594,
+          "stderr_bytes": 553,
+          "stdout_sha256": "a33b7c275f0570a2753154a57d21d1706023e31256fea58ff567da52e805358d",
+          "stderr_sha256": "7e72fe2ffea2125e933a36b300299374278b6ba4addce966c5a1b3101ffaf477",
+          "parsed_output_bytes": 594,
+          "parsed_output_sha256": "a33b7c275f0570a2753154a57d21d1706023e31256fea58ff567da52e805358d",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 8,
+          "locations_sha256": "593561f35e54ade1d7a08d55cdd53ec0359e812e7e85500dc7af439e856e3c7f",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/credentialdigger/bin/python",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/credentialdigger_adapter.py",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/quality"
+      ],
+      "summary": {
+        "cold_process_seconds": 5.7547938749194145,
+        "median_seconds": 5.620848749997094,
+        "min_seconds": 5.565886290976778,
+        "max_seconds": 6.010015374980867,
+        "mib_per_second": 0.00046166476458608637,
+        "max_peak_rss_bytes": 675135488
+      },
+      "quality": {
+        "tp": 6,
+        "fp": 2,
+        "fn": 28,
+        "negative_labels_flagged": 2,
+        "tn": 8,
+        "positive_labels": 34,
+        "negative_labels": 10,
+        "precision": 0.75,
+        "recall": 0.17647058823529413,
+        "f1": 0.2857142857142857,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 0,
+          "line_only": 6
+        },
+        "by_group": {
+          "common": {
+            "tp": 3,
+            "total": 27,
+            "recall": 0.1111111111111111
+          },
+          "generic": {
+            "tp": 3,
+            "total": 7,
+            "recall": 0.42857142857142855
+          }
+        },
+        "by_provider": {
+          "aws-access-key": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "github-pat": {
+            "tp": 0,
+            "total": 3,
+            "recall": 0.0
+          },
+          "gitlab-pat": {
+            "tp": 0,
+            "total": 3,
+            "recall": 0.0
+          },
+          "slack-bot": {
+            "tp": 0,
+            "total": 3,
+            "recall": 0.0
+          },
+          "stripe-secret": {
+            "tp": 0,
+            "total": 3,
+            "recall": 0.0
+          },
+          "google-api": {
+            "tp": 0,
+            "total": 3,
+            "recall": 0.0
+          },
+          "sendgrid-api": {
+            "tp": 0,
+            "total": 3,
+            "recall": 0.0
+          },
+          "npm-token": {
+            "tp": 0,
+            "total": 3,
+            "recall": 0.0
+          },
+          "twilio-api": {
+            "tp": 0,
+            "total": 3,
+            "recall": 0.0
+          },
+          "generic": {
+            "tp": 3,
+            "total": 7,
+            "recall": 0.42857142857142855
+          }
+        },
+        "missed_label_ids": [
+          "quality-00003",
+          "quality-00004",
+          "quality-00005",
+          "quality-00006",
+          "quality-00007",
+          "quality-00008",
+          "quality-00009",
+          "quality-00010",
+          "quality-00011",
+          "quality-00012",
+          "quality-00013",
+          "quality-00014",
+          "quality-00015",
+          "quality-00016",
+          "quality-00017",
+          "quality-00018",
+          "quality-00019",
+          "quality-00020",
+          "quality-00021",
+          "quality-00022",
+          "quality-00023",
+          "quality-00024",
+          "quality-00025",
+          "quality-00026",
+          "quality-00028",
+          "quality-00029",
+          "quality-00030",
+          "quality-00033"
+        ]
+      }
+    },
+    {
+      "tool": "credential-digger",
+      "dataset": "capabilities",
+      "mode": "fs",
+      "input_bytes": 66417,
+      "input_files": 8,
+      "worktree_content_sha256": "068943d0f4d0c1c47713e9c8c054ccbff2714f8123cf3d60919b8d6ddf293bd5",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 5.598499583080411,
+          "user_seconds": 4.819481,
+          "system_seconds": 0.7163149999999999,
+          "peak_rss_bytes": 674054144,
+          "stdout_bytes": 35,
+          "stderr_bytes": 553,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "43f83d23ba8bee79eb7575de0fca41fe7a72eef8e97977e0a92c49061e0f9aab",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 5.5706209999043494,
+          "user_seconds": 4.801157,
+          "system_seconds": 0.7071449999999999,
+          "peak_rss_bytes": 673792000,
+          "stdout_bytes": 35,
+          "stderr_bytes": 553,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "43f83d23ba8bee79eb7575de0fca41fe7a72eef8e97977e0a92c49061e0f9aab",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 5.510678165941499,
+          "user_seconds": 4.747942,
+          "system_seconds": 0.7070099999999999,
+          "peak_rss_bytes": 672890880,
+          "stdout_bytes": 35,
+          "stderr_bytes": 553,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "43f83d23ba8bee79eb7575de0fca41fe7a72eef8e97977e0a92c49061e0f9aab",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 5.518493750016205,
+          "user_seconds": 4.748453,
+          "system_seconds": 0.7084309999999999,
+          "peak_rss_bytes": 673939456,
+          "stdout_bytes": 35,
+          "stderr_bytes": 553,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "43f83d23ba8bee79eb7575de0fca41fe7a72eef8e97977e0a92c49061e0f9aab",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 5.521533207967877,
+          "user_seconds": 4.770996,
+          "system_seconds": 0.699063,
+          "peak_rss_bytes": 672972800,
+          "stdout_bytes": 35,
+          "stderr_bytes": 553,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "43f83d23ba8bee79eb7575de0fca41fe7a72eef8e97977e0a92c49061e0f9aab",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/credentialdigger/bin/python",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/credentialdigger_adapter.py",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/capabilities"
+      ],
+      "summary": {
+        "cold_process_seconds": 5.598499583080411,
+        "median_seconds": 5.518493750016205,
+        "min_seconds": 5.510678165941499,
+        "max_seconds": 5.521533207967877,
+        "mib_per_second": 0.01147780353517079,
+        "max_peak_rss_bytes": 673939456
+      },
+      "archive_probes": [
+        {
+          "path": "capabilities/archive.zip",
+          "member": "nested/config.conf",
+          "reported_archive": false,
+          "reported_member": false,
+          "evidence": "location only; no decoded span or credential validity claim"
+        },
+        {
+          "path": "capabilities/archive.tar.gz",
+          "member": "nested/config.conf",
+          "reported_archive": false,
+          "reported_member": false,
+          "evidence": "location only; no decoded span or credential validity claim"
+        }
+      ],
+      "excluded_unscored_archive_findings": 0,
+      "quality": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 6,
+        "negative_labels_flagged": 0,
+        "tn": 0,
+        "positive_labels": 6,
+        "negative_labels": 0,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 0,
+          "line_only": 0
+        },
+        "by_group": {
+          "capability": {
+            "tp": 0,
+            "total": 6,
+            "recall": 0.0
+          }
+        },
+        "by_provider": {
+          "github-pat": {
+            "tp": 0,
+            "total": 5,
+            "recall": 0.0
+          },
+          "private-key": {
+            "tp": 0,
+            "total": 1,
+            "recall": 0.0
+          }
+        },
+        "missed_label_ids": [
+          "capabilities-00044",
+          "capabilities-00045",
+          "capabilities-00046",
+          "capabilities-00047",
+          "capabilities-00048",
+          "capabilities-00049"
+        ]
+      }
+    },
+    {
+      "tool": "credential-digger",
+      "dataset": "throughput-1mib",
+      "mode": "fs",
+      "input_bytes": 1048576,
+      "input_files": 4,
+      "worktree_content_sha256": "02c5d6a26d681106821057a0381f563fbf29e4dbe02a5268485d9af6524c3823",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 5.559802333009429,
+          "user_seconds": 4.770722,
+          "system_seconds": 0.699355,
+          "peak_rss_bytes": 673841152,
+          "stdout_bytes": 35,
+          "stderr_bytes": 553,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "43f83d23ba8bee79eb7575de0fca41fe7a72eef8e97977e0a92c49061e0f9aab",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 5.508585292031057,
+          "user_seconds": 4.749706,
+          "system_seconds": 0.705344,
+          "peak_rss_bytes": 673136640,
+          "stdout_bytes": 35,
+          "stderr_bytes": 553,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "43f83d23ba8bee79eb7575de0fca41fe7a72eef8e97977e0a92c49061e0f9aab",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 5.546685499954037,
+          "user_seconds": 4.786615,
+          "system_seconds": 0.704897,
+          "peak_rss_bytes": 673955840,
+          "stdout_bytes": 35,
+          "stderr_bytes": 553,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "43f83d23ba8bee79eb7575de0fca41fe7a72eef8e97977e0a92c49061e0f9aab",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 5.67681220790837,
+          "user_seconds": 4.867417,
+          "system_seconds": 0.7284269999999999,
+          "peak_rss_bytes": 672415744,
+          "stdout_bytes": 35,
+          "stderr_bytes": 553,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "43f83d23ba8bee79eb7575de0fca41fe7a72eef8e97977e0a92c49061e0f9aab",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 6.175318958004937,
+          "user_seconds": 5.093001,
+          "system_seconds": 0.799848,
+          "peak_rss_bytes": 675037184,
+          "stdout_bytes": 35,
+          "stderr_bytes": 553,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "43f83d23ba8bee79eb7575de0fca41fe7a72eef8e97977e0a92c49061e0f9aab",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/credentialdigger/bin/python",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/credentialdigger_adapter.py",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/1mib"
+      ],
+      "summary": {
+        "cold_process_seconds": 5.559802333009429,
+        "median_seconds": 5.67681220790837,
+        "min_seconds": 5.546685499954037,
+        "max_seconds": 6.175318958004937,
+        "mib_per_second": 0.1761552017885847,
+        "max_peak_rss_bytes": 675037184
+      },
+      "quality": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 1,
+        "negative_labels_flagged": 0,
+        "tn": 0,
+        "positive_labels": 1,
+        "negative_labels": 0,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 0,
+          "line_only": 0
+        },
+        "by_group": {
+          "throughput": {
+            "tp": 0,
+            "total": 1,
+            "recall": 0.0
+          }
+        },
+        "by_provider": {
+          "github-pat": {
+            "tp": 0,
+            "total": 1,
+            "recall": 0.0
+          }
+        },
+        "missed_label_ids": [
+          "throughput-1mib-00050"
+        ]
+      }
+    },
+    {
+      "tool": "credential-digger",
+      "dataset": "throughput-16mib",
+      "mode": "fs",
+      "input_bytes": 16777216,
+      "input_files": 64,
+      "worktree_content_sha256": "483a0b1e1a788aeb54823995effff1ff43206798a3b3286ee2917fb496d4c6b2",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 6.113549417001195,
+          "user_seconds": 5.152395,
+          "system_seconds": 0.781671,
+          "peak_rss_bytes": 673808384,
+          "stdout_bytes": 35,
+          "stderr_bytes": 553,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "43f83d23ba8bee79eb7575de0fca41fe7a72eef8e97977e0a92c49061e0f9aab",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 6.1493548329453915,
+          "user_seconds": 5.119207,
+          "system_seconds": 0.786323,
+          "peak_rss_bytes": 672694272,
+          "stdout_bytes": 35,
+          "stderr_bytes": 553,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "43f83d23ba8bee79eb7575de0fca41fe7a72eef8e97977e0a92c49061e0f9aab",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 5.841713916976005,
+          "user_seconds": 5.011745,
+          "system_seconds": 0.7408009999999999,
+          "peak_rss_bytes": 673726464,
+          "stdout_bytes": 35,
+          "stderr_bytes": 553,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "43f83d23ba8bee79eb7575de0fca41fe7a72eef8e97977e0a92c49061e0f9aab",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 5.77907091693487,
+          "user_seconds": 4.975541,
+          "system_seconds": 0.7354729999999999,
+          "peak_rss_bytes": 673808384,
+          "stdout_bytes": 35,
+          "stderr_bytes": 553,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "43f83d23ba8bee79eb7575de0fca41fe7a72eef8e97977e0a92c49061e0f9aab",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 5.780915375100449,
+          "user_seconds": 4.977038,
+          "system_seconds": 0.73281,
+          "peak_rss_bytes": 672727040,
+          "stdout_bytes": 35,
+          "stderr_bytes": 553,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "43f83d23ba8bee79eb7575de0fca41fe7a72eef8e97977e0a92c49061e0f9aab",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/credentialdigger/bin/python",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/credentialdigger_adapter.py",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib"
+      ],
+      "summary": {
+        "cold_process_seconds": 6.113549417001195,
+        "median_seconds": 5.780915375100449,
+        "min_seconds": 5.77907091693487,
+        "max_seconds": 5.841713916976005,
+        "mib_per_second": 2.767727766594747,
+        "max_peak_rss_bytes": 673808384
+      },
+      "quality": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 16,
+        "negative_labels_flagged": 0,
+        "tn": 0,
+        "positive_labels": 16,
+        "negative_labels": 0,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 0,
+          "line_only": 0
+        },
+        "by_group": {
+          "throughput": {
+            "tp": 0,
+            "total": 16,
+            "recall": 0.0
+          }
+        },
+        "by_provider": {
+          "github-pat": {
+            "tp": 0,
+            "total": 16,
+            "recall": 0.0
+          }
+        },
+        "missed_label_ids": [
+          "throughput-16mib-00051",
+          "throughput-16mib-00052",
+          "throughput-16mib-00053",
+          "throughput-16mib-00054",
+          "throughput-16mib-00055",
+          "throughput-16mib-00056",
+          "throughput-16mib-00057",
+          "throughput-16mib-00058",
+          "throughput-16mib-00059",
+          "throughput-16mib-00060",
+          "throughput-16mib-00061",
+          "throughput-16mib-00062",
+          "throughput-16mib-00063",
+          "throughput-16mib-00064",
+          "throughput-16mib-00065",
+          "throughput-16mib-00066"
+        ]
+      }
+    },
+    {
+      "tool": "credential-digger",
+      "dataset": "throughput-128mib",
+      "mode": "fs",
+      "input_bytes": 134217728,
+      "input_files": 512,
+      "worktree_content_sha256": "e29b0c3af9715995799f828ad66918365ba8de1ae0299730745cf4d162cc21dc",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 7.0707927090115845,
+          "user_seconds": 6.080191,
+          "system_seconds": 0.90347,
+          "peak_rss_bytes": 673890304,
+          "stdout_bytes": 35,
+          "stderr_bytes": 553,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "43f83d23ba8bee79eb7575de0fca41fe7a72eef8e97977e0a92c49061e0f9aab",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 7.144480124930851,
+          "user_seconds": 6.108079,
+          "system_seconds": 0.92057,
+          "peak_rss_bytes": 673513472,
+          "stdout_bytes": 35,
+          "stderr_bytes": 553,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "43f83d23ba8bee79eb7575de0fca41fe7a72eef8e97977e0a92c49061e0f9aab",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 6.980875417008065,
+          "user_seconds": 6.017103,
+          "system_seconds": 0.8938499999999999,
+          "peak_rss_bytes": 674414592,
+          "stdout_bytes": 35,
+          "stderr_bytes": 553,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "43f83d23ba8bee79eb7575de0fca41fe7a72eef8e97977e0a92c49061e0f9aab",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 7.218238582951017,
+          "user_seconds": 6.092843,
+          "system_seconds": 0.9126519999999999,
+          "peak_rss_bytes": 673890304,
+          "stdout_bytes": 35,
+          "stderr_bytes": 553,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "43f83d23ba8bee79eb7575de0fca41fe7a72eef8e97977e0a92c49061e0f9aab",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 7.00582720793318,
+          "user_seconds": 6.030716,
+          "system_seconds": 0.89688,
+          "peak_rss_bytes": 673710080,
+          "stdout_bytes": 35,
+          "stderr_bytes": 553,
+          "stdout_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "stderr_sha256": "43f83d23ba8bee79eb7575de0fca41fe7a72eef8e97977e0a92c49061e0f9aab",
+          "parsed_output_bytes": 35,
+          "parsed_output_sha256": "759baf12eaba565c577f5a4e3494db8dbff09c1f2c7af14363821efda8872659",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/credentialdigger/bin/python",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/credentialdigger_adapter.py",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib"
+      ],
+      "summary": {
+        "cold_process_seconds": 7.0707927090115845,
+        "median_seconds": 7.00582720793318,
+        "min_seconds": 6.980875417008065,
+        "max_seconds": 7.218238582951017,
+        "mib_per_second": 18.270504852739844,
+        "max_peak_rss_bytes": 674414592
+      },
+      "quality": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 128,
+        "negative_labels_flagged": 0,
+        "tn": 0,
+        "positive_labels": 128,
+        "negative_labels": 0,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 0,
+          "line_only": 0
+        },
+        "by_group": {
+          "throughput": {
+            "tp": 0,
+            "total": 128,
+            "recall": 0.0
+          }
+        },
+        "by_provider": {
+          "github-pat": {
+            "tp": 0,
+            "total": 128,
+            "recall": 0.0
+          }
+        },
+        "missed_label_ids": [
+          "throughput-128mib-00067",
+          "throughput-128mib-00068",
+          "throughput-128mib-00069",
+          "throughput-128mib-00070",
+          "throughput-128mib-00071",
+          "throughput-128mib-00072",
+          "throughput-128mib-00073",
+          "throughput-128mib-00074",
+          "throughput-128mib-00075",
+          "throughput-128mib-00076",
+          "throughput-128mib-00077",
+          "throughput-128mib-00078",
+          "throughput-128mib-00079",
+          "throughput-128mib-00080",
+          "throughput-128mib-00081",
+          "throughput-128mib-00082",
+          "throughput-128mib-00083",
+          "throughput-128mib-00084",
+          "throughput-128mib-00085",
+          "throughput-128mib-00086",
+          "throughput-128mib-00087",
+          "throughput-128mib-00088",
+          "throughput-128mib-00089",
+          "throughput-128mib-00090",
+          "throughput-128mib-00091",
+          "throughput-128mib-00092",
+          "throughput-128mib-00093",
+          "throughput-128mib-00094",
+          "throughput-128mib-00095",
+          "throughput-128mib-00096",
+          "throughput-128mib-00097",
+          "throughput-128mib-00098",
+          "throughput-128mib-00099",
+          "throughput-128mib-00100",
+          "throughput-128mib-00101",
+          "throughput-128mib-00102",
+          "throughput-128mib-00103",
+          "throughput-128mib-00104",
+          "throughput-128mib-00105",
+          "throughput-128mib-00106",
+          "throughput-128mib-00107",
+          "throughput-128mib-00108",
+          "throughput-128mib-00109",
+          "throughput-128mib-00110",
+          "throughput-128mib-00111",
+          "throughput-128mib-00112",
+          "throughput-128mib-00113",
+          "throughput-128mib-00114",
+          "throughput-128mib-00115",
+          "throughput-128mib-00116",
+          "throughput-128mib-00117",
+          "throughput-128mib-00118",
+          "throughput-128mib-00119",
+          "throughput-128mib-00120",
+          "throughput-128mib-00121",
+          "throughput-128mib-00122",
+          "throughput-128mib-00123",
+          "throughput-128mib-00124",
+          "throughput-128mib-00125",
+          "throughput-128mib-00126",
+          "throughput-128mib-00127",
+          "throughput-128mib-00128",
+          "throughput-128mib-00129",
+          "throughput-128mib-00130",
+          "throughput-128mib-00131",
+          "throughput-128mib-00132",
+          "throughput-128mib-00133",
+          "throughput-128mib-00134",
+          "throughput-128mib-00135",
+          "throughput-128mib-00136",
+          "throughput-128mib-00137",
+          "throughput-128mib-00138",
+          "throughput-128mib-00139",
+          "throughput-128mib-00140",
+          "throughput-128mib-00141",
+          "throughput-128mib-00142",
+          "throughput-128mib-00143",
+          "throughput-128mib-00144",
+          "throughput-128mib-00145",
+          "throughput-128mib-00146",
+          "throughput-128mib-00147",
+          "throughput-128mib-00148",
+          "throughput-128mib-00149",
+          "throughput-128mib-00150",
+          "throughput-128mib-00151",
+          "throughput-128mib-00152",
+          "throughput-128mib-00153",
+          "throughput-128mib-00154",
+          "throughput-128mib-00155",
+          "throughput-128mib-00156",
+          "throughput-128mib-00157",
+          "throughput-128mib-00158",
+          "throughput-128mib-00159",
+          "throughput-128mib-00160",
+          "throughput-128mib-00161",
+          "throughput-128mib-00162",
+          "throughput-128mib-00163",
+          "throughput-128mib-00164",
+          "throughput-128mib-00165",
+          "throughput-128mib-00166",
+          "throughput-128mib-00167",
+          "throughput-128mib-00168",
+          "throughput-128mib-00169",
+          "throughput-128mib-00170",
+          "throughput-128mib-00171",
+          "throughput-128mib-00172",
+          "throughput-128mib-00173",
+          "throughput-128mib-00174",
+          "throughput-128mib-00175",
+          "throughput-128mib-00176",
+          "throughput-128mib-00177",
+          "throughput-128mib-00178",
+          "throughput-128mib-00179",
+          "throughput-128mib-00180",
+          "throughput-128mib-00181",
+          "throughput-128mib-00182",
+          "throughput-128mib-00183",
+          "throughput-128mib-00184",
+          "throughput-128mib-00185",
+          "throughput-128mib-00186",
+          "throughput-128mib-00187",
+          "throughput-128mib-00188",
+          "throughput-128mib-00189",
+          "throughput-128mib-00190",
+          "throughput-128mib-00191",
+          "throughput-128mib-00192",
+          "throughput-128mib-00193",
+          "throughput-128mib-00194"
+        ]
+      }
+    },
+    {
+      "tool": "credential-digger",
+      "dataset": "git_history",
+      "status": "unsupported",
+      "reason": "no tested git command"
+    },
+    {
+      "tool": "credential-digger",
+      "dataset": "staged",
+      "status": "unsupported",
+      "reason": "no tested staged command"
+    },
+    {
+      "tool": "credential-digger",
+      "dataset": "real-regex",
+      "mode": "fs",
+      "input_bytes": 8434814,
+      "input_files": 451,
+      "worktree_content_sha256": "c404bcbf4f1517a017b133211ac33b80ab26a348af0f03158ef13b3b09e30c1d",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 5.858629208989441,
+          "user_seconds": 4.939326,
+          "system_seconds": 0.8416969999999999,
+          "peak_rss_bytes": 674398208,
+          "stdout_bytes": 68378,
+          "stderr_bytes": 557,
+          "stdout_sha256": "5e4e150a43ba8b1c712b4f56b3c549a3b9c1b0896368abcfbeb442f0f2f7c5d2",
+          "stderr_sha256": "bfbaecc43b01d88a08a719a414f15ae8437c40a7636b97adf7402bfeb6a9c6ea",
+          "parsed_output_bytes": 68378,
+          "parsed_output_sha256": "5e4e150a43ba8b1c712b4f56b3c549a3b9c1b0896368abcfbeb442f0f2f7c5d2",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 893,
+          "locations_sha256": "de682582c11500aa5865512b075e5c784990a1ba1af9dd36099fd40dd4fc29dc",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 5.796207917039283,
+          "user_seconds": 4.905169,
+          "system_seconds": 0.83319,
+          "peak_rss_bytes": 673808384,
+          "stdout_bytes": 68378,
+          "stderr_bytes": 557,
+          "stdout_sha256": "5e4e150a43ba8b1c712b4f56b3c549a3b9c1b0896368abcfbeb442f0f2f7c5d2",
+          "stderr_sha256": "bfbaecc43b01d88a08a719a414f15ae8437c40a7636b97adf7402bfeb6a9c6ea",
+          "parsed_output_bytes": 68378,
+          "parsed_output_sha256": "5e4e150a43ba8b1c712b4f56b3c549a3b9c1b0896368abcfbeb442f0f2f7c5d2",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 893,
+          "locations_sha256": "de682582c11500aa5865512b075e5c784990a1ba1af9dd36099fd40dd4fc29dc",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 5.804437916027382,
+          "user_seconds": 4.906826,
+          "system_seconds": 0.838282,
+          "peak_rss_bytes": 673775616,
+          "stdout_bytes": 68378,
+          "stderr_bytes": 557,
+          "stdout_sha256": "5e4e150a43ba8b1c712b4f56b3c549a3b9c1b0896368abcfbeb442f0f2f7c5d2",
+          "stderr_sha256": "bfbaecc43b01d88a08a719a414f15ae8437c40a7636b97adf7402bfeb6a9c6ea",
+          "parsed_output_bytes": 68378,
+          "parsed_output_sha256": "5e4e150a43ba8b1c712b4f56b3c549a3b9c1b0896368abcfbeb442f0f2f7c5d2",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 893,
+          "locations_sha256": "de682582c11500aa5865512b075e5c784990a1ba1af9dd36099fd40dd4fc29dc",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 5.798205624916591,
+          "user_seconds": 4.90496,
+          "system_seconds": 0.834124,
+          "peak_rss_bytes": 674594816,
+          "stdout_bytes": 68378,
+          "stderr_bytes": 557,
+          "stdout_sha256": "5e4e150a43ba8b1c712b4f56b3c549a3b9c1b0896368abcfbeb442f0f2f7c5d2",
+          "stderr_sha256": "bfbaecc43b01d88a08a719a414f15ae8437c40a7636b97adf7402bfeb6a9c6ea",
+          "parsed_output_bytes": 68378,
+          "parsed_output_sha256": "5e4e150a43ba8b1c712b4f56b3c549a3b9c1b0896368abcfbeb442f0f2f7c5d2",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 893,
+          "locations_sha256": "de682582c11500aa5865512b075e5c784990a1ba1af9dd36099fd40dd4fc29dc",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 5.864025832968764,
+          "user_seconds": 4.939442,
+          "system_seconds": 0.8395269999999999,
+          "peak_rss_bytes": 673988608,
+          "stdout_bytes": 68378,
+          "stderr_bytes": 557,
+          "stdout_sha256": "5e4e150a43ba8b1c712b4f56b3c549a3b9c1b0896368abcfbeb442f0f2f7c5d2",
+          "stderr_sha256": "bfbaecc43b01d88a08a719a414f15ae8437c40a7636b97adf7402bfeb6a9c6ea",
+          "parsed_output_bytes": 68378,
+          "parsed_output_sha256": "5e4e150a43ba8b1c712b4f56b3c549a3b9c1b0896368abcfbeb442f0f2f7c5d2",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 893,
+          "locations_sha256": "de682582c11500aa5865512b075e5c784990a1ba1af9dd36099fd40dd4fc29dc",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/credentialdigger/bin/python",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/credentialdigger_adapter.py",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex"
+      ],
+      "summary": {
+        "cold_process_seconds": 5.858629208989441,
+        "median_seconds": 5.804437916027382,
+        "min_seconds": 5.798205624916591,
+        "max_seconds": 5.864025832968764,
+        "mib_per_second": 1.3858474484243102,
+        "max_peak_rss_bytes": 674594816
+      }
+    },
+    {
+      "tool": "scratch-scanner-rs",
+      "dataset": "quality",
+      "mode": "fs",
+      "input_bytes": 2721,
+      "input_files": 44,
+      "worktree_content_sha256": "d06745d4356819c905f5556f9247505c4d02194125d65392e4ee119b0355125b",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.14485879195854068,
+          "user_seconds": 0.14413399999999998,
+          "system_seconds": 0.067965,
+          "peak_rss_bytes": 419545088,
+          "stdout_bytes": 16743,
+          "stderr_bytes": 465,
+          "stdout_sha256": "a82bc7fc08a11e8700b72f517dca7d0303933ff7bb10447dd923ec058cecc924",
+          "stderr_sha256": "a1a5bbf2238a2ff07dd37192befea0c9d041b892be610635893f9dc27b30ba3f",
+          "parsed_output_bytes": 16743,
+          "parsed_output_sha256": "a82bc7fc08a11e8700b72f517dca7d0303933ff7bb10447dd923ec058cecc924",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 44,
+            "bytes": 2721,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 52,
+          "locations_sha256": "850691f9d38ce877906fcfbd3d6366e95ba7936f3054adb24125ac7fd7e2b938",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.14269650005735457,
+          "user_seconds": 0.14224799999999999,
+          "system_seconds": 0.06933299999999999,
+          "peak_rss_bytes": 457261056,
+          "stdout_bytes": 16743,
+          "stderr_bytes": 465,
+          "stdout_sha256": "15ac24309dbcd452e8d0ebf496f8c91321214bf899a0fadfbef457d32071f71f",
+          "stderr_sha256": "fb1ecfc7f1502d2c5f3bb350faea59f2ddcae4a078d3cabb9a205ec470c76951",
+          "parsed_output_bytes": 16743,
+          "parsed_output_sha256": "15ac24309dbcd452e8d0ebf496f8c91321214bf899a0fadfbef457d32071f71f",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 44,
+            "bytes": 2721,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 52,
+          "locations_sha256": "850691f9d38ce877906fcfbd3d6366e95ba7936f3054adb24125ac7fd7e2b938",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.14451033296063542,
+          "user_seconds": 0.141761,
+          "system_seconds": 0.06563,
+          "peak_rss_bytes": 427327488,
+          "stdout_bytes": 16743,
+          "stderr_bytes": 465,
+          "stdout_sha256": "1a4e81da91f13ea6751d1ef53a7e82476a17446ad8b940821d3ca1be58eecaa4",
+          "stderr_sha256": "112601c31009c0cae69a1388304dcc07fe8a6cd30b3176b113562faf2c1f55e7",
+          "parsed_output_bytes": 16743,
+          "parsed_output_sha256": "1a4e81da91f13ea6751d1ef53a7e82476a17446ad8b940821d3ca1be58eecaa4",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 44,
+            "bytes": 2721,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 52,
+          "locations_sha256": "850691f9d38ce877906fcfbd3d6366e95ba7936f3054adb24125ac7fd7e2b938",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.15266170899849385,
+          "user_seconds": 0.148171,
+          "system_seconds": 0.059489999999999994,
+          "peak_rss_bytes": 400506880,
+          "stdout_bytes": 16743,
+          "stderr_bytes": 465,
+          "stdout_sha256": "106e22698874b07dd7c7923685633927e28cd7910e5ea1a9d8dbefeb96b8b082",
+          "stderr_sha256": "dee1cd24ac19995da94c9b8a29bd450545b181672eecf10e362e830421146f03",
+          "parsed_output_bytes": 16743,
+          "parsed_output_sha256": "106e22698874b07dd7c7923685633927e28cd7910e5ea1a9d8dbefeb96b8b082",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 44,
+            "bytes": 2721,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 52,
+          "locations_sha256": "850691f9d38ce877906fcfbd3d6366e95ba7936f3054adb24125ac7fd7e2b938",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.1407220420660451,
+          "user_seconds": 0.141531,
+          "system_seconds": 0.061405999999999995,
+          "peak_rss_bytes": 413908992,
+          "stdout_bytes": 16743,
+          "stderr_bytes": 465,
+          "stdout_sha256": "853b6a999cdb0bdab22ee9bd431a89f86e782a1d1c388b8303a745cdbcec96e2",
+          "stderr_sha256": "75652895e6eebe0f5a45ae340ee6c4bc22ef5c84d82748b44e53675585e3b028",
+          "parsed_output_bytes": 16743,
+          "parsed_output_sha256": "853b6a999cdb0bdab22ee9bd431a89f86e782a1d1c388b8303a745cdbcec96e2",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 44,
+            "bytes": 2721,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 52,
+          "locations_sha256": "850691f9d38ce877906fcfbd3d6366e95ba7936f3054adb24125ac7fd7e2b938",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/target/release/scanner-rs",
+        "scan",
+        "fs",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/quality",
+        "--rules=/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/default_rules.yaml",
+        "--event-format=sarif"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.14485879195854068,
+        "median_seconds": 0.14451033296063542,
+        "min_seconds": 0.1407220420660451,
+        "max_seconds": 0.15266170899849385,
+        "mib_per_second": 0.017956832302422756,
+        "max_peak_rss_bytes": 427327488
+      },
+      "quality": {
+        "tp": 30,
+        "fp": 1,
+        "fn": 4,
+        "negative_labels_flagged": 1,
+        "tn": 9,
+        "positive_labels": 34,
+        "negative_labels": 10,
+        "precision": 0.967741935483871,
+        "recall": 0.8823529411764706,
+        "f1": 0.923076923076923,
+        "duplicate_findings": 21,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 30,
+          "line_only": 0
+        },
+        "by_group": {
+          "common": {
+            "tp": 27,
+            "total": 27,
+            "recall": 1.0
+          },
+          "generic": {
+            "tp": 3,
+            "total": 7,
+            "recall": 0.42857142857142855
+          }
+        },
+        "by_provider": {
+          "aws-access-key": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "github-pat": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "gitlab-pat": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "slack-bot": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "stripe-secret": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "google-api": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "sendgrid-api": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "npm-token": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "twilio-api": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "generic": {
+            "tp": 3,
+            "total": 7,
+            "recall": 0.42857142857142855
+          }
+        },
+        "missed_label_ids": [
+          "quality-00029",
+          "quality-00030",
+          "quality-00031",
+          "quality-00033"
+        ]
+      }
+    },
+    {
+      "tool": "scratch-scanner-rs",
+      "dataset": "capabilities",
+      "mode": "fs",
+      "input_bytes": 66417,
+      "input_files": 8,
+      "worktree_content_sha256": "068943d0f4d0c1c47713e9c8c054ccbff2714f8123cf3d60919b8d6ddf293bd5",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.14302299998234957,
+          "user_seconds": 0.142257,
+          "system_seconds": 0.061925999999999995,
+          "peak_rss_bytes": 443318272,
+          "stdout_bytes": 1843,
+          "stderr_bytes": 458,
+          "stdout_sha256": "7ba61fcca483e4a71b41c8a843d604c1f6a87ecb8d46da5ea520d22cda088cce",
+          "stderr_sha256": "3d5a522413cbc38b2386a304e002de729bf3837ed25017169917354526b76722",
+          "parsed_output_bytes": 1843,
+          "parsed_output_sha256": "7ba61fcca483e4a71b41c8a843d604c1f6a87ecb8d46da5ea520d22cda088cce",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 8,
+            "bytes": 295,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 5,
+          "locations_sha256": "3c046e487ce96ac586b402fb52e71da62b991a97515f0c4ed5de622a192b3d6c",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.1407946249237284,
+          "user_seconds": 0.14080299999999998,
+          "system_seconds": 0.070044,
+          "peak_rss_bytes": 427524096,
+          "stdout_bytes": 1843,
+          "stderr_bytes": 458,
+          "stdout_sha256": "6418299a9af1a1b2435285eb57ae9b74bdd7272af07a209fd090a834b06677b5",
+          "stderr_sha256": "899de87a1771adbe4ecd13369ebfb53e686e8d35ffd77c5556e72a9f4c5e9fa9",
+          "parsed_output_bytes": 1843,
+          "parsed_output_sha256": "6418299a9af1a1b2435285eb57ae9b74bdd7272af07a209fd090a834b06677b5",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 8,
+            "bytes": 295,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 5,
+          "locations_sha256": "3c046e487ce96ac586b402fb52e71da62b991a97515f0c4ed5de622a192b3d6c",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.14180983405094594,
+          "user_seconds": 0.141175,
+          "system_seconds": 0.059042,
+          "peak_rss_bytes": 437223424,
+          "stdout_bytes": 1843,
+          "stderr_bytes": 458,
+          "stdout_sha256": "6418299a9af1a1b2435285eb57ae9b74bdd7272af07a209fd090a834b06677b5",
+          "stderr_sha256": "96def155bcbc512eadbae7e0333568d88632da811387b8824c9b2aa43a5105da",
+          "parsed_output_bytes": 1843,
+          "parsed_output_sha256": "6418299a9af1a1b2435285eb57ae9b74bdd7272af07a209fd090a834b06677b5",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 8,
+            "bytes": 295,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 5,
+          "locations_sha256": "3c046e487ce96ac586b402fb52e71da62b991a97515f0c4ed5de622a192b3d6c",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.14192637498490512,
+          "user_seconds": 0.140506,
+          "system_seconds": 0.056797999999999994,
+          "peak_rss_bytes": 401653760,
+          "stdout_bytes": 1843,
+          "stderr_bytes": 458,
+          "stdout_sha256": "7ba61fcca483e4a71b41c8a843d604c1f6a87ecb8d46da5ea520d22cda088cce",
+          "stderr_sha256": "d92d0b70731dbfc94bfdfdc859de98c3aed83afb59fd9a70d1b58789b613fd98",
+          "parsed_output_bytes": 1843,
+          "parsed_output_sha256": "7ba61fcca483e4a71b41c8a843d604c1f6a87ecb8d46da5ea520d22cda088cce",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 8,
+            "bytes": 295,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 5,
+          "locations_sha256": "3c046e487ce96ac586b402fb52e71da62b991a97515f0c4ed5de622a192b3d6c",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.1422497919993475,
+          "user_seconds": 0.141736,
+          "system_seconds": 0.062842,
+          "peak_rss_bytes": 401555456,
+          "stdout_bytes": 1843,
+          "stderr_bytes": 458,
+          "stdout_sha256": "7ba61fcca483e4a71b41c8a843d604c1f6a87ecb8d46da5ea520d22cda088cce",
+          "stderr_sha256": "26957a5e341e87cf34edf3e7fcb5f73c99644703308f6bb87aa033aaf16b6f34",
+          "parsed_output_bytes": 1843,
+          "parsed_output_sha256": "7ba61fcca483e4a71b41c8a843d604c1f6a87ecb8d46da5ea520d22cda088cce",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 8,
+            "bytes": 295,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 5,
+          "locations_sha256": "3c046e487ce96ac586b402fb52e71da62b991a97515f0c4ed5de622a192b3d6c",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/target/release/scanner-rs",
+        "scan",
+        "fs",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/capabilities",
+        "--rules=/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/default_rules.yaml",
+        "--event-format=sarif"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.14302299998234957,
+        "median_seconds": 0.14192637498490512,
+        "min_seconds": 0.14180983405094594,
+        "max_seconds": 0.1422497919993475,
+        "mib_per_second": 0.4462890500760735,
+        "max_peak_rss_bytes": 437223424
+      },
+      "archive_probes": [
+        {
+          "path": "capabilities/archive.zip",
+          "member": "nested/config.conf",
+          "reported_archive": true,
+          "reported_member": true,
+          "evidence": "location only; no decoded span or credential validity claim"
+        },
+        {
+          "path": "capabilities/archive.tar.gz",
+          "member": "nested/config.conf",
+          "reported_archive": true,
+          "reported_member": true,
+          "evidence": "location only; no decoded span or credential validity claim"
+        }
+      ],
+      "excluded_unscored_archive_findings": 4,
+      "quality": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 5,
+        "negative_labels_flagged": 0,
+        "tn": 0,
+        "positive_labels": 6,
+        "negative_labels": 0,
+        "precision": 1.0,
+        "recall": 0.16666666666666666,
+        "f1": 0.2857142857142857,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 1,
+          "overlap_span": 0,
+          "line_only": 0
+        },
+        "by_group": {
+          "capability": {
+            "tp": 1,
+            "total": 6,
+            "recall": 0.16666666666666666
+          }
+        },
+        "by_provider": {
+          "github-pat": {
+            "tp": 0,
+            "total": 5,
+            "recall": 0.0
+          },
+          "private-key": {
+            "tp": 1,
+            "total": 1,
+            "recall": 1.0
+          }
+        },
+        "missed_label_ids": [
+          "capabilities-00044",
+          "capabilities-00045",
+          "capabilities-00046",
+          "capabilities-00047",
+          "capabilities-00048"
+        ]
+      }
+    },
+    {
+      "tool": "scratch-scanner-rs",
+      "dataset": "throughput-1mib",
+      "mode": "fs",
+      "input_bytes": 1048576,
+      "input_files": 4,
+      "worktree_content_sha256": "02c5d6a26d681106821057a0381f563fbf29e4dbe02a5268485d9af6524c3823",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.14419454091694206,
+          "user_seconds": 0.143875,
+          "system_seconds": 0.061921,
+          "peak_rss_bytes": 419250176,
+          "stdout_bytes": 488,
+          "stderr_bytes": 466,
+          "stdout_sha256": "d990cfb4ed88c5278592001efea4bcbbed93fdad6a11c79f44445a130f4351ff",
+          "stderr_sha256": "9a73585a5cecd3db5b764a50ba45f45284b454fad296f5d534101ec9f1897a7f",
+          "parsed_output_bytes": 488,
+          "parsed_output_sha256": "d990cfb4ed88c5278592001efea4bcbbed93fdad6a11c79f44445a130f4351ff",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 4,
+            "bytes": 1048576,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "33187aac3869628e5c5a9e72903a1179f3f83f2935a52d5a7f9ab3b2cf30308b",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.14256408298388124,
+          "user_seconds": 0.143951,
+          "system_seconds": 0.064735,
+          "peak_rss_bytes": 427114496,
+          "stdout_bytes": 488,
+          "stderr_bytes": 466,
+          "stdout_sha256": "d990cfb4ed88c5278592001efea4bcbbed93fdad6a11c79f44445a130f4351ff",
+          "stderr_sha256": "02600ac2aeb5577de9293e7b494579aca6af7643fa964aa321afc90f150229d2",
+          "parsed_output_bytes": 488,
+          "parsed_output_sha256": "d990cfb4ed88c5278592001efea4bcbbed93fdad6a11c79f44445a130f4351ff",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 4,
+            "bytes": 1048576,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "33187aac3869628e5c5a9e72903a1179f3f83f2935a52d5a7f9ab3b2cf30308b",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.1430589590454474,
+          "user_seconds": 0.143343,
+          "system_seconds": 0.068144,
+          "peak_rss_bytes": 445415424,
+          "stdout_bytes": 488,
+          "stderr_bytes": 466,
+          "stdout_sha256": "d990cfb4ed88c5278592001efea4bcbbed93fdad6a11c79f44445a130f4351ff",
+          "stderr_sha256": "5c4e3522940bfb9acffda3fae88d713e7db77cfd9d0955853be924ca38b580ee",
+          "parsed_output_bytes": 488,
+          "parsed_output_sha256": "d990cfb4ed88c5278592001efea4bcbbed93fdad6a11c79f44445a130f4351ff",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 4,
+            "bytes": 1048576,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "33187aac3869628e5c5a9e72903a1179f3f83f2935a52d5a7f9ab3b2cf30308b",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.1435730829834938,
+          "user_seconds": 0.144361,
+          "system_seconds": 0.06593399999999999,
+          "peak_rss_bytes": 435437568,
+          "stdout_bytes": 488,
+          "stderr_bytes": 466,
+          "stdout_sha256": "d990cfb4ed88c5278592001efea4bcbbed93fdad6a11c79f44445a130f4351ff",
+          "stderr_sha256": "2b1b6ee787a85ae30b9e5465195303c2e0d52874adf2e3e24d69bdb81e984123",
+          "parsed_output_bytes": 488,
+          "parsed_output_sha256": "d990cfb4ed88c5278592001efea4bcbbed93fdad6a11c79f44445a130f4351ff",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 4,
+            "bytes": 1048576,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "33187aac3869628e5c5a9e72903a1179f3f83f2935a52d5a7f9ab3b2cf30308b",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.14319487498141825,
+          "user_seconds": 0.14393999999999998,
+          "system_seconds": 0.070241,
+          "peak_rss_bytes": 452689920,
+          "stdout_bytes": 488,
+          "stderr_bytes": 466,
+          "stdout_sha256": "d990cfb4ed88c5278592001efea4bcbbed93fdad6a11c79f44445a130f4351ff",
+          "stderr_sha256": "0a70161619b1c60e35bfe1979961755c6b514957981ba33f132b0e74f0933fc8",
+          "parsed_output_bytes": 488,
+          "parsed_output_sha256": "d990cfb4ed88c5278592001efea4bcbbed93fdad6a11c79f44445a130f4351ff",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 4,
+            "bytes": 1048576,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 1,
+          "locations_sha256": "33187aac3869628e5c5a9e72903a1179f3f83f2935a52d5a7f9ab3b2cf30308b",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/target/release/scanner-rs",
+        "scan",
+        "fs",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/1mib",
+        "--rules=/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/default_rules.yaml",
+        "--event-format=sarif"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.14419454091694206,
+        "median_seconds": 0.14319487498141825,
+        "min_seconds": 0.1430589590454474,
+        "max_seconds": 0.1435730829834938,
+        "mib_per_second": 6.9834901572403725,
+        "max_peak_rss_bytes": 452689920
+      },
+      "quality": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "negative_labels_flagged": 0,
+        "tn": 0,
+        "positive_labels": 1,
+        "negative_labels": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 1,
+          "overlap_span": 0,
+          "line_only": 0
+        },
+        "by_group": {
+          "throughput": {
+            "tp": 1,
+            "total": 1,
+            "recall": 1.0
+          }
+        },
+        "by_provider": {
+          "github-pat": {
+            "tp": 1,
+            "total": 1,
+            "recall": 1.0
+          }
+        },
+        "missed_label_ids": []
+      }
+    },
+    {
+      "tool": "scratch-scanner-rs",
+      "dataset": "throughput-16mib",
+      "mode": "fs",
+      "input_bytes": 16777216,
+      "input_files": 64,
+      "worktree_content_sha256": "483a0b1e1a788aeb54823995effff1ff43206798a3b3286ee2917fb496d4c6b2",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.1488435419742018,
+          "user_seconds": 0.188995,
+          "system_seconds": 0.07814499999999999,
+          "peak_rss_bytes": 475217920,
+          "stdout_bytes": 4801,
+          "stderr_bytes": 472,
+          "stdout_sha256": "8a41fc0f276cfd055b204e2a52e937d1509728a46db093e28a60000b78a116a3",
+          "stderr_sha256": "9e37d20d921e0f93fd3aea4f528bb104b4f117b7d6c925d9639a86e38b85cd25",
+          "parsed_output_bytes": 4801,
+          "parsed_output_sha256": "8a41fc0f276cfd055b204e2a52e937d1509728a46db093e28a60000b78a116a3",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 64,
+            "bytes": 16777216,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 15,
+          "locations_sha256": "8d4787c0ef3a8aadf10346f767194eb0477c43e489b62063feec44102c9f48a0",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.1491767920088023,
+          "user_seconds": 0.188182,
+          "system_seconds": 0.073211,
+          "peak_rss_bytes": 474742784,
+          "stdout_bytes": 4801,
+          "stderr_bytes": 472,
+          "stdout_sha256": "ec8bd1a3cb73089b44845b64e9cdee96175ce754d43071a6898f76cd4753555a",
+          "stderr_sha256": "05aca7089e93976b6403e734531e3a721cae550ef8f0c7cf5eaf49b9809098c4",
+          "parsed_output_bytes": 4801,
+          "parsed_output_sha256": "ec8bd1a3cb73089b44845b64e9cdee96175ce754d43071a6898f76cd4753555a",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 64,
+            "bytes": 16777216,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 15,
+          "locations_sha256": "8d4787c0ef3a8aadf10346f767194eb0477c43e489b62063feec44102c9f48a0",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.14901195792481303,
+          "user_seconds": 0.18926199999999999,
+          "system_seconds": 0.082574,
+          "peak_rss_bytes": 474447872,
+          "stdout_bytes": 4801,
+          "stderr_bytes": 472,
+          "stdout_sha256": "2090fb70648fc16e1f542cfb0dd57bb8e31abe274dba199e566e49ffe5e33647",
+          "stderr_sha256": "d35849dcb59ad5b4b12a1f089be55b5de0c0c521c8455f8440286ab173119e24",
+          "parsed_output_bytes": 4801,
+          "parsed_output_sha256": "2090fb70648fc16e1f542cfb0dd57bb8e31abe274dba199e566e49ffe5e33647",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 64,
+            "bytes": 16777216,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 15,
+          "locations_sha256": "8d4787c0ef3a8aadf10346f767194eb0477c43e489b62063feec44102c9f48a0",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.14739425003062934,
+          "user_seconds": 0.186921,
+          "system_seconds": 0.065729,
+          "peak_rss_bytes": 474415104,
+          "stdout_bytes": 4801,
+          "stderr_bytes": 472,
+          "stdout_sha256": "8dbc07377b25fdeb15ea864bbeb7cc7d50fd647734732c8f556f432b2f35a189",
+          "stderr_sha256": "d88e76dd834ae298725cbbdbb8aadc6498a99e858c6de0e83dcf7e06b40bf545",
+          "parsed_output_bytes": 4801,
+          "parsed_output_sha256": "8dbc07377b25fdeb15ea864bbeb7cc7d50fd647734732c8f556f432b2f35a189",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 64,
+            "bytes": 16777216,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 15,
+          "locations_sha256": "8d4787c0ef3a8aadf10346f767194eb0477c43e489b62063feec44102c9f48a0",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.14881666598375887,
+          "user_seconds": 0.186168,
+          "system_seconds": 0.07862999999999999,
+          "peak_rss_bytes": 474316800,
+          "stdout_bytes": 4801,
+          "stderr_bytes": 472,
+          "stdout_sha256": "6d64c4c28c311d1a445015057b296d269e10e252e3f109c5f53d911f4e55891c",
+          "stderr_sha256": "12da7a66263c7e54dbd0262c096e341c8989d049ea71c8cfbe58adb17bdfae39",
+          "parsed_output_bytes": 4801,
+          "parsed_output_sha256": "6d64c4c28c311d1a445015057b296d269e10e252e3f109c5f53d911f4e55891c",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 64,
+            "bytes": 16777216,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 15,
+          "locations_sha256": "8d4787c0ef3a8aadf10346f767194eb0477c43e489b62063feec44102c9f48a0",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/target/release/scanner-rs",
+        "scan",
+        "fs",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/16mib",
+        "--rules=/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/default_rules.yaml",
+        "--event-format=sarif"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.1488435419742018,
+        "median_seconds": 0.14881666598375887,
+        "min_seconds": 0.14739425003062934,
+        "max_seconds": 0.14901195792481303,
+        "mib_per_second": 107.5148397810912,
+        "max_peak_rss_bytes": 474447872
+      },
+      "quality": {
+        "tp": 15,
+        "fp": 0,
+        "fn": 1,
+        "negative_labels_flagged": 0,
+        "tn": 0,
+        "positive_labels": 16,
+        "negative_labels": 0,
+        "precision": 1.0,
+        "recall": 0.9375,
+        "f1": 0.967741935483871,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 15,
+          "overlap_span": 0,
+          "line_only": 0
+        },
+        "by_group": {
+          "throughput": {
+            "tp": 15,
+            "total": 16,
+            "recall": 0.9375
+          }
+        },
+        "by_provider": {
+          "github-pat": {
+            "tp": 15,
+            "total": 16,
+            "recall": 0.9375
+          }
+        },
+        "missed_label_ids": [
+          "throughput-16mib-00051"
+        ]
+      }
+    },
+    {
+      "tool": "scratch-scanner-rs",
+      "dataset": "throughput-128mib",
+      "mode": "fs",
+      "input_bytes": 134217728,
+      "input_files": 512,
+      "worktree_content_sha256": "e29b0c3af9715995799f828ad66918365ba8de1ae0299730745cf4d162cc21dc",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.20691720896866173,
+          "user_seconds": 0.509356,
+          "system_seconds": 0.100383,
+          "peak_rss_bytes": 480018432,
+          "stdout_bytes": 35407,
+          "stderr_bytes": 478,
+          "stdout_sha256": "def16af81174330b11850362384979ed5379f9faeb538bf5774d45d911dd586f",
+          "stderr_sha256": "9efe5264a64da84f362044f0ed8aebb6ac3b70a62c524818ea38907c7cccb981",
+          "parsed_output_bytes": 35407,
+          "parsed_output_sha256": "def16af81174330b11850362384979ed5379f9faeb538bf5774d45d911dd586f",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 512,
+            "bytes": 134217728,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 114,
+          "locations_sha256": "6526cace1aaaed178577dd8459939fc24c81940afeb247f7228c10b1357099c4",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.18769020796753466,
+          "user_seconds": 0.516442,
+          "system_seconds": 0.103043,
+          "peak_rss_bytes": 477184000,
+          "stdout_bytes": 35407,
+          "stderr_bytes": 478,
+          "stdout_sha256": "61f158b8f2c9f4f5b3702110622e3bf76b01d9c356499ee1c6cb4ac6efe19cf8",
+          "stderr_sha256": "a32eda4b74d9e77a174557caf3cfc726c9097fab99ee672d1c6d93c74dd3d4d2",
+          "parsed_output_bytes": 35407,
+          "parsed_output_sha256": "61f158b8f2c9f4f5b3702110622e3bf76b01d9c356499ee1c6cb4ac6efe19cf8",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 512,
+            "bytes": 134217728,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 114,
+          "locations_sha256": "6526cace1aaaed178577dd8459939fc24c81940afeb247f7228c10b1357099c4",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.19251666590571404,
+          "user_seconds": 0.506664,
+          "system_seconds": 0.096481,
+          "peak_rss_bytes": 476561408,
+          "stdout_bytes": 35407,
+          "stderr_bytes": 478,
+          "stdout_sha256": "46dbf7140b6a3ef6f62388dd74f91eee3ffa71a05209157a3ed86d55b751ea11",
+          "stderr_sha256": "1f5eb967b448859e0a5579f89ef76cb5b4a615eb2f2feb48146281ac9a5d3136",
+          "parsed_output_bytes": 35407,
+          "parsed_output_sha256": "46dbf7140b6a3ef6f62388dd74f91eee3ffa71a05209157a3ed86d55b751ea11",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 512,
+            "bytes": 134217728,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 114,
+          "locations_sha256": "6526cace1aaaed178577dd8459939fc24c81940afeb247f7228c10b1357099c4",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.19173679198138416,
+          "user_seconds": 0.5054069999999999,
+          "system_seconds": 0.10074,
+          "peak_rss_bytes": 474677248,
+          "stdout_bytes": 35407,
+          "stderr_bytes": 478,
+          "stdout_sha256": "a03471b9cbe6a90d1c5a8be142f38321173feafd0afe3c51befcd67f9c4ca997",
+          "stderr_sha256": "39132831cb5d8607481d92bc99a9744068543f22ef71660f36e1fdcd1a1d2d53",
+          "parsed_output_bytes": 35407,
+          "parsed_output_sha256": "a03471b9cbe6a90d1c5a8be142f38321173feafd0afe3c51befcd67f9c4ca997",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 512,
+            "bytes": 134217728,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 114,
+          "locations_sha256": "6526cace1aaaed178577dd8459939fc24c81940afeb247f7228c10b1357099c4",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.1903443749761209,
+          "user_seconds": 0.511154,
+          "system_seconds": 0.10106699999999999,
+          "peak_rss_bytes": 477233152,
+          "stdout_bytes": 35407,
+          "stderr_bytes": 478,
+          "stdout_sha256": "b70df8c36e2b3344ed068e276c909b09c115e8dd738c6f23faa675f99988684e",
+          "stderr_sha256": "f56d72eb543132acb482b30985ae0cfb6d9cd9159c2a4412a37e60084eecd3b2",
+          "parsed_output_bytes": 35407,
+          "parsed_output_sha256": "b70df8c36e2b3344ed068e276c909b09c115e8dd738c6f23faa675f99988684e",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 512,
+            "bytes": 134217728,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 114,
+          "locations_sha256": "6526cace1aaaed178577dd8459939fc24c81940afeb247f7228c10b1357099c4",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/target/release/scanner-rs",
+        "scan",
+        "fs",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/throughput/128mib",
+        "--rules=/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/default_rules.yaml",
+        "--event-format=sarif"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.20691720896866173,
+        "median_seconds": 0.19173679198138416,
+        "min_seconds": 0.1903443749761209,
+        "max_seconds": 0.19251666590571404,
+        "mib_per_second": 667.5818379835395,
+        "max_peak_rss_bytes": 477233152
+      },
+      "quality": {
+        "tp": 114,
+        "fp": 0,
+        "fn": 14,
+        "negative_labels_flagged": 0,
+        "tn": 0,
+        "positive_labels": 128,
+        "negative_labels": 0,
+        "precision": 1.0,
+        "recall": 0.890625,
+        "f1": 0.9421487603305785,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 114,
+          "overlap_span": 0,
+          "line_only": 0
+        },
+        "by_group": {
+          "throughput": {
+            "tp": 114,
+            "total": 128,
+            "recall": 0.890625
+          }
+        },
+        "by_provider": {
+          "github-pat": {
+            "tp": 114,
+            "total": 128,
+            "recall": 0.890625
+          }
+        },
+        "missed_label_ids": [
+          "throughput-128mib-00068",
+          "throughput-128mib-00070",
+          "throughput-128mib-00072",
+          "throughput-128mib-00078",
+          "throughput-128mib-00081",
+          "throughput-128mib-00089",
+          "throughput-128mib-00094",
+          "throughput-128mib-00112",
+          "throughput-128mib-00114",
+          "throughput-128mib-00122",
+          "throughput-128mib-00142",
+          "throughput-128mib-00143",
+          "throughput-128mib-00162",
+          "throughput-128mib-00164"
+        ]
+      }
+    },
+    {
+      "tool": "scratch-scanner-rs",
+      "dataset": "git_history",
+      "mode": "git",
+      "input_bytes": null,
+      "input_files": 2,
+      "worktree_content_sha256": "9a11f857c6008a54207c122c7be646dc6d1f83e103e7cb95f3b0d1ecc11994d9",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.17803916591219604,
+          "user_seconds": 0.139289,
+          "system_seconds": 0.036275,
+          "peak_rss_bytes": 222478336,
+          "stdout_bytes": 610,
+          "stderr_bytes": 377,
+          "stdout_sha256": "36bf11c6f53790193acb8c28e6abd78d16bf279d4f1e6b90c5247814d16dc8ec",
+          "stderr_sha256": "84510e1e0a885940c63dffedd91c07d3049c6c66539b2fd1c83c4410fc39e9a9",
+          "parsed_output_bytes": 610,
+          "parsed_output_sha256": "36bf11c6f53790193acb8c28e6abd78d16bf279d4f1e6b90c5247814d16dc8ec",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 2,
+          "locations_sha256": "649e19984a11083bbe7d1e32a43287009127dde2b331d4f392ea582d838d6db6",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.17692841601092368,
+          "user_seconds": 0.13863,
+          "system_seconds": 0.037806,
+          "peak_rss_bytes": 222855168,
+          "stdout_bytes": 610,
+          "stderr_bytes": 377,
+          "stdout_sha256": "36bf11c6f53790193acb8c28e6abd78d16bf279d4f1e6b90c5247814d16dc8ec",
+          "stderr_sha256": "1dd92ee6ce40b47f3c1b370eb3c63b3cfdbfe9d572d73cff8c007aeefdfb7545",
+          "parsed_output_bytes": 610,
+          "parsed_output_sha256": "36bf11c6f53790193acb8c28e6abd78d16bf279d4f1e6b90c5247814d16dc8ec",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 2,
+          "locations_sha256": "649e19984a11083bbe7d1e32a43287009127dde2b331d4f392ea582d838d6db6",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.17399074998684227,
+          "user_seconds": 0.138481,
+          "system_seconds": 0.033651,
+          "peak_rss_bytes": 221315072,
+          "stdout_bytes": 610,
+          "stderr_bytes": 377,
+          "stdout_sha256": "36bf11c6f53790193acb8c28e6abd78d16bf279d4f1e6b90c5247814d16dc8ec",
+          "stderr_sha256": "8e0936607a06dc82af8b8338a361a6c442880cead46ffa7c78a475520ac7c7e2",
+          "parsed_output_bytes": 610,
+          "parsed_output_sha256": "36bf11c6f53790193acb8c28e6abd78d16bf279d4f1e6b90c5247814d16dc8ec",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 2,
+          "locations_sha256": "649e19984a11083bbe7d1e32a43287009127dde2b331d4f392ea582d838d6db6",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.17519083293154836,
+          "user_seconds": 0.13818,
+          "system_seconds": 0.036321,
+          "peak_rss_bytes": 222543872,
+          "stdout_bytes": 610,
+          "stderr_bytes": 377,
+          "stdout_sha256": "36bf11c6f53790193acb8c28e6abd78d16bf279d4f1e6b90c5247814d16dc8ec",
+          "stderr_sha256": "64ef205db258c1b9c7a7ac330e1f6be5ed19330053a14dd0055fa27a83e9ebed",
+          "parsed_output_bytes": 610,
+          "parsed_output_sha256": "36bf11c6f53790193acb8c28e6abd78d16bf279d4f1e6b90c5247814d16dc8ec",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 2,
+          "locations_sha256": "649e19984a11083bbe7d1e32a43287009127dde2b331d4f392ea582d838d6db6",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.18180116696748883,
+          "user_seconds": 0.140658,
+          "system_seconds": 0.040601,
+          "peak_rss_bytes": 222855168,
+          "stdout_bytes": 610,
+          "stderr_bytes": 377,
+          "stdout_sha256": "36bf11c6f53790193acb8c28e6abd78d16bf279d4f1e6b90c5247814d16dc8ec",
+          "stderr_sha256": "162af7ed0cdc1c845987dd069ca1249d7af6b18794c92b443b07dce0440615de",
+          "parsed_output_bytes": 610,
+          "parsed_output_sha256": "36bf11c6f53790193acb8c28e6abd78d16bf279d4f1e6b90c5247814d16dc8ec",
+          "output_source": "stdout",
+          "scanner_stats": {},
+          "complete": true,
+          "findings_count": 2,
+          "locations_sha256": "649e19984a11083bbe7d1e32a43287009127dde2b331d4f392ea582d838d6db6",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/target/release/scanner-rs",
+        "scan",
+        "git",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/git-repo",
+        "--rules=/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/default_rules.yaml",
+        "--event-format=sarif"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.17803916591219604,
+        "median_seconds": 0.17519083293154836,
+        "min_seconds": 0.17399074998684227,
+        "max_seconds": 0.18180116696748883,
+        "mib_per_second": null,
+        "max_peak_rss_bytes": 222855168
+      },
+      "extra_scope_findings": [],
+      "scope_note": "Known positive fixture locations from other input modes are separately reported, not false positives; extra results in staged mode violate its expected index-only scope.",
+      "quality": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "negative_labels_flagged": 0,
+        "tn": 0,
+        "positive_labels": 1,
+        "negative_labels": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "duplicate_findings": 1,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 1,
+          "line_only": 0
+        },
+        "by_group": {
+          "history": {
+            "tp": 1,
+            "total": 1,
+            "recall": 1.0
+          }
+        },
+        "by_provider": {
+          "github-pat": {
+            "tp": 1,
+            "total": 1,
+            "recall": 1.0
+          }
+        },
+        "missed_label_ids": []
+      }
+    },
+    {
+      "tool": "scratch-scanner-rs",
+      "dataset": "staged",
+      "status": "unsupported",
+      "reason": "no tested staged command"
+    },
+    {
+      "tool": "scratch-scanner-rs",
+      "dataset": "real-regex",
+      "mode": "fs",
+      "input_bytes": 8434814,
+      "input_files": 451,
+      "worktree_content_sha256": "c404bcbf4f1517a017b133211ac33b80ab26a348af0f03158ef13b3b09e30c1d",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.14925383299123496,
+          "user_seconds": 0.16961299999999999,
+          "system_seconds": 0.079034,
+          "peak_rss_bytes": 463159296,
+          "stdout_bytes": 182,
+          "stderr_bytes": 472,
+          "stdout_sha256": "43d63fb8c11d4865abac2f1a81bd81c92a3e9be1bbc220aecdda49aa4ee1e595",
+          "stderr_sha256": "8c6185777fa0127fbcdb5d32c24671fa2d6eeb16340d606d0f7e18edc4a25b30",
+          "parsed_output_bytes": 182,
+          "parsed_output_sha256": "43d63fb8c11d4865abac2f1a81bd81c92a3e9be1bbc220aecdda49aa4ee1e595",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 451,
+            "bytes": 7303709,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.14794212498236448,
+          "user_seconds": 0.172845,
+          "system_seconds": 0.086199,
+          "peak_rss_bytes": 472154112,
+          "stdout_bytes": 182,
+          "stderr_bytes": 472,
+          "stdout_sha256": "43d63fb8c11d4865abac2f1a81bd81c92a3e9be1bbc220aecdda49aa4ee1e595",
+          "stderr_sha256": "7c86df65322936852580f9d02f4d1dec8146a6c72c39cb932ec444aa371e5982",
+          "parsed_output_bytes": 182,
+          "parsed_output_sha256": "43d63fb8c11d4865abac2f1a81bd81c92a3e9be1bbc220aecdda49aa4ee1e595",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 451,
+            "bytes": 7303709,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.1490421670023352,
+          "user_seconds": 0.174001,
+          "system_seconds": 0.083841,
+          "peak_rss_bytes": 474611712,
+          "stdout_bytes": 182,
+          "stderr_bytes": 472,
+          "stdout_sha256": "43d63fb8c11d4865abac2f1a81bd81c92a3e9be1bbc220aecdda49aa4ee1e595",
+          "stderr_sha256": "c4a43db6777163347295bcfc73d0d000eee5153c675d83487e2259c62735bd89",
+          "parsed_output_bytes": 182,
+          "parsed_output_sha256": "43d63fb8c11d4865abac2f1a81bd81c92a3e9be1bbc220aecdda49aa4ee1e595",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 451,
+            "bytes": 7303709,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.14776599989272654,
+          "user_seconds": 0.172811,
+          "system_seconds": 0.085821,
+          "peak_rss_bytes": 474398720,
+          "stdout_bytes": 182,
+          "stderr_bytes": 472,
+          "stdout_sha256": "43d63fb8c11d4865abac2f1a81bd81c92a3e9be1bbc220aecdda49aa4ee1e595",
+          "stderr_sha256": "e0464dcc174b20ffb27b5b8aad957b73054572bc515f5938548cf7057839de32",
+          "parsed_output_bytes": 182,
+          "parsed_output_sha256": "43d63fb8c11d4865abac2f1a81bd81c92a3e9be1bbc220aecdda49aa4ee1e595",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 451,
+            "bytes": 7303709,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.14721216703765094,
+          "user_seconds": 0.174235,
+          "system_seconds": 0.09444899999999999,
+          "peak_rss_bytes": 473907200,
+          "stdout_bytes": 182,
+          "stderr_bytes": 472,
+          "stdout_sha256": "43d63fb8c11d4865abac2f1a81bd81c92a3e9be1bbc220aecdda49aa4ee1e595",
+          "stderr_sha256": "3b69327c17c112fe575b8d4b4904cf66f6893d3b85c3eb649a9210767790e296",
+          "parsed_output_bytes": 182,
+          "parsed_output_sha256": "43d63fb8c11d4865abac2f1a81bd81c92a3e9be1bbc220aecdda49aa4ee1e595",
+          "output_source": "stdout",
+          "scanner_stats": {
+            "files": 451,
+            "bytes": 7303709,
+            "errors": 0,
+            "dropped_findings": 0,
+            "persist_emit_failures": 0
+          },
+          "complete": true,
+          "findings_count": 0,
+          "locations_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/target/release/scanner-rs",
+        "scan",
+        "fs",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-final/real-regex",
+        "--rules=/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/default_rules.yaml",
+        "--event-format=sarif"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.14925383299123496,
+        "median_seconds": 0.14776599989272654,
+        "min_seconds": 0.14721216703765094,
+        "max_seconds": 0.1490421670023352,
+        "mib_per_second": 54.43786447020022,
+        "max_peak_rss_bytes": 474611712
+      }
+    }
+  ]
+}

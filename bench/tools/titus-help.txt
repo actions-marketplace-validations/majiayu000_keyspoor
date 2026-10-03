@@ -1,0 +1,24 @@
+Titus is a fast secrets scanner that finds credentials in code, files, and git history.
+It uses regex-based detection rules to identify sensitive data like API keys, passwords, and tokens.
+
+Usage:
+  titus [command]
+
+Available Commands:
+  analyze     Analyze a credential on demand — detect type, validate, score, and enumerate resources
+  completion  Generate the autocompletion script for the specified shell
+  enum        Enumerate remote services for secrets
+  explore     Interactively explore scan results
+  help        Help about any command
+  report      Generate a report from scan results
+  rules       Manage detection rules
+  scan        Scan a target for secrets
+  serve       Run as streaming server for Burp extension integration
+  version     Show version information
+
+Flags:
+  -h, --help      help for titus
+  -q, --quiet     Quiet mode (errors only)
+  -v, --verbose   Verbose output
+
+Use "titus [command] --help" for more information about a command.

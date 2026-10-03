@@ -1,0 +1,251 @@
+{
+  "schema_version": 1,
+  "host": {
+    "system": "Darwin",
+    "release": "25.5.0",
+    "machine": "arm64"
+  },
+  "binary_sha256": {
+    "before": "8b81bca74a88cbee7f8920aa2eab7e3ece4029267e044cb7b96305a02c4e3144",
+    "after": "d454d96bbb98fb5223c788afaa9fd5b2708a7c8605b729a1592d1c7c5509c5c2"
+  },
+  "rss_method": "per-child wait4 ru_maxrss; Darwin bytes; fresh process",
+  "scope": "Whole-version UTF-16 comparison, not an isolated mapping experiment; default rules; no Base64 decode; one scan thread; no cache flushing; wall time includes process and rule initialization",
+  "repeats": 3,
+  "cases": {
+    "with_finding": {
+      "input_bytes": 16777216,
+      "input_sha256": "7fecf762ddc8d282b4140acc3d9ab24309646e348a812c5b2c092c8ea2a0ecbb",
+      "expected_source_span": {
+        "start": 16777134,
+        "end": 16777214,
+        "line": 2,
+        "column": 0,
+        "coordinate_space": "source_bytes"
+      },
+      "finding_parity": true,
+      "before": {
+        "runs": [
+          {
+            "wall_ms": 972.0816670451313,
+            "user_ms": 67.021,
+            "system_ms": 15.685999999999998,
+            "peak_rss_bytes": 184860672,
+            "finding_count": 1,
+            "exit_code": 1,
+            "exact_span_verified": true,
+            "raw_value_absent": true
+          },
+          {
+            "wall_ms": 81.27220894675702,
+            "user_ms": 65.676,
+            "system_ms": 12.164,
+            "peak_rss_bytes": 185843712,
+            "finding_count": 1,
+            "exit_code": 1,
+            "exact_span_verified": true,
+            "raw_value_absent": true
+          },
+          {
+            "wall_ms": 83.38437497150153,
+            "user_ms": 65.823,
+            "system_ms": 14.741999999999999,
+            "peak_rss_bytes": 185073664,
+            "finding_count": 1,
+            "exit_code": 1,
+            "exact_span_verified": true,
+            "raw_value_absent": true
+          }
+        ],
+        "wall_ms": {
+          "median": 83.38437497150153,
+          "min": 81.27220894675702,
+          "max": 972.0816670451313
+        },
+        "user_ms": {
+          "median": 65.823,
+          "min": 65.676,
+          "max": 67.021
+        },
+        "system_ms": {
+          "median": 14.741999999999999,
+          "min": 12.164,
+          "max": 15.685999999999998
+        },
+        "peak_rss_bytes": {
+          "median": 185073664,
+          "min": 184860672,
+          "max": 185843712
+        }
+      },
+      "after": {
+        "runs": [
+          {
+            "wall_ms": 84.6671670442447,
+            "user_ms": 76.404,
+            "system_ms": 6.175,
+            "peak_rss_bytes": 46776320,
+            "finding_count": 1,
+            "exit_code": 1,
+            "exact_span_verified": true,
+            "raw_value_absent": true
+          },
+          {
+            "wall_ms": 84.30695801507682,
+            "user_ms": 75.936,
+            "system_ms": 5.796,
+            "peak_rss_bytes": 45350912,
+            "finding_count": 1,
+            "exit_code": 1,
+            "exact_span_verified": true,
+            "raw_value_absent": true
+          },
+          {
+            "wall_ms": 85.32166702207178,
+            "user_ms": 75.803,
+            "system_ms": 6.175,
+            "peak_rss_bytes": 45285376,
+            "finding_count": 1,
+            "exit_code": 1,
+            "exact_span_verified": true,
+            "raw_value_absent": true
+          }
+        ],
+        "wall_ms": {
+          "median": 84.6671670442447,
+          "min": 84.30695801507682,
+          "max": 85.32166702207178
+        },
+        "user_ms": {
+          "median": 75.936,
+          "min": 75.803,
+          "max": 76.404
+        },
+        "system_ms": {
+          "median": 6.175,
+          "min": 5.796,
+          "max": 6.175
+        },
+        "peak_rss_bytes": {
+          "median": 45350912,
+          "min": 45285376,
+          "max": 46776320
+        }
+      }
+    },
+    "without_finding": {
+      "input_bytes": 16777216,
+      "input_sha256": "4c4e3f8458e2fe7e3bf7969315eb7ebb5907d7c72107fbe631a759755dece73a",
+      "expected_source_span": null,
+      "finding_parity": true,
+      "before": {
+        "runs": [
+          {
+            "wall_ms": 82.18208397738636,
+            "user_ms": 65.023,
+            "system_ms": 12.767,
+            "peak_rss_bytes": 185696256,
+            "finding_count": 0,
+            "exit_code": 0,
+            "exact_span_verified": false,
+            "raw_value_absent": true
+          },
+          {
+            "wall_ms": 80.99283301271498,
+            "user_ms": 65.05199999999999,
+            "system_ms": 12.184,
+            "peak_rss_bytes": 184500224,
+            "finding_count": 0,
+            "exit_code": 0,
+            "exact_span_verified": false,
+            "raw_value_absent": true
+          },
+          {
+            "wall_ms": 81.79025002755225,
+            "user_ms": 65.47699999999999,
+            "system_ms": 12.189,
+            "peak_rss_bytes": 183992320,
+            "finding_count": 0,
+            "exit_code": 0,
+            "exact_span_verified": false,
+            "raw_value_absent": true
+          }
+        ],
+        "wall_ms": {
+          "median": 81.79025002755225,
+          "min": 80.99283301271498,
+          "max": 82.18208397738636
+        },
+        "user_ms": {
+          "median": 65.05199999999999,
+          "min": 65.023,
+          "max": 65.47699999999999
+        },
+        "system_ms": {
+          "median": 12.189,
+          "min": 12.184,
+          "max": 12.767
+        },
+        "peak_rss_bytes": {
+          "median": 184500224,
+          "min": 183992320,
+          "max": 185696256
+        }
+      },
+      "after": {
+        "runs": [
+          {
+            "wall_ms": 69.91441699210554,
+            "user_ms": 61.462999999999994,
+            "system_ms": 5.728,
+            "peak_rss_bytes": 45301760,
+            "finding_count": 0,
+            "exit_code": 0,
+            "exact_span_verified": false,
+            "raw_value_absent": true
+          },
+          {
+            "wall_ms": 70.25774999056011,
+            "user_ms": 61.724999999999994,
+            "system_ms": 5.843999999999999,
+            "peak_rss_bytes": 45318144,
+            "finding_count": 0,
+            "exit_code": 0,
+            "exact_span_verified": false,
+            "raw_value_absent": true
+          },
+          {
+            "wall_ms": 69.2073330283165,
+            "user_ms": 61.318,
+            "system_ms": 5.499,
+            "peak_rss_bytes": 45056000,
+            "finding_count": 0,
+            "exit_code": 0,
+            "exact_span_verified": false,
+            "raw_value_absent": true
+          }
+        ],
+        "wall_ms": {
+          "median": 69.91441699210554,
+          "min": 69.2073330283165,
+          "max": 70.25774999056011
+        },
+        "user_ms": {
+          "median": 61.462999999999994,
+          "min": 61.318,
+          "max": 61.724999999999994
+        },
+        "system_ms": {
+          "median": 5.728,
+          "min": 5.499,
+          "max": 5.843999999999999
+        },
+        "peak_rss_bytes": {
+          "median": 45301760,
+          "min": 45056000,
+          "max": 45318144
+        }
+      }
+    }
+  }
+}

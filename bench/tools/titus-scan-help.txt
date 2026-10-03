@@ -1,0 +1,47 @@
+Scan a file, directory, git repository, Docker image, or remote GitHub/GitLab repository for secrets using detection rules.
+Supports github.com/org/repo and gitlab.com/namespace/project URLs for direct remote scanning.
+Use --docker for image references or prefix the target with docker://.
+
+Usage:
+  titus scan <target> [flags]
+
+Flags:
+      --accessibility string            code accessibility: "public" (no penalty), "private" (-25 to all scores),
+                                        or "auto" (detect via git remote/GitHub API, defaults to private if undetermined) (default "auto")
+      --asana-attachment-max-size int   Maximum Asana attachment size in bytes to download (default 52428800)
+      --asana-concurrency int           Number of workers processing tasks within a project (0 = use default of 5)
+      --asana-include-attachments       Download and scan Asana-hosted file attachments
+      --asana-rate-limit float          Asana API requests per second (free tier ≈ 2.5/sec; paid tier ≈ 25/sec) (default 10)
+      --context-lines int               Lines of context before/after matches (0 to disable) (default 3)
+      --docker                          Treat target as Docker image (uses docker image save)
+      --extract extensions              Extract text from binary files (extensions: xlsx,docx,pdf,zip or 'all')
+      --extract-max-depth int           Max nested archive depth (default 5)
+      --extract-max-size string         Max uncompressed size per extracted file (default "10MB")
+      --extract-max-total string        Max total bytes to extract from one archive (default "100MB")
+      --format string                   Output format: json, sarif, human (default "human")
+      --gdrive-concurrency int          Google Drive parallel file workers (default 5; 0 = use default; clamped to [1, 100])
+      --gdrive-rate-limit float         Google Drive API requests per second (default 16; 0 = use default). Per-user cap is ~325k quota units/min
+      --git                             Treat target as git repository (enumerate git history)
+  -h, --help                            help for scan
+      --ignore string                   Path to gitignore-style ignore file (replaces built-in defaults; use /dev/null to disable)
+      --include-noisy                   Enable rules marked noisy: true (off by default; high false-positive rate)
+      --incremental                     Skip already-scanned blobs
+      --max-file-size int               Maximum file size to scan (bytes) (default 10485760)
+      --output string                   Output datastore path (:memory: for in-memory, :auto: to derive from target name) (default "titus.ds")
+      --readers int                     Number of parallel file readers (0 = NumCPU)
+      --rules string                    Path to custom rules file or directory
+      --rules-exclude string            Exclude rules matching regex pattern (comma-separated)
+      --rules-include string            Include rules matching regex pattern (comma-separated)
+      --ruleset string                  Ruleset to use: default, np.assets, np.hashes, all (all = no filtering) (default "default")
+      --score-budget duration           per-finding overall scoring budget across all modifiers (default 60s; 0 = unlimited) (default 1m0s)
+      --score-scope                     enable HTTP dynamic scoring modifiers (calls external APIs to determine secret scope/permissions)
+      --score-timeout duration          per-modifier HTTP timeout for dynamic scoring (default 10s) (default 10s)
+      --sqlite-row-limit int            Max rows per table for SQLite extraction (0 for unlimited) (default 1000)
+      --store-blobs                     Store file contents in blobs/ directory
+      --validate                        validate detected secrets against their source APIs
+      --validate-workers int            number of concurrent validation workers (default 4)
+      --workers int                     Number of parallel scan workers (default NumCPU)
+
+Global Flags:
+  -q, --quiet     Quiet mode (errors only)
+  -v, --verbose   Verbose output

@@ -1,0 +1,709 @@
+{
+  "schema_version": 1,
+  "timestamp_utc": "2026-10-02T18:02:39Z",
+  "hardware": {
+    "system": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
+    "python": "3.14.7",
+    "logical_cpus": 12,
+    "memory_bytes": "103079215104",
+    "cpu": "Apple M2 Max"
+  },
+  "manifest_sha256": "768943b3435c20a304737a2584a0db499030d9f28c30a70732e89787ecdd05ca",
+  "corpus_manifest_sha256": "c452eb6df615404aa8143d91f346fbe3a547a79e5e9836862559149909e250c3",
+  "method": {
+    "offline": true,
+    "repeats": 1,
+    "timeout_seconds": 30.0,
+    "cache": "OS cache uncontrolled; warmup before repeats",
+    "scoring": "one-to-one location; exact/overlap byte span else line"
+  },
+  "tools": [
+    {
+      "id": "gitleaks",
+      "status": "available",
+      "version": "v8.30.1",
+      "source_url": "https://github.com/gitleaks/gitleaks",
+      "asset_url": "https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_darwin_arm64.tar.gz",
+      "commit_or_digest": "sha256:b40ab0ae55c505963e365f271a8d3846efbc170aa17f2607f13df610a9aeb6a5",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/gitleaks",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/gitleaks",
+          "dir",
+          "{input}",
+          "--report-format",
+          "json",
+          "--report-path",
+          "{output}",
+          "--redact",
+          "--no-banner"
+        ]
+      },
+      "parser": "gitleaks",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/gitleaks",
+        "version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "8.30.1"
+    },
+    {
+      "id": "trufflehog",
+      "status": "available",
+      "version": "v3.97.9",
+      "source_url": "https://github.com/trufflesecurity/trufflehog",
+      "asset_url": "https://github.com/trufflesecurity/trufflehog/releases/download/v3.97.9/trufflehog_3.97.9_darwin_arm64.tar.gz",
+      "commit_or_digest": "sha256:3d25c178fe1a2563687b22547adcaebcf08cc8a607315c6741fe396c597951f7",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/trufflehog",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/trufflehog",
+          "filesystem",
+          "{input}",
+          "--no-verification",
+          "--no-update",
+          "--json",
+          "--fail-on-scan-errors"
+        ]
+      },
+      "parser": "trufflehog",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/trufflehog",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "trufflehog 3.97.9"
+    },
+    {
+      "id": "kingfisher",
+      "status": "available",
+      "version": "v2.9.1",
+      "source_url": "https://github.com/mongodb/kingfisher",
+      "asset_url": "https://github.com/mongodb/kingfisher/releases/download/v2.9.1/kingfisher-darwin-arm64.tgz",
+      "commit_or_digest": "sha256:0218b6fc1560cffa9a7e04b74a1e17371ef3fa6c78f0bd1d586f5d2893d84cff",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/kingfisher",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/kingfisher",
+          "scan",
+          "{input}",
+          "--no-validate",
+          "--no-update-check",
+          "--git-history",
+          "none",
+          "--format",
+          "sarif",
+          "--output",
+          "{output}",
+          "--quiet"
+        ]
+      },
+      "parser": "sarif",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/kingfisher",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "kingfisher 2.9.1"
+    },
+    {
+      "id": "betterleaks",
+      "status": "available",
+      "version": "v1.9.0",
+      "source_url": "https://github.com/betterleaks/betterleaks",
+      "asset_url": "https://github.com/betterleaks/betterleaks/releases/download/v1.9.0/betterleaks_1.9.0_darwin_arm64.tar.gz",
+      "commit_or_digest": "sha256:83dd7eaab13d44a1e8e347a17064cdef153a1478db473276d41b38d55613d3f2",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/betterleaks",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/betterleaks",
+          "dir",
+          "{input}",
+          "--report-format",
+          "json",
+          "--report-path",
+          "{output}",
+          "--redact",
+          "--no-banner"
+        ]
+      },
+      "parser": "gitleaks",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/betterleaks",
+        "version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "1.9.0"
+    },
+    {
+      "id": "titus",
+      "status": "available",
+      "version": "v1.2.10",
+      "source_url": "https://github.com/praetorian-inc/titus",
+      "asset_url": "https://github.com/praetorian-inc/titus/releases/download/v1.2.10/titus-darwin-arm64",
+      "commit_or_digest": "sha256:1501333f62becae4d4f9cbbe6edeaade4e77e4a7c74a1b6616c9fe6ae5b419ec",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/titus",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/titus",
+          "scan",
+          "{input}",
+          "--accessibility",
+          "private",
+          "--format",
+          "sarif",
+          "--output",
+          ":memory:",
+          "--quiet"
+        ]
+      },
+      "parser": "sarif",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/titus",
+        "version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "Titus v1.2.10 (Go port of NoseyParker)\n\n  ______ ____ ______ __  __ _____\n /_  __//  _//_  __// / / // ___/\n  / /   / /   / /  / / / / \\__ \\\n / /  _/ /   / /  / /_/ / ___/ /\n/_/  /___/  /_/   \\____/ /____/\n There's always something.\n Praetorian Security, Inc."
+    },
+    {
+      "id": "ripsecrets",
+      "status": "available",
+      "version": "v0.1.11",
+      "source_url": "https://github.com/sirwart/ripsecrets",
+      "asset_url": "https://github.com/sirwart/ripsecrets/releases/download/v0.1.11/ripsecrets-0.1.11-aarch64-apple-darwin.tar.gz",
+      "commit_or_digest": "sha256:b2c822742e8cbf355ba0cb4cc690c3cd8fdc9ec1916c8148f27bd9098cb7aee4",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/ripsecrets",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/ripsecrets",
+          "{input}"
+        ]
+      },
+      "parser": "ripsecrets",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/ripsecrets",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "ripsecrets 0.1.11"
+    },
+    {
+      "id": "talisman",
+      "status": "available",
+      "version": "v1.37.0",
+      "source_url": "https://github.com/thoughtworks/talisman",
+      "asset_url": "https://github.com/thoughtworks/talisman/releases/download/v1.37.0/talisman_darwin_arm64",
+      "commit_or_digest": "sha256:4806746b2ba0190941f0606853990b4da6eb7df2d64c261212a6aa66eb6b15c2",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/talisman",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {},
+      "parser": "talisman",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 2,
+      "notes": "--help convention exits 2. Git-history-focused; pattern filesystem mode requires adapter.",
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/talisman",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "talisman 1.37.0"
+    },
+    {
+      "id": "trivy",
+      "status": "available",
+      "version": "v0.75.0",
+      "source_url": "https://github.com/aquasecurity/trivy",
+      "asset_url": "https://github.com/aquasecurity/trivy/releases/download/v0.75.0/trivy_0.75.0_macOS-ARM64.tar.gz",
+      "commit_or_digest": "sha256:4a77108cccf8e55c8d6823e1e759939a622277e66cd0daa3c1fc621ed69e4568",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/trivy",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/trivy",
+          "fs",
+          "--scanners",
+          "secret",
+          "--offline-scan",
+          "--skip-db-update",
+          "--skip-java-db-update",
+          "--format",
+          "sarif",
+          "--output",
+          "{output}",
+          "{input}"
+        ]
+      },
+      "parser": "sarif",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/trivy",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "Version: 0.75.0"
+    },
+    {
+      "id": "leakferret",
+      "status": "available",
+      "version": "v0.1.9",
+      "source_url": "https://github.com/leakferrethq/leakferret",
+      "asset_url": "https://github.com/leakferrethq/leakferret/releases/download/v0.1.9/leakferret-0.1.9-aarch64-apple-darwin.tar.gz",
+      "commit_or_digest": "sha256:363b1da65bf34d2c89c37aa2e00eaa03d49c8595cc5b8bb752a344dacf21d7da",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/leakferret",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/leakferret",
+          "scan",
+          "{input}",
+          "--format",
+          "sarif",
+          "--quiet"
+        ]
+      },
+      "parser": "sarif",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/leakferret",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "leakferret 0.1.9"
+    },
+    {
+      "id": "noseyparker",
+      "status": "available",
+      "version": "v0.24.0",
+      "source_url": "https://github.com/praetorian-inc/noseyparker",
+      "asset_url": "https://github.com/praetorian-inc/noseyparker/releases/download/v0.24.0/noseyparker-v0.24.0-aarch64-apple-darwin.tar.gz",
+      "commit_or_digest": "sha256:b19f983d586a738f127bc8c53ef1331055010db4926ac1789791f717fcc107b7",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/noseyparker",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {},
+      "parser": "noseyparker",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": 0,
+      "notes": "Requires scan then report with isolated datastore; adapter pending.",
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/noseyparker",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "noseyparker 0.24.0\n\nBuild Configuration:\n\n    Build Timestamp:    2025-05-08T21:09:00.215428000Z\n\n    Commit Timestamp:   2025-05-08T17:04:47.000000000-04:00\n    Commit Branch:      HEAD\n    Commit SHA:         61fa4ca67e4ded1b47b3b9ecce618ae91f1ff2fe\n\n    Cargo Features:     color_backtrace,default,disable_trace,github,log,mimalloc,parquet,release\n    Debug:              true\n    Optimization:       3\n    Target Triple:      aarch64-apple-darwin\n\nBuild System:\n\n    OS:                 Darwin\n    OS Version:         macOS 13.7.5 Ventura\n\n    CPU Vendor:         Apple\n    CPU Brand:          Apple M1 (Virtual)\n    CPU Cores:          6\n\n    rustc Version:      1.86.0\n    rustc Channel:      stable\n    rustc Host Triple:  aarch64-apple-darwin\n    rustc Commit Date:  2025-03-31\n    rustc Commit SHA:   05f9846f893b09a1be1fc8560e33fc3c815cfecb\n    rustc LLVM Version: 19.1"
+    },
+    {
+      "id": "rusty-hog",
+      "status": "runtime_failed",
+      "version": "v1.0.11",
+      "source_url": "https://github.com/newrelic/rusty-hog",
+      "asset_url": "https://github.com/newrelic/rusty-hog/releases/download/v1.0.11/rustyhogs-darwin-duroc_hog-1.0.11.zip",
+      "commit_or_digest": "sha256:a23da7c53602d28bfc154be8dd1096b90faecae64fe29236eae896627968df8f",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/binaries/duroc_hog",
+      "install_command": "python3 bench/tools/install_releases.py",
+      "commands": {},
+      "parser": "rusty_hog",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "help_exit_code": -6,
+      "reason": "dyld[65584]: Library not loaded: /usr/local/opt/openssl@1.1/lib/libssl.1.1.dylib\n  Referenced from: <B71E1ABE-70AF-3529-931D-6B2D533B0329> /Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/rusty-hog/darwin_releases/duroc_hog\n  Reason: tried: '/usr/local/opt/openssl@1.1/lib/libssl.1.1.dylib' (no such file), '/System/Volumes/Preboot/Cryptexes/OS/usr/local/opt/openssl@1.1/lib/libssl.1.1.dylib' (no such file), '/usr/local/opt/openssl@1.1/lib/libssl.1.1.dylib' (no such file), '/usr/local/lib/libssl.1.1.dylib' (no such file), '/usr/lib/libssl.1.1.dylib' (no such file, not in dyld cache)\n"
+    },
+    {
+      "id": "detect-secrets",
+      "status": "available",
+      "version": "1.5.0",
+      "source_url": "https://github.com/Yelp/detect-secrets",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/detect-secrets",
+      "help_exit_code": 0,
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "install_command": "uv pip install --python bench/tools/venvs/python/bin/python detect-secrets==1.5.0",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/detect-secrets",
+          "scan",
+          "--all-files",
+          "--no-verify",
+          "{input}"
+        ]
+      },
+      "parser": "detect_secrets",
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/detect-secrets",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "1.5.0"
+    },
+    {
+      "id": "deepsecrets",
+      "status": "available",
+      "version": "2.2.0",
+      "source_url": "https://github.com/ntoskernel/deepsecrets",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/deepsecrets",
+      "help_exit_code": 0,
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "install_command": "uv pip install --python bench/tools/venvs/python/bin/python deepsecrets==2.2.0",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/deepsecrets",
+          "--target-dir",
+          "{input}",
+          "--outfile",
+          "{output}",
+          "--outformat",
+          "sarif",
+          "--ci",
+          "--process-count",
+          "2"
+        ]
+      },
+      "parser": "sarif",
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/deepsecrets",
+        "--version"
+      ],
+      "version_exit_code": 2,
+      "version_output": "usage: deepsecrets [-h] --target-dir TARGET_DIR\n                   [--regex-rules [REGEX_RULES ...]]\n                   [--regex-candidate-scoring-rules [REGEX_CANDIDATE_SCORING_RULES ...]]\n                   [--hashed-values [HASHED_VALUES ...]]\n                   [--semantic-analysis [SEMANTIC_ANALYSIS ...]]\n                   [--variable-scoring-rules [VARIABLE_SCORING_RULES ...]]\n                   [--excluded-paths [EXCLUDED_PATHS ...]] [--skip-bundles]\n                   [--deep-max-size DEEP_MAX_SIZE]\n                   [--confidence-level {all,low,medium,high,very-high}]\n                   [--false-findings [FALSE_FINDINGS ...]] [-v]\n                   [--reflect-findings-in-return-code]\n                   [--process-count PROCESS_COUNT]\n                   [--max-file-size MAX_FILE_SIZE]\n                   [--multiprocessing-context {spawn,fork,forkserver}]\n                   [--ci | --no-ci] --outfile OUTFILE\n                   [--outformat {json,sarif,dojo-sarif}] [--disable-"
+    },
+    {
+      "id": "whispers",
+      "status": "available",
+      "version": "2.2.1",
+      "source_url": "https://github.com/Skyscanner/whispers",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/whispers",
+      "help_exit_code": 0,
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "install_command": "uv pip install --python bench/tools/venvs/python/bin/python whispers==2.2.1",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/whispers",
+          "{input}",
+          "--output",
+          "{output}"
+        ]
+      },
+      "parser": "whispers",
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/whispers",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "2.2.1"
+    },
+    {
+      "id": "secretlint",
+      "status": "available",
+      "version": "13.0.6",
+      "source_url": "https://github.com/secretlint/secretlint",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/npm/node_modules/.bin/secretlint",
+      "help_exit_code": 0,
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "offline": true,
+      "install_command": "npm install --prefix bench/tools/npm secretlint@13.0.6 @secretlint/secretlint-rule-preset-recommend",
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/npm/node_modules/.bin/secretlint",
+          "{input}/**/*",
+          "--format",
+          "json",
+          "--secretlintrc",
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secretlintrc.json"
+        ]
+      },
+      "parser": "secretlint",
+      "version_command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/npm/node_modules/.bin/secretlint",
+        "--version"
+      ],
+      "version_exit_code": 0,
+      "version_output": "13.0.6"
+    }
+  ],
+  "datasets": {
+    "quality": {
+      "path": "quality",
+      "mode": "fs"
+    },
+    "capabilities": {
+      "path": "capabilities",
+      "mode": "fs",
+      "archives": [
+        {
+          "path": "capabilities/archive.zip",
+          "member": "nested/config.conf",
+          "provider": "github-pat",
+          "candidate_sha256": "b398812423072225b313600dd692dad498f4086cf13a7cb84fca3d6131f992a8"
+        },
+        {
+          "path": "capabilities/archive.tar.gz",
+          "member": "nested/config.conf",
+          "provider": "github-pat",
+          "candidate_sha256": "b398812423072225b313600dd692dad498f4086cf13a7cb84fca3d6131f992a8"
+        }
+      ]
+    },
+    "git_history": {
+      "path": "git-repo",
+      "mode": "git",
+      "commits": 3
+    },
+    "staged": {
+      "path": "git-repo",
+      "mode": "staged"
+    },
+    "git_worktree": {
+      "path": "git-repo",
+      "mode": "fs"
+    }
+  },
+  "results": [
+    {
+      "tool": "whispers",
+      "dataset": "quality",
+      "mode": "fs",
+      "input_bytes": 2721,
+      "input_files": 44,
+      "worktree_content_sha256": "d06745d4356819c905f5556f9247505c4d02194125d65392e4ee119b0355125b",
+      "runs": [
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.2774582910351455,
+          "user_seconds": 0.13736399999999999,
+          "system_seconds": 0.052266,
+          "peak_rss_bytes": 37699584,
+          "stdout_bytes": 0,
+          "stderr_bytes": 14996,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "0ea065284a71dee2f86e151012bdd7657e465b19609c58f1e3f9e21e51588ff8",
+          "complete": true,
+          "findings_count": 69,
+          "locations_sha256": "619f172ddb2c40b7b02462b409ae67f37163c324d0d297dc79d16dcf764aa4b3",
+          "phase": "cold_process"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.15611837501637638,
+          "user_seconds": 0.117421,
+          "system_seconds": 0.029306,
+          "peak_rss_bytes": 37699584,
+          "stdout_bytes": 0,
+          "stderr_bytes": 14996,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "0ea065284a71dee2f86e151012bdd7657e465b19609c58f1e3f9e21e51588ff8",
+          "complete": true,
+          "findings_count": 69,
+          "locations_sha256": "619f172ddb2c40b7b02462b409ae67f37163c324d0d297dc79d16dcf764aa4b3",
+          "phase": "warmup"
+        },
+        {
+          "status": "finished",
+          "exit_code": 0,
+          "wall_seconds": 0.14636733301449567,
+          "user_seconds": 0.114934,
+          "system_seconds": 0.025401999999999997,
+          "peak_rss_bytes": 37617664,
+          "stdout_bytes": 0,
+          "stderr_bytes": 14996,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "0ea065284a71dee2f86e151012bdd7657e465b19609c58f1e3f9e21e51588ff8",
+          "complete": true,
+          "findings_count": 69,
+          "locations_sha256": "619f172ddb2c40b7b02462b409ae67f37163c324d0d297dc79d16dcf764aa4b3",
+          "phase": "warm_fs"
+        }
+      ],
+      "status": "ok",
+      "command": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/python/bin/whispers",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/corpus-smoke/quality",
+        "--output",
+        "/var/folders/58/pj_81qw13l59j103s0njbw1c0000gn/T/secret-benchmark-2me5_6z0/report.json"
+      ],
+      "summary": {
+        "cold_process_seconds": 0.2774582910351455,
+        "median_seconds": 0.14636733301449567,
+        "min_seconds": 0.14636733301449567,
+        "max_seconds": 0.14636733301449567,
+        "mib_per_second": 0.01772900934585187,
+        "max_peak_rss_bytes": 37617664
+      },
+      "quality": {
+        "tp": 21,
+        "fp": 48,
+        "fn": 13,
+        "negative_labels_flagged": 4,
+        "tn": 6,
+        "positive_labels": 34,
+        "negative_labels": 10,
+        "precision": 0.30434782608695654,
+        "recall": 0.6176470588235294,
+        "f1": 0.4077669902912621,
+        "duplicate_findings": 0,
+        "location_quality": {
+          "exact_span": 0,
+          "overlap_span": 0,
+          "line_only": 21
+        },
+        "by_group": {
+          "common": {
+            "tp": 18,
+            "total": 27,
+            "recall": 0.6666666666666666
+          },
+          "generic": {
+            "tp": 3,
+            "total": 7,
+            "recall": 0.42857142857142855
+          }
+        },
+        "by_provider": {
+          "aws-access-key": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "github-pat": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "gitlab-pat": {
+            "tp": 0,
+            "total": 3,
+            "recall": 0.0
+          },
+          "slack-bot": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "stripe-secret": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "google-api": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "sendgrid-api": {
+            "tp": 3,
+            "total": 3,
+            "recall": 1.0
+          },
+          "npm-token": {
+            "tp": 0,
+            "total": 3,
+            "recall": 0.0
+          },
+          "twilio-api": {
+            "tp": 0,
+            "total": 3,
+            "recall": 0.0
+          },
+          "generic": {
+            "tp": 3,
+            "total": 7,
+            "recall": 0.42857142857142855
+          }
+        },
+        "missed_label_ids": [
+          "quality-00006",
+          "quality-00007",
+          "quality-00008",
+          "quality-00021",
+          "quality-00022",
+          "quality-00023",
+          "quality-00024",
+          "quality-00025",
+          "quality-00026",
+          "quality-00028",
+          "quality-00029",
+          "quality-00030",
+          "quality-00033"
+        ]
+      }
+    }
+  ]
+}

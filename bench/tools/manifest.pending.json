@@ -1,0 +1,193 @@
+{
+  "note": "Verified final recovery deltas; successful adapters were smoke-tested. Merged canonical inventory: bench/tools/manifest.json. Full benchmark including the local implementation: bench/run-manifest-final.json.",
+  "credential-digger": {
+    "status": "available",
+    "install_adjustments": [
+      "uv pip install --python bench/tools/venvs/credentialdigger/bin/python 'transformers<5'",
+      "uv pip install --python bench/tools/venvs/credentialdigger/bin/python 'setuptools<81'"
+    ],
+    "help_exit_code": 0,
+    "command": [
+      "bench/tools/venvs/credentialdigger/bin/python",
+      "bench/tools/credentialdigger_adapter.py",
+      "{input}"
+    ],
+    "parser": "normalized",
+    "accepted_exit_codes": [
+      0
+    ],
+    "offline": true,
+    "notes": "Official ui/backend/rules.yml, SDK fresh in-memory SQLite, models=None/similarity=False; no ML false-positive model claims. Import compatibility pins transformers4.57.6 + setuptools80.10.2 are in the lock.",
+    "commands": {
+      "fs": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/venvs/credentialdigger/bin/python",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/credentialdigger_adapter.py",
+        "{input}"
+      ]
+    },
+    "smoke": {
+      "exit_code": 0,
+      "finding_count": 8,
+      "dataset": "bench/corpus-smoke/quality"
+    },
+    "dependency_lock": "bench/tools/credentialdigger-requirements.lock",
+    "dependency_lock_sha256": "434be7ef28d272dffb0cae05f187f049be951d3414baabbdf5610304ed1146f5"
+  },
+  "talisman": {
+    "status": "available",
+    "command": [
+      "python3",
+      "bench/tools/talisman_adapter.py",
+      "{input}"
+    ],
+    "parser": "normalized",
+    "accepted_exit_codes": [
+      0,
+      1
+    ],
+    "offline": true,
+    "notes": "Native report lacks structured lines. Findings omit line. Git JSON scan, staged native pre-commit table mapped to exact staged filenames; no working-tree substitution.",
+    "localization": "file",
+    "commands": {
+      "git": [
+        "python3",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/talisman_adapter.py",
+        "git",
+        "{input}"
+      ],
+      "staged": [
+        "python3",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/talisman_adapter.py",
+        "staged",
+        "{input}"
+      ]
+    },
+    "smoke": {
+      "git": {
+        "exit_code": 1,
+        "finding_count": 1
+      },
+      "staged": {
+        "exit_code": 1,
+        "finding_count": 1
+      },
+      "corpus": "bench/corpus-smoke/git-repo"
+    }
+  },
+  "rusty-hog": {
+    "status": "available",
+    "version": "1.0.11",
+    "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/rusty-hog-build/target/release/duroc_hog",
+    "commit_or_digest": "9da595ad204f017cff576ffac5bce7f2bed1be2f",
+    "binary_sha256": "6e25262ff480ac836336f64b159c5380eadb3ab496f6183b6b6185e9771cc486",
+    "source_url": "https://github.com/newrelic/rusty-hog",
+    "source_folder": "rusty-hog-build",
+    "parser": "normalized",
+    "offline": true,
+    "accepted_exit_codes": [
+      0
+    ],
+    "commands": {
+      "fs": [
+        "python3",
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/rusty_hog_adapter.py",
+        "{input}"
+      ]
+    },
+    "install_command": "cargo build --release --locked -j 2 --bin duroc_hog",
+    "dependency_lock": "bench/tools/rusty-hog-Cargo.lock",
+    "dependency_lock_sha256": "8dee6e9ab5fc0688bc0392b8b9013c426d0ddfa3e96808dc8c228be25b0542c8",
+    "notes": "Official old macOS binary failed OpenSSL1.1 dylib; pinned current source built successfully without source modification. Adapter rejects missing/invalid JSON because native CLI logs some scan errors yet exits0.",
+    "smoke": {
+      "dataset": "quality",
+      "exit_code": 0,
+      "findings": 29
+    },
+    "help_exit_code": 0
+  },
+  "scratch-scanner-rs": {
+    "status": "available",
+    "version": "0.1.0",
+    "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/target/release/scanner-rs",
+    "commit_or_digest": "3fb8740fb576a9859c84b7a5a08f3bbae06a9f05",
+    "binary_sha256": "a0e4b5edd1a2417ab6a808f78e4ab3585e500809a7e661d998dd129143753079",
+    "source_url": "https://github.com/ahrav/scratch-scanner-rs",
+    "parser": "sarif",
+    "offline": true,
+    "accepted_exit_codes": [
+      0
+    ],
+    "commands": {
+      "fs": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/target/release/scanner-rs",
+        "scan",
+        "fs",
+        "{input}",
+        "--rules=/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/default_rules.yaml",
+        "--event-format=sarif"
+      ],
+      "git": [
+        "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/target/release/scanner-rs",
+        "scan",
+        "git",
+        "{input}",
+        "--rules=/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/source/scratch-scanner-rs/default_rules.yaml",
+        "--event-format=sarif"
+      ]
+    },
+    "install_command": "BOOST_ROOT=<tools>/source/boost_1_88_0 cargo build --release --locked -j 2",
+    "source_dependencies": [
+      {
+        "repository": "https://github.com/ahrav/Gossip-rs",
+        "commit": "7e632d795e09b51c3c43e816bb188e8d816ee5a6",
+        "path": "bench/tools/source/Gossip-rs",
+        "selection": "last commit before scanner commit timestamp; same vectorscan-rs-sys0.0.5"
+      }
+    ],
+    "native_dependencies": [
+      {
+        "name": "Boost headers",
+        "version": "1.88.0",
+        "url": "https://archives.boost.io/release/1.88.0/source/boost_1_88_0.tar.gz",
+        "sha256": "3621533e820dcab1e8012afd583c0c73cf0f77694952b81352bf38c1488f9cb4"
+      }
+    ],
+    "smoke": {
+      "fs": {
+        "exit_code": 0,
+        "findings": 52
+      },
+      "git": {
+        "exit_code": 0,
+        "findings": 2
+      }
+    },
+    "help_exit_code": 0,
+    "notes": "Source unchanged. Missing sibling fixed with contemporaneous pinned Gossip commit; latest sibling conflicts native hs versions. Boost headers installed only under bench/tools/source."
+  },
+  "deepfence-secretscanner": {
+    "status": "build_failed",
+    "reason": "Retried after cloning YaraHunter and initializing both agent-plugins-grpc submodules. Go build then fails pkg-config yara: package not found. Official YARA v4.5.8 source has configure.ac but no generated configure; official latest5 releases publish no tarball assets. Local bootstrap attempted and fails autoreconf: command not found. No global packages or upstream source edits applied.",
+    "source_dependencies": [
+      {
+        "repository": "https://github.com/deepfence/YaraHunter",
+        "commit": "8cb5a008056a407cf5a273fabb0ecf6626acd50e"
+      }
+    ],
+    "build_evidence": [
+      "bench/tools/deepfence-build-retry.log",
+      "bench/tools/yara-bootstrap.log"
+    ],
+    "native_dependencies": [
+      {
+        "name": "YARA",
+        "version": "4.5.8",
+        "url": "https://codeload.github.com/VirusTotal/yara/tar.gz/refs/tags/v4.5.8",
+        "sha256": "c322414975ff6f701149856613afdcd92a7e6939c284c798ae3c85618197efaa",
+        "status": "source downloaded; bootstrap blocked by missing autoreconf"
+      }
+    ],
+    "commands": {},
+    "offline": true
+  }
+}

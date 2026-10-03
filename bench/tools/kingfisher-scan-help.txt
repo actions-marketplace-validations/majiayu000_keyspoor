@@ -1,0 +1,474 @@
+Scan content for secrets and sensitive information
+
+Usage: kingfisher scan [OPTIONS] [PATH_INPUTS]... [COMMAND]
+
+Commands:
+  github       Enumerate and scan GitHub repositories
+  gitlab       Enumerate and scan GitLab repositories
+  gitea        Enumerate and scan Gitea repositories
+  bitbucket    Enumerate and scan Bitbucket repositories
+  azure        Enumerate and scan Azure DevOps repositories
+  huggingface  Enumerate and scan Hugging Face repositories and buckets
+  slack        Scan Slack messages and files matching a search query
+  teams        Scan Microsoft Teams messages via Microsoft Graph
+  jira         Scan Jira issues using JQL
+  confluence   Scan Confluence content using CQL
+  postman      Scan Postman workspaces, collections, and environments
+  s3           Scan an S3 bucket
+  gcs          Scan a Google Cloud Storage bucket
+  docker       Scan Docker or OCI images
+  help         Print this message or the help of the given subcommand(s)
+
+Arguments:
+  [PATH_INPUTS]...
+          Scan this file, directory, or local Git repository
+
+Options:
+  -j, --jobs <NUM_JOBS>
+          Number of parallel scanning threads
+          
+          [default: 12]
+
+      --rules-path <RULES_PATH>
+          Load additional rules from file(s) or directories
+          
+          Directories are walked recursively for YAML files. This option can be repeated.
+
+      --rule <RULE>
+          Enable the ruleset with the given ID (e.g. `all`, `default`, or custom)
+          
+          Repeating this disables the default set unless `default` is explicitly included.
+          
+          [default: all]
+
+      --exclude-rule <RULE>
+          Exclude the rule or ruleset with the given ID from the selected rules
+          
+          Applied after `--rule`, so `--rule all --exclude-rule betterleaks.aws-access-token`
+          enables everything except that rule.
+
+      --load-builtins <LOAD_BUILTINS>
+          Load the built-in Betterleaks rules
+          
+          [default: true]
+          [possible values: true, false]
+
+      --no-rule-cache
+          Disable the compiled Vectorscan rule database cache
+
+      --rule-cache-dir <PATH>
+          Directory for the compiled rule cache
+          
+          [env: KF_RULE_CACHE_DIR=]
+
+      --prune-rule-cache
+          Remove stale compiled rule cache entries before scanning
+
+      --rule-cache-max-entries <N>
+          Keep at least this many compiled rule cache entries when pruning
+          
+          [default: 10]
+
+      --rule-cache-max-age <DURATION>
+          Remove only compiled rule cache entries older than this duration when pruning
+          
+          [default: 30d]
+
+      --git-url <GIT_URL>
+          Deprecated: clone and scan a Git repository URL. Prefer positional targets: `kingfisher
+          scan github.com/org/repo`
+
+      --repo-clone-limit <COUNT>
+          Limit the number of GitHub/GitLab repositories cloned during enumeration
+
+      --include-contributors
+          Include contributor repositories when scanning GitHub or GitLab git URLs
+
+      --git-clone <GIT_CLONE>
+          Select how to clone Git repositories
+
+          Possible values:
+          - bare:   Equivalent to `git clone --bare`
+          - mirror: Equivalent to `git clone --mirror`, often clones extra objects
+          
+          [default: bare]
+
+      --git-history <GIT_HISTORY>
+          Scan full Git history (restricted to --branch when set), or only the selected
+          snapshot/working tree with "none". --since-commit bounds the history range; staged and
+          branch-root options retain their diff scope
+
+          Possible values:
+          - full: Scan all history
+          - none: Ignore history entirely
+          
+          [default: full]
+
+      --scan-nested-repos
+          Enable or disable scanning nested git repositories
+
+      --max-file-size <MB>
+          Ignore files larger than the given size in MB (0 = unlimited)
+          
+          [default: 256]
+          [alias: --max-filesize]
+
+      --no-limits
+          Disable scan resource budgets and timeouts. Overrides individual limits. Concurrency, rate
+          limits, exclusions, and extraction path checks remain enabled
+
+      --exclude <PATTERN>
+          Skip any file or directory whose path matches this glob pattern. Multiple patterns may be
+          provided by repeating the flag
+
+      --no-extract-archives
+          If true, do NOT extract archive files
+
+      --extraction-depth <EXTRACTION_DEPTH>
+          Maximum allowed depth for extracting nested archives (0 = unlimited)
+          
+          [default: 2]
+
+      --no-binary
+          If true, do NOT scan binary files
+
+  -c, --confidence <CONFIDENCE>
+          Minimum confidence level for reporting findings
+          
+          [default: medium]
+          [possible values: low, medium, high]
+
+      --disk-offload
+          Temporarily offload completed findings to disk with automatic cleanup. Uses a private
+          temporary file that is automatically removed when closed or the process exits. Offloading
+          starts only after a repository or input root finishes, so a single-repository scan may use
+          the same peak memory with or without this flag. Final deduplication, validation, and
+          reporting still use an in-memory working set
+
+  -n, --no-validate
+          Disable secret validation
+
+      --validation-timeout <SECONDS>
+          Timeout for validation requests in seconds (0 = unlimited)
+          
+          [default: 10]
+
+      --validation-retries <N>
+          Number of retries for validation requests (0-5)
+          
+          [default: 1]
+
+      --validation-rps <RPS>
+          Global validation request rate limit in requests per second
+
+      --validation-rps-rule <RULE_SELECTOR=RPS>
+          Rule-scoped validation request rate limit (RULE_SELECTOR=RPS), repeatable
+
+      --full-validation-response
+          Include full validation response bodies without truncation
+
+      --max-validation-response-length <BYTES>
+          Maximum bytes to store from validation response bodies (0 = unlimited). Overridden by
+          --full-validation-response which forces unlimited storage
+          
+          [default: 2048]
+
+      --blast-radius
+          Map validated cloud credentials to their effective identities and blast radius; use only
+          when authorized for the target account because this triggers additional network requests
+          to determine granted access
+
+      --only-valid
+          Display only validated findings
+
+      --validation-filter <VALIDATION_FILTER>
+          Filter findings by validation outcome. `active` is equivalent to `--only-valid`;
+          `actionable` includes active credentials and high-confidence assumed-valid secrets. This
+          conflicts with the `--only-valid` compatibility alias
+
+          Possible values:
+          - all:        Include every finding, regardless of validation outcome
+          - active:     Include only credentials proven active by a validator
+          - actionable: Include active credentials and high-confidence assumed-valid secrets
+
+      --include-hidden-findings
+          Include hidden helper-rule findings in reports and scan summaries
+
+  -e, --min-entropy <MIN_ENTROPY>
+          Override the default minimum entropy threshold
+
+      --rule-stats
+          Show performance statistics for each rule
+
+      --no-dedup
+          Display every occurrence of a finding
+
+  -r, --redact
+          Redact findings values using a secure hash
+
+      --no-base64
+          Skip decoding Base64 blobs before scanning
+
+      --turbo
+          Turbo mode: equivalent to --commit-metadata=false --no-base64 and disables MIME sniffing,
+          language detection, and parser-based context verification
+
+      --git-repo-timeout <SECONDS>
+          Timeout for Git repository scanning in seconds (0 = unlimited)
+          
+          [default: 1800]
+
+      --audit-log <FILE>
+          Write incremental repository discovery, fetch, and scan audit events as JSON Lines
+
+  -h, --help
+          Print help (see a summary with '-h')
+
+Git Options:
+      --git-clone-dir <GIT_CLONE_DIR>
+          Parent directory for cloned Git repositories and scan artifacts
+
+      --keep-clones
+          Keep cloned Git repositories on disk after the scan completes
+
+      --commit-metadata <COMMIT_METADATA>
+          Include detailed Git commit context (author, date, commit hash) for findings. Set to
+          'false' to disable
+          
+          [default: true]
+          [possible values: true, false]
+
+      --repo-artifacts
+          Also scan repository host artifacts like issues, wikis, and gists/snippets
+
+      --since-commit <GIT-REF>
+          Scan commits reachable from all refs and HEAD (or only --branch when set), excluding this
+          ref and its ancestors. With --git-history none, scan only the net tree diff to --branch
+          (default HEAD) instead
+
+      --since-hours <HOURS>
+          Scan Git commits from the last N whole hours, using committer timestamps. Walk all refs
+          and HEAD unless --branch is set. Requires --git-history full
+
+      --staged
+          Scan only staged changes by synthesizing a temporary commit and diffing it against the
+          current HEAD (or an empty tree when no commits exist)
+
+      --branch <GIT-REF>
+          Branch, tag, or commit whose reachable history to scan or to compare against. Use
+          --git-history none to scan only its snapshot. Diff comparisons default to HEAD
+          
+          [alias: --ref]
+
+      --branch-root
+          Treat the `--branch` commit or ref as the inclusive root for the scan.
+          
+          When enabled, Kingfisher diffs from the parent of the selected commit through the current
+          HEAD of the repository, ensuring the chosen commit and every descendant is scanned exactly
+          once. Providing `--branch-root-commit` will also enable this behaviour automatically.
+
+      --branch-root-commit <GIT-REF>
+          Explicit commit or ref to use as the inclusive branch root. Supplying this flag implicitly
+          enables branch-root scanning even if `--branch-root` is omitted
+
+Output Options:
+  -o, --output <OUTPUT>
+          Write output to the specified path (stdout if not given)
+
+  -f, --format <FORMAT>
+          Output format (defaults to `pretty`; use `toon` for LLM/agent integrations)
+
+          Possible values:
+          - pretty: A human-friendly text-based format
+          - json:   Pretty-printed JSON
+          - jsonl:  JSON Lines (one JSON object per line)
+          - bson:   BSON (binary JSON) format
+          - toon:   TOON format optimized for LLMs and agents
+          - sarif:  SARIF format (experimental)
+          - html:   Standalone HTML audit report
+          
+          [default: pretty]
+
+      --baseline-file <FILE>
+          Baseline file to filter known secrets
+
+      --manage-baseline
+          Create or update the baseline file with current findings
+
+      --skip-regex <PATTERN>
+          Regex patterns to allow-list secret matches (repeatable)
+
+      --skip-word <WORD>
+          Skipwords to allow-list secret matches (case-insensitive, repeatable)
+
+      --skip-aws-account <ACCOUNT_ID>
+          AWS account IDs whose findings should skip live credential validation (repeatable)
+
+      --skip-aws-account-file <FILE>
+          File containing AWS account IDs to skip (one per line, `#` comments ignored)
+
+      --ignore-comment <DIRECTIVE>
+          Additional inline ignore directives to recognise (repeatable)
+
+      --no-ignore
+          Disable inline ignore directives entirely
+
+      --no-ignore-if-contains
+          Disable rule-level `ignore_if_contains` filtering for pattern requirements
+
+      --alert-webhook <URL>
+          POST scan results to a webhook URL when scanning completes (repeatable). Use multiple
+          `--alert-webhook` flags to fan out to several destinations
+
+      --alert-format <FORMAT>
+          Format for `--alert-webhook` payloads. Default is inferred from the URL host (slack.com →
+          slack, *.office.com → teams, discord.com → discord, chat.googleapis.com → googlechat,
+          otherwise generic). Mattermost is self-hosted and never inferred — pass `--alert-format
+          mattermost` explicitly
+
+          Possible values:
+          - slack:      Slack incoming-webhook (Block Kit)
+          - teams:      Microsoft Teams incoming-webhook (Adaptive Card / MessageCard)
+          - generic:    Generic JSON envelope (`{ summary, findings }`)
+          - discord:    Discord incoming-webhook (color-coded `embeds`)
+          - mattermost: Mattermost incoming-webhook (Slack-compatible `attachments`)
+          - googlechat: Google Chat incoming-webhook (`cardsV2` payload)
+
+      --alert-on <MODE>
+          When to post alerts: only when there are findings, or always
+
+          Possible values:
+          - findings: Only post when at least one finding is reported
+          - always:   Always post, even on a clean run
+          
+          [default: findings]
+
+      --alert-min-confidence <LEVEL>
+          Minimum confidence required for a finding to be included in alert payloads
+          
+          [default: medium]
+          [possible values: low, medium, high]
+
+      --alert-include-secret
+          Include the (possibly truncated) secret value in alert payloads. Off by default; on, the
+          snippet is truncated to ~32 chars
+
+      --alert-report-url <URL>
+          Pivot link rendered in the payload — typically the URL of the full scan report (CI run, S3
+          object, SARIF in Code Scanning, etc.). When present, every alert payload includes a "Full
+          report" link, which is the right place to send operators who hit the truncated finding
+          cap. Falls back to env var `KINGFISHER_ALERT_REPORT_URL` if unset
+          
+          [env: KINGFISHER_ALERT_REPORT_URL=]
+
+      --alert-detail <MODE>
+          How much per-finding detail to include in alert payloads. `auto` (default) shows up to 10
+          findings inline, but switches to a summary-only payload once the per-sink filtered finding
+          count exceeds 25 — at that volume, chat detail blocks add noise and the operator should be
+          pivoting to the full report instead
+
+          Possible values:
+          - summary: Headline + top-rules + report link only. No per-finding lines
+          - detail:  Headline + top-rules + per-finding lines (capped at 10)
+          - auto:    `Detail` if filtered findings ≤ [`AUTO_DETAIL_THRESHOLD`], else `Summary`
+          
+          [default: auto]
+
+      --alert-finding-filter <FILTER>
+          Restrict which findings are eligible for alert payloads, on top of
+          `--alert-min-confidence`. `exclude-inactive` drops "Inactive Credential" findings;
+          `only-active` keeps only "Active Credential" findings; `access-map-only` keeps only
+          findings with a successful, matching `--blast-radius` result (requires `--blast-radius` to
+          be set, otherwise this filter matches nothing)
+
+          Possible values:
+          - all:              No filtering by validation status or access-map result
+          - exclude-inactive: Drop `VerifiedInactive` findings; keep active + unknown/not-attempted
+          - only-active:      Keep only `VerifiedActive` findings. Note this excludes `Assumed`,
+            which was never live-validated
+          - access-map-only:  Keep only findings with a matching successful `--blast-radius` result
+            (implies active, since access-mapping only runs on validated credentials)
+          
+          [default: all]
+
+      --alert-prevent-empty
+          Skip a webhook entirely when `--alert-min-confidence` / `--alert-finding-filter` leave
+          nothing to report, instead of posting an alert with an empty findings list. `--alert-on
+          always` sinks are heartbeats and always post, so that silence keeps meaning "the scan
+          never ran". Off by default to preserve existing behavior
+
+      --alert-dry-run
+          Build and log each alert sink's resolved payload instead of POSTing it — use to validate
+          `--alert-*` filter configuration against a real scan before wiring a production webhook
+          URL. Dry-run payloads always redact secret values, even when `--alert-include-secret` is
+          set
+
+      --view-report
+          Serve a JSON report locally and open the browser (http://127.0.0.1:7890)
+
+      --view-report-port <PORT>
+          Port for the report viewer when using --view-report (default 7890)
+          
+          [default: 7890]
+
+      --view-report-address <ADDRESS>
+          Bind address for the report viewer when using --view-report (default 127.0.0.1). Use
+          0.0.0.0 to allow access from Docker or other hosts
+          
+          [default: 127.0.0.1]
+
+Global Options:
+  -v, --verbose...
+          Enable verbose output (up to 3 times for more detail)
+
+  -q, --quiet
+          Suppress non-error messages and disable progress bars
+
+      --tls-mode <TLS_MODE>
+          TLS certificate validation mode for secret validation requests.
+          
+          - strict: Full WebPKI validation (default) - lax: Accept self-signed/unknown CA, but
+          enforce hostname + expiry - off: Disable all certificate validation
+
+          Possible values:
+          - strict: Full WebPKI certificate validation: trusted CA chain, hostname match, not
+            expired. This is the default and most secure mode
+          - lax:    Accept self-signed or unknown CA certificates, but still enforce: - Hostname
+            must match certificate's CN/SAN - Certificate must not be expired - TLS 1.2 or higher
+            required
+          - off:    Disable all TLS certificate validation. Use with extreme caution. Equivalent to
+            the legacy `--ignore-certs` flag
+          
+          [default: strict]
+
+      --allow-internal-ips
+          Allow validation requests to internal/private IP addresses.
+          
+          By default, Kingfisher blocks HTTP requests to loopback, private, and link-local addresses
+          during credential validation to prevent SSRF. Use this flag when scanning infrastructure
+          that uses internal endpoints.
+
+      --self-update
+          Update the Kingfisher binary to the latest release
+
+      --no-update-check
+          Disable automatic update checks
+
+      --user-agent-suffix <SUFFIX>
+          Append a custom suffix to the default Kingfisher user-agent string
+
+      --endpoint <PROVIDER=URL>
+          Override provider API endpoints for validation/revocation (PROVIDER=URL), repeatable.
+          
+          Supported providers: github, gitlab, gitea, jira, jira-cloud, confluence, artifactory.
+
+      --endpoint-config <FILE>
+          YAML file containing provider endpoint overrides
+
+      --config <FILE>
+          Path to a `kingfisher.yaml` project config file.
+          
+          **No auto-discovery** — the file is loaded only when this flag is passed explicitly.
+          List-typed config values are concatenated onto matching CLI flags; scalar config values
+          are applied only when the matching `--flag` was not passed (precedence: CLI > env > config
+          > built-in default). See `docs/CONFIG.md` for the full schema.

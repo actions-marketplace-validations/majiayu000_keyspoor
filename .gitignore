@@ -1,0 +1,12 @@
+/target/
+/bench/tools/*
+!/bench/tools/*.py
+!/bench/tools/*.json
+!/bench/tools/*help.txt
+!/bench/tools/README.md
+!/bench/tools/*.lock
+/bench/corpus*/
+/bench/fixtures/generated/
+/bench/results/raw/
+__pycache__/
+.DS_Store

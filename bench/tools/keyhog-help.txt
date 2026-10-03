@@ -1,0 +1,43 @@
+KeyHog: The developer-first secret scanner.
+Find leaked credentials in your code before hackers do. Fast, accurate, and verifying.
+
+Usage: keyhog [OPTIONS] [COMMAND]
+
+Commands:
+  scan                 Scan files, directories, or repositories for secrets
+  config               Print resolved scan configuration without scanning
+  hook                 Manage git pre-commit hooks
+  detectors            List all loaded secret detectors
+  explain              Explain a detector: spec, regex, severity, rotation guide
+  diff                 Diff baselines or artifacts: show NEW / REMOVED / UNCHANGED
+  triage               Import redacted findings into scoped suppression and pattern feedback
+  calibrate            Show or update per-detector Bayesian calibration counters
+  calibrate-autoroute  Prime autoroute: calibrate every scan-policy preset × workload bucket.
+  watch                Watch one or more directories and scan files as they change
+  completion           Print shell completion script (bash, zsh, fish, powershell, elvish)
+  backend              Inspect hardware, diagnostic routing heuristics, or autoroute evidence
+  doctor               Health-check the install: host, PATH, detector corpus, scan self-test
+  bloom-diagnostic     Measure Bloom rejection and prove enabled-versus-bypassed finding parity
+  install              Compile, authenticate, calibrate, and install execution packs for the local host
+  uninstall            Uninstall keyhog: remove the binary (dry run unless --yes)
+  scan-system          Recursive system-wide scan: every mounted drive, every git history
+  daemon               Manage the long-lived `keyhog daemon` (start, stop, status)
+  guard                Manage the perpetual repository and filesystem guard
+  help                 Print this message or the help of the given subcommand(s)
+
+Options:
+  -V, --version  Print version, build information, and statistics
+      --full     Include the hardware probe in version output. This initializes GPU/SIMD discovery, so it is explicit instead of controlled by ambient env
+  -h, --help     Print help
+
+EXIT CODES:
+  0   Success (no finding blocks the active evidence policy)
+  1   Findings block the active evidence policy, none confirmed live
+  2   User error (bad flag/config, missing path/baseline, detector-load failure, invalid autoroute calibration, not-found/permission-denied path)
+  3   System error (local environment failure: low-level I/O, fatal daemon service failure, or selected SIMD/Hyperscan unavailable)
+  4   Health/self-test failure (doctor unhealthy / backend --self-test failed)
+  10  Live credentials found under scan --verify
+  11  Scanner thread panicked mid-scan (state is unreliable)
+  12  Required GPU unavailable (--require-gpu, explicit gpu, or proof-selected daemon GPU before readiness)
+  13  Requested source failed, input coverage incomplete, or guard root degraded/stale/stopped/indexing (run `keyhog guard status <root>` for the repair command)
+  130 Interrupted (SIGINT / Ctrl-C)
