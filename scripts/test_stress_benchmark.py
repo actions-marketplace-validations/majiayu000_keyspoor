@@ -1,15 +1,159 @@
-"""Small collector-contract tests; no scanners or generated workload required."""
+"""Collector and process-wait contract tests; no scanner workload required."""
+from contextlib import ExitStack
 import copy
 import importlib.util
 from pathlib import Path
 import shutil
 import tempfile
+from types import SimpleNamespace
 import unittest
+from unittest.mock import Mock, call, patch
 
 
 SPEC = importlib.util.spec_from_file_location("stress_benchmark", Path(__file__).with_name("stress_benchmark.py"))
 BENCH = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(BENCH)
+
+
+class MeasureWaitTests(unittest.TestCase):
+    def setUp(self):
+        self.stack = ExitStack()
+        self.addCleanup(self.stack.close)
+        self.now = 0.0
+        self.child = Mock(pid=42, returncode=None)
+        self.selector = Mock()
+        self.registered = {}
+
+        def register(stream, events, name):
+            self.registered[stream] = SimpleNamespace(fileobj=stream, fd=name, data=name)
+
+        def select(timeout):
+            self.assertTrue(self.registered, "must not wait on an empty selector")
+            return [(key, BENCH.selectors.EVENT_READ) for key in self.registered.values()]
+
+        def sleep(delay):
+            self.now += delay
+
+        self.selector.register.side_effect = register
+        self.selector.unregister.side_effect = self.registered.pop
+        self.selector.get_map.side_effect = lambda: self.registered
+        self.selector.select.side_effect = select
+        self.stack.enter_context(patch.object(BENCH.subprocess, "Popen", return_value=self.child))
+        self.stack.enter_context(patch.object(BENCH.selectors, "DefaultSelector", return_value=self.selector))
+        self.stack.enter_context(patch.object(BENCH.time, "perf_counter", side_effect=lambda: self.now))
+        self.sleep = self.stack.enter_context(patch.object(BENCH.time, "sleep", side_effect=sleep))
+        self.stack.enter_context(patch.object(BENCH.os, "read", return_value=b""))
+        self.wait4 = self.stack.enter_context(patch.object(BENCH.os, "wait4"))
+        self.collector = self.stack.enter_context(patch.object(BENCH, "Collector")).return_value
+        self.collector.finish.return_value = {}
+        self.usage = SimpleNamespace(ru_maxrss=12345, ru_utime=0.02, ru_stime=0.003)
+        self.case = {"mode": "scan", "path": Path("/fixture/dense.txt")}
+
+    def measure(self, timeout=1):
+        return BENCH.measure(Path("/synthetic/scanner"), self.case, 1, timeout)
+
+    def assert_closed(self):
+        self.selector.close.assert_called_once_with()
+        self.child.stdout.close.assert_called_once_with()
+        self.child.stderr.close.assert_called_once_with()
+
+    def test_pipe_eof_before_exit_avoids_empty_selector_wait_and_keeps_usage(self):
+        self.wait4.side_effect = [(0, 0, None), (0, 0, None), (42, 1 << 8, self.usage)]
+        result = self.measure()
+        self.selector.select.assert_called_once_with(0.1)
+        self.sleep.assert_called_once_with(0.001)
+        self.assertEqual(self.wait4.call_count, 3)
+        for call in self.wait4.call_args_list:
+            self.assertEqual(call.args, (42, BENCH.os.WNOHANG))
+        self.assertEqual(result["exit_code"], 1)
+        self.assertEqual(result["wall_ms"], 1)
+        self.assertEqual(result["peak_rss_bytes"], 12345)
+        self.assertEqual(result["user_ms"], 20)
+        self.assertEqual(result["system_ms"], 3)
+        self.collector.finish.assert_called_once_with(1)
+        self.child.kill.assert_not_called()
+        self.child.wait.assert_not_called()
+        self.assert_closed()
+
+    def test_exit_ready_after_pipe_eof_does_not_sleep(self):
+        self.wait4.side_effect = [(0, 0, None), (42, 1 << 8, self.usage)]
+        result = self.measure()
+        self.selector.select.assert_called_once_with(0.1)
+        self.sleep.assert_not_called()
+        self.assertEqual(result["wall_ms"], 0)
+        self.child.kill.assert_not_called()
+        self.child.wait.assert_not_called()
+        self.assert_closed()
+
+    def test_exited_child_is_reaped_once_and_buffered_pipes_are_drained_before_finish(self):
+        self.wait4.return_value = (42, 1 << 8, self.usage)
+        records = [{"type": "progress", "stats": {"files": 1}},
+                   {"type": "summary", "complete": True}]
+        stdout = b"".join(BENCH.json.dumps(record).encode() + b"\n" for record in records)
+        stderr = b"synthetic diagnostic\n"
+        chunks = {"stdout": [stdout[:12], stdout[12:], b""],
+                  "stderr": [stderr, b""]}
+
+        def read(fd, size):
+            self.assertEqual(self.child.returncode, 1, "child must already be reaped")
+            return chunks[fd].pop(0)
+
+        def finish(exit_code):
+            self.assertEqual(exit_code, 1)
+            self.assertFalse(self.registered, "both pipes must reach EOF before validation")
+            self.assertTrue(all(not remaining for remaining in chunks.values()))
+            return {}
+
+        self.collector.accept.return_value = False
+        self.collector.finish.side_effect = finish
+        with patch.object(BENCH.os, "read", side_effect=read):
+            result = self.measure()
+        self.wait4.assert_called_once_with(42, BENCH.os.WNOHANG)
+        self.assertEqual(self.collector.method_calls,
+                         [call.accept(record) for record in records] + [call.finish(1)])
+        self.assertEqual(result["stdout_bytes"], len(stdout))
+        self.assertEqual(result["stderr_bytes"], len(stderr))
+        self.assertEqual(result["peak_rss_bytes"], self.usage.ru_maxrss)
+        self.sleep.assert_not_called()
+        self.child.kill.assert_not_called()
+        self.child.wait.assert_not_called()
+        self.assert_closed()
+
+    def test_closed_pipes_do_not_disable_timeout_or_child_cleanup(self):
+        self.wait4.return_value = (0, 0, None)
+        with self.assertRaisesRegex(RuntimeError, "per-run time limit"):
+            self.measure(timeout=0.0025)
+        self.assertAlmostEqual(self.now, 0.0025)
+        self.assertEqual(self.sleep.call_count, 3)
+        self.assertAlmostEqual(self.sleep.call_args.args[0], 0.0005)
+        self.selector.select.assert_called_once_with(0.0025)
+        self.collector.finish.assert_not_called()
+        self.child.kill.assert_called_once_with()
+        self.child.wait.assert_called_once_with()
+        self.assert_closed()
+
+    def test_pipe_wait_is_bounded_by_remaining_timeout(self):
+        def no_output(timeout):
+            self.now += timeout
+            return []
+
+        self.selector.select.side_effect = no_output
+        self.wait4.return_value = (0, 0, None)
+        with self.assertRaisesRegex(RuntimeError, "per-run time limit"):
+            self.measure(timeout=0.025)
+        self.selector.select.assert_called_once_with(0.025)
+        self.sleep.assert_not_called()
+        self.child.kill.assert_called_once_with()
+        self.child.wait.assert_called_once_with()
+        self.assert_closed()
+
+    def test_wait4_error_is_propagated_and_child_is_cleaned_up(self):
+        self.wait4.side_effect = OSError("synthetic wait4 failure")
+        with self.assertRaisesRegex(OSError, "synthetic wait4 failure"):
+            self.measure()
+        self.child.kill.assert_called_once_with()
+        self.child.wait.assert_called_once_with()
+        self.assert_closed()
 
 
 class CollectorTests(unittest.TestCase):

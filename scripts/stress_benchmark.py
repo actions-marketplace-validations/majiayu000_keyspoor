@@ -260,9 +260,25 @@ def measure(binary, case, threads, timeout):
     usage = None
     try:
         while selector.get_map() or usage is None:
-            if time.perf_counter() - started > timeout:
+            remaining = timeout - (time.perf_counter() - started)
+            if remaining <= 0:
                 raise RuntimeError("scanner exceeded the per-run time limit")
-            for key, _ in selector.select(0.1):
+            if usage is None:
+                pid, status, measured = os.wait4(child.pid, os.WNOHANG)
+                if pid:
+                    child.returncode = os.waitstatus_to_exitcode(status)
+                    usage = measured
+            if selector.get_map():
+                events = selector.select(min(0.1, remaining))
+            elif usage is None:
+                # Pipe EOF can precede process exit. An empty selector cannot
+                # wake on exit, so avoid its full 100 ms wait while preserving
+                # wait4 resource usage and the per-run deadline.
+                time.sleep(min(0.001, remaining))
+                events = ()
+            else:
+                break
+            for key, _ in events:
                 data = os.read(key.fd, 65536)
                 if not data:
                     selector.unregister(key.fileobj)
@@ -291,11 +307,6 @@ def measure(binary, case, threads, timeout):
                             first_result = (time.perf_counter() - started) * 1000
                     if len(pending) > 1024 * 1024:
                         raise RuntimeError("scanner emitted an unexpectedly large JSONL record")
-            if usage is None:
-                pid, status, measured = os.wait4(child.pid, os.WNOHANG)
-                if pid:
-                    child.returncode = os.waitstatus_to_exitcode(status)
-                    usage = measured
         if pending.strip():
             raise RuntimeError("scanner output ended before a JSONL record terminator")
         verified = collector.finish(child.returncode)
@@ -352,7 +363,9 @@ def main():
               "scope": "Whole-version comparison, not isolated causal attribution; default rules, "
                        "Base64 disabled, warm/uncleared filesystem cache, fresh processes. "
                        "RSS is per-child wait4 peak, not sampled simultaneous process-tree RSS. "
-                       "Wall and first-result include pipe transfer and benchmark validation/backpressure.",
+                       "Wall and first-result include pipe transfer and benchmark validation/backpressure. "
+                       "After pipe EOF, process-exit polling requests sleeps of at most 1 ms; "
+                       "scheduler delays can exceed that interval.",
               "parity_scope": "Rule, path and exact source coordinates; fingerprints intentionally "
                               "excluded because fingerprint identity policy changed between versions. "
                               "Filesystem paths normalized relative to each fixture source root; "
