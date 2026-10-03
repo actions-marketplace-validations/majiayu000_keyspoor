@@ -2,41 +2,38 @@
 
 Verified on 2026-10-04 (Asia/Shanghai). Product identity: **Keyspoor**, an offline
 Rust secret scanner for Git, CI and AI agents. `key` + `spoor` describes tracing
-credential footprints. Exact package-name availability checks and distribution
-tradeoffs are recorded in [DECISIONS.md](DECISIONS.md).
+credential footprints. Distribution decisions are recorded in [DECISIONS.md](DECISIONS.md).
 
 ## Public surfaces
 
 | Surface | Result | Evidence |
 |---|---|---|
-| GitHub | Public repository, description, homepage and 12 relevant topics configured | [majiayu000/keyspoor](https://github.com/majiayu000/keyspoor) |
-| GitHub Release | v0.1.1 published; five native targets, npm tarball, license notices and checksums | [Release](https://github.com/majiayu000/keyspoor/releases/tag/v0.1.1) |
-| crates.io | 0.1.1 published, latest API version verified; fresh registry install passes clean/finding/error exits and redaction | [Crate](https://crates.io/crates/keyspoor) |
-| Rust API docs | Version 0.1.1 returns HTTP 200 | [docs.rs](https://docs.rs/keyspoor/0.1.1/keyspoor/) |
-| npm distribution | Real five-platform tarball, 8,959,704 bytes, installed successfully from public GitHub URL with scripts disabled | [Tarball](https://github.com/majiayu000/keyspoor/releases/download/v0.1.1/keyspoor-0.1.1.tgz) |
-| npm registry | **0.1.1 published** by lifcc after browser authentication; fresh registry installation with scripts disabled passes exits 0/1/2 and redaction | [npm package](https://www.npmjs.com/package/keyspoor) |
-| Project homepage | HTTP 200; v0.1.1 content verified; installation links updated to the published npm package | [Website](https://majiayu000.github.io/keyspoor/) |
+| GitHub | Public repository, description, homepage and 12 relevant topics configured | [Repository](https://github.com/majiayu000/keyspoor) |
+| GitHub Release | v0.1.2 published; five native targets, npm tarball, license notices and checksums; every public asset hash verified | [Release](https://github.com/majiayu000/keyspoor/releases/tag/v0.1.2) |
+| crates.io | 0.1.2 published by GitHub Actions using a temporary OIDC token; registry API verified | [Crate](https://crates.io/crates/keyspoor) |
+| Rust API docs | Version 0.1.2 returns HTTP 200 | [docs.rs](https://docs.rs/keyspoor/0.1.2/keyspoor/) |
+| npm registry | 0.1.2 published through OIDC with provenance; fresh registry install passes exits 0/1/2 and redaction on Linux CI and local macOS | [npm package](https://www.npmjs.com/package/keyspoor) |
+| npm provenance | Registry attestation identifies this repository, release.yml and refs/tags/v0.1.2 | [Attestation](https://registry.npmjs.org/-/npm/v1/attestations/keyspoor@0.1.2) |
+| Scanning Action | v1 points to the release commit; Linux, macOS and Windows public consumers pass exits 0/1/2, failure semantics, SARIF and redaction | [Action verification](https://github.com/majiayu000/keyspoor/actions/runs/37152835692) |
+| Homebrew | 0.1.2 formula automatically committed; tap CI and local upgrade, brew test and strict audit pass | [Update run](https://github.com/majiayu000/homebrew-tap/actions/runs/37152837292) · [Formula commit](https://github.com/majiayu000/homebrew-tap/commit/ffbf3c27d064597a38576b6e224895d446547664) |
+| Project homepage | HTTP 200; live v0.1.2 content, Homebrew installation and scanning Action verified | [Website](https://majiayu000.github.io/keyspoor/) |
 | Search Console / Google indexing | **Unverified**; no authenticated property access or indexing submission performed | Crawlable content is not proof of indexing or ranking |
 
-The Rust release commit is `eb1df810ae0368bf7f7495c3d501b21deafb30b8`.
-[CI](https://github.com/majiayu000/keyspoor/actions/runs/37144648049) passed on
-Linux, macOS and Windows, including package consumers and npm launcher tests.
-[Release builds](https://github.com/majiayu000/keyspoor/actions/runs/37144890196)
-passed for Linux GNU x64/ARM64, macOS x64/ARM64 and Windows x64. Windows CI caught
-a path-separator bug before the cross-platform release; it was fixed in 0.1.1.
-crates.io 0.1.0 was uploaded earlier; 0.1.1 is the corrected current version.
+Release commit: `6bce73fa5e9b20dd8510821ac50277d8ab23b9ab`.
+The [release workflow](https://github.com/majiayu000/keyspoor/actions/runs/37151811766)
+passed three-platform CI, Linux GNU x64/ARM64, macOS x64/ARM64 and Windows x64
+native builds, packaging, both registry publications and the GitHub release.
+The first registry installation check ran before npm made the accepted package
+visible and failed with ETARGET. Rerunning only failed jobs after visibility
+completed the release; no package was republished. The next-release workflow
+now waits up to ten minutes for exact-version visibility, retrying only 404.
+This wait passed focused checks; it was added after the v0.1.2 tag.
 
 Published crate SHA-256:
-`c5d9dec419f9065100abce1ea1f24aad5a2edb51204293269a0b8b7e68ea2fb7`.
-GitHub-hosted npm tarball SHA-256:
-`d189b9aaf65de5d506aede097503d3bc83146e15e4fa7f69b9eadcc11a2f1d00`.
-npm registry tarball SHA-256:
-`96f4efca974587b917771782a2a2edbb46a03e8b2c77327b895911f3481d0792`.
-The registry tarball differs from the earlier GitHub tarball only in README
-installation instructions; all five binaries, launcher and metadata match.
-
-All release binary hashes and license files were verified against SHA256SUMS;
-the tarball was added to the same checksum manifest after assembly.
+`28b0dcd79fc04cbf1bb25f84d184ee5032b02bfd1305c0d56670732bcacec9a2`.
+GitHub and npm registry tarballs are byte-identical, 8,959,656 bytes, SHA-256:
+`14c99943c2d0277296502c13a526718482ab0d672ce93a247c6d7115b2fd5c9a`.
+All five binaries, tarball and license notices match the public `SHA256SUMS`.
 
 ## Search surfaces implemented
 
@@ -63,6 +60,7 @@ the tarball was added to the same checksum manifest after assembly.
   `secret-scan` names and binary hashes are preserved; no fastest-tool or
   production-accuracy claims were introduced.
 
-All three distribution surfaces (GitHub, crates.io and npm) are published.
+GitHub, crates.io and npm are published; Homebrew and the reusable scanning
+Action are recorded above with their installation checks.
 Google indexing requires separate verification through Search Console or observed
 search results; no property verification file or indexing request was invented.

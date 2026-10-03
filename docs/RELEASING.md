@@ -59,6 +59,19 @@ uploading the verified `release-assets` Actions artifact. It does not publish
 to a registry or create a GitHub release. The `v1` scanner Action alias does
 not trigger publication: only full numeric version tags do.
 
+The scanner Action has a separately maintained `v1` alias. After a package
+release succeeds, point that alias at the tested release commit and verify
+the public consumer workflow (Linux, macOS and Windows):
+
+```sh
+git tag -f v1 v0.1.2
+git push origin refs/tags/v1 --force
+gh workflow run action-smoke.yml --ref main
+```
+
+Only the moving Action alias is updated this way; never move a full published
+version tag. The first `v1` alias points to the v0.1.2 release commit.
+
 The Homebrew tap has its own scheduled workflow that reads the published
 GitHub release and updates the formula using the tap repository's temporary
 `GITHUB_TOKEN`. It can also be run manually in the tap after a release. No
