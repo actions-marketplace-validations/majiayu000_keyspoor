@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "tools": [
+    {
+      "id": "secret-scan-before",
+      "status": "available",
+      "version": "0.1.0 / 9da912a",
+      "source_url": "local independent implementation",
+      "commit_or_digest": "9c6c2052d33d7479ae9ce998e0565e9faa9daf617826ed9b4cb1f1624872e85d",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-9da912a",
+      "offline": true,
+      "parser": "secret_scan",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-9da912a",
+          "scan",
+          "{input}",
+          "--format",
+          "json"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-9da912a",
+          "history",
+          "{input}",
+          "--format",
+          "json"
+        ],
+        "staged": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/bench/tools/secret-scan-9da912a",
+          "staged",
+          "{input}",
+          "--format",
+          "json"
+        ]
+      },
+      "notes": "Frozen 9da912a release baseline for v3 iteration. Original SHA-256 verified before backup."
+    },
+    {
+      "id": "secret-scan",
+      "status": "available",
+      "version": "0.1.0 / v3 optimized final candidate",
+      "source_url": "local independent implementation",
+      "commit_or_digest": "b607dd486f9a62670b0f42bb93e3739346ae4a27f1728f0be8e00851f5590239",
+      "executable": "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+      "offline": true,
+      "parser": "secret_scan",
+      "accepted_exit_codes": [
+        0,
+        1
+      ],
+      "commands": {
+        "fs": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+          "scan",
+          "{input}",
+          "--format",
+          "json"
+        ],
+        "git": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+          "history",
+          "{input}",
+          "--format",
+          "json"
+        ],
+        "staged": [
+          "/Users/apple/Desktop/code/AI/tool/secrets/secret-scan/target/release/secret-scan",
+          "staged",
+          "{input}",
+          "--format",
+          "json"
+        ]
+      },
+      "notes": "Frozen after 104 Rust tests, fmt, clippy and Rust 1.96.1 check. One-keyword candidate allocation fast path only since prior v3 evaluation; observed v3 corpus now regression, not a second independent holdout."
+    }
+  ],
+  "platform": "darwin-arm64",
+  "recorded_at": "2026-10-03",
+  "python_lock": "bench/tools/python-requirements.lock",
+  "npm_lock": "bench/tools/npm/package-lock.json"
+}

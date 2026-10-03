@@ -269,7 +269,17 @@ fn run(cli: Cli) -> Result<u8> {
     {
         let control = ScanControl::default();
         let mut output = io::BufWriter::new(io::stdout().lock());
-        let mut sink = |event| write_scan_event(&event, &mut output);
+        let mut first_finding = true;
+        let mut sink = |event| {
+            write_scan_event(&event, &mut output)?;
+            // Progress is throttled. Deliver the first finding immediately;
+            // subsequent output retains BufWriter batching for dense results.
+            if first_finding && matches!(event, secret_scan::scan::ScanEvent::Finding(_)) {
+                output.flush()?;
+                first_finding = false;
+            }
+            Ok(())
+        };
         let mut summary = match mode {
             "files" => scan_paths_stream(&engine, &args.paths, &options, &control, &mut sink)?,
             "staged" => scan_staged_stream(&engine, &args.paths[0], &options, &control, &mut sink)?,

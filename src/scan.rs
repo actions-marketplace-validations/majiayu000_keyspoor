@@ -79,6 +79,29 @@ fn elapsed(started: Instant) -> u64 {
     started.elapsed().as_millis().min(u64::MAX as u128) as u64
 }
 
+/// Progress is advisory; findings and errors always bypass this throttle.
+#[derive(Default)]
+struct ProgressThrottle {
+    last_elapsed_ms: Option<u64>,
+}
+
+impl ProgressThrottle {
+    fn emit(
+        &mut self,
+        stats: &ScanStats,
+        sink: &mut (impl FnMut(ScanEvent) -> Result<()> + ?Sized),
+    ) -> Result<()> {
+        if self
+            .last_elapsed_ms
+            .is_none_or(|last| stats.elapsed_ms.saturating_sub(last) >= 100)
+        {
+            sink(ScanEvent::Progress(stats.clone()))?;
+            self.last_elapsed_ms = Some(stats.elapsed_ms);
+        }
+        Ok(())
+    }
+}
+
 fn sort_report(report: &mut ScanReport) {
     report.findings.sort_by(|a, b| {
         (&a.path, a.start, a.end, &a.rule_id, &a.fingerprint).cmp(&(
@@ -132,6 +155,7 @@ fn emit(
 fn emit_partial(
     summary: &mut ScanSummary,
     partial: ScanReport,
+    progress: &mut ProgressThrottle,
     control: &ScanControl,
     sink: &mut (impl FnMut(ScanEvent) -> Result<()> + ?Sized),
     started: Instant,
@@ -155,7 +179,7 @@ fn emit_partial(
     }
     if !control.is_cancelled() {
         summary.stats.elapsed_ms = elapsed(started);
-        sink(ScanEvent::Progress(summary.stats.clone()))?;
+        progress.emit(&summary.stats, sink)?;
     }
     Ok(())
 }
@@ -601,7 +625,8 @@ fn produce_files(
 
 /// File-level streaming with bounded job/result queues and synchronous sink
 /// backpressure. Each worker buffers one input and its findings. Streaming order
-/// follows completion order; the collecting API sorts its final report.
+/// follows completion order; the collecting API sorts its final report. Progress
+/// retains the first event, then emits at most once per 100 ms, plus a final event.
 pub fn scan_paths_stream(
     engine: &Engine,
     paths: &[PathBuf],
@@ -617,6 +642,7 @@ pub fn scan_paths_stream(
     }
     let started = Instant::now();
     let mut summary = ScanSummary::default();
+    let mut progress = ProgressThrottle::default();
     let mut roots = BTreeSet::new();
     for path in paths {
         if control.is_cancelled() {
@@ -692,7 +718,8 @@ pub fn scan_paths_stream(
         let mut sink_error = None;
         for partial in result_rx {
             if sink_error.is_none()
-                && let Err(error) = emit_partial(&mut summary, partial, control, sink, started)
+                && let Err(error) =
+                    emit_partial(&mut summary, partial, &mut progress, control, sink, started)
             {
                 control.cancel();
                 sink_error = Some(error);
@@ -829,6 +856,7 @@ fn history_objects(
     range: Option<&str>,
     control: &ScanControl,
     summary: &mut ScanSummary,
+    progress: &mut ProgressThrottle,
     sink: &mut (impl FnMut(ScanEvent) -> Result<()> + ?Sized),
     started: Instant,
 ) -> Result<GitObjects> {
@@ -897,7 +925,7 @@ fn history_objects(
                 .push(Arc::clone(&commits));
         }
         summary.stats.elapsed_ms = elapsed(started);
-        sink(ScanEvent::Progress(summary.stats.clone()))?;
+        progress.emit(&summary.stats, sink)?;
     }
     Ok(objects)
 }
@@ -987,11 +1015,20 @@ fn scan_git_stream(
         )),
         ..ScanSummary::default()
     };
+    let mut progress = ProgressThrottle::default();
     let result = (|| {
         let objects = if staged {
             staged_objects(&canonical, control)?
         } else {
-            history_objects(&canonical, range, control, &mut summary, sink, started)?
+            history_objects(
+                &canonical,
+                range,
+                control,
+                &mut summary,
+                &mut progress,
+                sink,
+                started,
+            )?
         };
         scan_git_objects(
             engine,
@@ -1000,6 +1037,7 @@ fn scan_git_stream(
             objects,
             control,
             &mut summary,
+            &mut progress,
             sink,
             started,
         )?;
@@ -1031,6 +1069,7 @@ fn scan_git_objects(
     objects: GitObjects,
     control: &ScanControl,
     summary: &mut ScanSummary,
+    progress: &mut ProgressThrottle,
     sink: &mut (impl FnMut(ScanEvent) -> Result<()> + ?Sized),
     started: Instant,
 ) -> Result<()> {
@@ -1111,7 +1150,7 @@ fn scan_git_objects(
                 partial.stats.files = 0;
                 partial.stats.bytes = 0;
                 if commit_groups.is_empty() {
-                    emit_partial(summary, partial, control, sink, started)?;
+                    emit_partial(summary, partial, progress, control, sink, started)?;
                 } else {
                     summary.complete &= partial.complete && partial.errors.is_empty();
                     summary.stats.detection_passes += partial.stats.detection_passes;
@@ -1141,7 +1180,7 @@ fn scan_git_objects(
                     }
                     if !control.is_cancelled() {
                         summary.stats.elapsed_ms = elapsed(started);
-                        sink(ScanEvent::Progress(summary.stats.clone()))?;
+                        progress.emit(&summary.stats, sink)?;
                     }
                 }
             }
@@ -1159,4 +1198,48 @@ fn scan_git_objects(
         bail!("Git blob reader failed ({status})");
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod progress_tests {
+    use super::*;
+
+    #[test]
+    fn progress_keeps_first_event_and_respects_interval_without_wall_clock_waits() {
+        let mut throttle = ProgressThrottle::default();
+        let mut emitted = Vec::new();
+        for elapsed_ms in [0, 0, 1, 99, 100, 101, 199, 200, 450, 451] {
+            throttle
+                .emit(
+                    &ScanStats {
+                        elapsed_ms,
+                        ..Default::default()
+                    },
+                    &mut |event| {
+                        if let ScanEvent::Progress(stats) = event {
+                            emitted.push(stats.elapsed_ms);
+                        }
+                        Ok(())
+                    },
+                )
+                .unwrap();
+        }
+        assert_eq!(emitted, [0, 100, 200, 450]);
+    }
+
+    #[test]
+    fn progress_sink_error_is_returned_without_advancing_throttle() {
+        let mut throttle = ProgressThrottle::default();
+        let stats = ScanStats {
+            elapsed_ms: 7,
+            ..Default::default()
+        };
+        let error = throttle
+            .emit(&stats, &mut |_| anyhow::bail!("sink failed"))
+            .unwrap_err();
+        assert_eq!(error.to_string(), "sink failed");
+        assert_eq!(throttle.last_elapsed_ms, None);
+        throttle.emit(&stats, &mut |_| Ok(())).unwrap();
+        assert_eq!(throttle.last_elapsed_ms, Some(7));
+    }
 }

@@ -105,3 +105,23 @@ To reproduce the current binary, use `run-manifest-v2-final.json` and new output
 python3 bench/merge_results.py bench/results/v2/regression.json bench/results/v2/performance.json bench/results/v2/regression-ours-final.json bench/results/v2/performance-ours-final.json --output bench/results/v2/regression-current.json
 python3 bench/merge_results.py bench/results/v2/holdout.json bench/results/v2/holdout-ours-final.json --output bench/results/v2/holdout-current.json
 ```
+
+## v3 iteration protocol
+
+Completed results are indexed in [v3 measured results](results/v3/README.md), including all-tool fresh-holdout quality, before/after duplicates, three throughput datasets and all six stress scenarios. The first candidate SHA-256 was `72dc62725996cb927cbd5416a867864cf815c6df34d9ff6ee4b296fd64065ee3`. A performance-only revision is frozen at `b607dd486f9a62670b0f42bb93e3739346ae4a27f1728f0be8e00851f5590239` in `manifest-optimized.json`; its complete local reruns use `*-optimized.json/md`. The observed v3 corpus is explicitly regression in this final rerun. [Final quality comparison](results/v3/fresh-holdout-current.md) combines the original competitor quality rows and final local verification without duplicating a large merged JSON. Scored TP/FP/FN stayed unchanged on all three quality sets while observed duplicate findings fell to zero. The initial 100,000-finding regression did not recur in the final batch, but overlapping timing ranges and some slower workloads do not justify a universal speedup claim.
+
+`results/v3` names the development iteration; run artifacts still use schema and scoring **v2**. The frozen `9da912a` binary is preserved as `tools/secret-scan-9da912a`, SHA-256 `9c6c2052d33d7479ae9ce998e0565e9faa9daf617826ed9b4cb1f1624872e85d`. Its manifest entry is `secret-scan-before`; `secret-scan` identifies the candidate binary. The final manifest must record the candidate's actual release hash after code freeze. No existing result artifact is overwritten.
+
+The original quality corpus and the previously inspected v2 holdout are both **regression** sets for this iteration. A separately generated, frozen v3 holdout is evaluated only after implementation freeze. Synthetic format/context independence does not establish natural-code precision or live credential validity. Every installed filesystem scanner is run on the new holdout, including tools that only report lines: ambiguous multi-candidate lines remain `unlocalized`, not guessed matches or false positives. Current competitors are reused at their pinned installed versions; this iteration does not imply their upstream versions are the latest.
+
+After compilation and other CPU-heavy work stop, use these commands with the frozen manifest and fresh output paths. The runner creates a Markdown table beside each raw JSON artifact; no duplicated merged JSON is needed.
+
+```sh
+python3 bench/run.py --manifest bench/results/v3/manifest-final.json --corpus bench/corpus-final --datasets quality --tools secret-scan-before,secret-scan --corpus-role regression --repeats 3 --timeout 60 --output bench/results/v3/regression-quality.json
+python3 bench/run.py --manifest bench/results/v3/manifest-final.json --corpus bench/corpus-holdout --datasets quality --tools secret-scan-before,secret-scan --corpus-role regression --repeats 3 --timeout 60 --output bench/results/v3/previous-holdout-regression.json
+python3 bench/run.py --manifest bench/results/v3/manifest-final.json --corpus bench/corpus-holdout-v3 --datasets quality --corpus-role holdout --repeats 3 --timeout 60 --output bench/results/v3/fresh-holdout.json
+python3 bench/run.py --manifest bench/results/v3/manifest-final.json --corpus bench/corpus-final --datasets throughput-16mib,throughput-128mib,real-regex --tools secret-scan-before,secret-scan --corpus-role regression --repeats 3 --timeout 60 --output bench/results/v3/performance.json
+python3 scripts/stress_benchmark.py --before bench/tools/secret-scan-9da912a --after target/release/secret-scan --repeats 3 --output bench/results/v3/stress-comparison.json
+```
+
+The separate stress artifact retains its existing schema 1 (it is not a quality-scoring artifact). Six synthetic scenarios compare whole versions with identical input: a newline-dense 16 MiB file, 10,000 files, 10,000 and 100,000 dense findings, and one versus 200 commits sharing a fixed tree. Each run validates exact GitHub finding coordinates and before/after detection parity. It records first finding, process wall time, peak RSS, stdout/stderr bytes and progress-event count, including median/min/max summaries. Timing includes the consumer's validation and pipe backpressure, so dense-output timings are end-to-end costs, not isolated scanner-engine throughput.

@@ -143,6 +143,15 @@ class CollectorTests(unittest.TestCase):
             self.assertEqual(trees[0], trees[1])
             self.assertEqual(len(trees[0].splitlines()), 16)
 
+    def test_summary_keeps_output_and_progress_measurements(self):
+        fields = ("wall_ms", "first_finding_ms", "peak_rss_bytes", "user_ms", "system_ms",
+                  "stdout_bytes", "stderr_bytes", "progress_records")
+        runs = [{field: value for field in fields} for value in (10, 2, 3)]
+        summary = BENCH.summarize(runs)
+        self.assertEqual(summary["runs"], runs)
+        for field in fields:
+            self.assertEqual(summary[field], {"median": 3, "min": 2, "max": 10})
+
 
 if __name__ == "__main__":
     unittest.main()

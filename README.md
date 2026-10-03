@@ -51,6 +51,15 @@ not encryption and not protection against guessing low-entropy secrets. Supply
 `--fingerprint-key-file` with exactly 32 private bytes for keyed BLAKE3 identities.
 Keep the same private key when comparing baselines.
 
+Exact matches at the same secret byte span within one decoded view are merged.
+`rule_id` identifies the primary rule: non-`generic-` IDs take precedence, then
+higher confidence, then lexical rule ID. Merged findings include sorted
+`matched_rule_ids` containing the primary and other matching rules; single-rule
+findings omit that field. Adjacent occurrences, partial overlaps and distinct
+positions inside one Base64 container stay separate. The primary rule determines
+the fingerprint. This semantic update changes the engine configuration identity,
+so previous baselines must be explicitly recreated rather than compared silently.
+
 Scanning never contacts credential providers or validates whether a credential
 is active. Filesystem scans respect ignore files by default; `--no-ignore`
 includes ignored files, while Git metadata remains excluded. Oversized inputs
@@ -131,7 +140,11 @@ reports; output errors stop further acquisition. Each worker still buffers one
 input and its findings, and Git history metadata remains resident. JSON/SARIF,
 stdin, and JSONL scans using baselines collect reports; baseline validation must
 finish before filtered results are emitted. SDK callers can use the `scan_*_stream`
-APIs with `ScanControl` and a fallible event sink.
+APIs with `ScanControl` and a fallible event sink. Regular progress is emitted at
+most once per 100 ms, with first and final snapshots retained. These are
+event-driven updates, not a heartbeat during a single long regex operation.
+The CLI flushes its first finding and each error immediately; later findings use
+buffered writes, and progress/final records flush remaining output.
 
 ## Verification and comparison
 
@@ -154,7 +167,8 @@ capabilities are retained. Online verification is disabled. These measurements
 do not establish production accuracy or universal speed leadership.
 
 Measured results: [implementation and measured findings](docs/RESULTS.md),
-[current holdout comparison](bench/results/v2/holdout-current.md),
+[current duplicate/progress iteration](bench/results/v3/README.md),
+[previous holdout comparison](bench/results/v2/holdout-current.md),
 [current regression/performance comparison](bench/results/v2/regression-current.md),
 [historical cross-tool comparison](bench/results/final.md),
 [machine-readable evidence](bench/results/final.json),

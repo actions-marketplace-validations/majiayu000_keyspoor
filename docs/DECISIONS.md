@@ -67,3 +67,25 @@ now distinguish uncertain localization from false positives and freeze an
 independently generated synthetic holdout before scoring. These decisions are
 validated with context mismatch, source identity, flow-control, protocol and
 location tests, plus whole-version stress and cross-tool measurements.
+
+
+## Exact occurrence merging and progress volume
+
+Multiple rules may describe one secret occurrence. Merge only identical secret
+byte spans inside the same decoded view, before mapping Base64 spans to their
+source container. Keep all contributing rule IDs and select the primary by
+non-generic prefix, confidence and lexical ID; keep adjacent/overlapping spans
+separate. Construct fingerprints and findings after grouping to avoid redundant
+allocation. A new engine semantic identity invalidates incompatible baselines.
+
+Progress uses the existing scan event sink with a private 100 ms throttle; no
+new public setting or task runtime is introduced. First/final progress stays,
+while first findings and errors are flushed independently at the CLI boundary.
+
+The 25 previous-holdout false positives are long descriptions assigned to
+token-like keys. Byte-level input does not establish whether such a phrase is
+documentation or an actual credential. Extending the exclusion to all long
+phrases, or only quoted/hyphenated dictionary keys, was rejected because it
+would sacrifice existing long-credential positives based on evaluation examples.
+The filter is unchanged. That observed dataset is now regression data; a new
+synthetic value/context corpus is frozen independently for this iteration.

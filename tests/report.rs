@@ -76,7 +76,9 @@ fn jsonl_escapes_records_and_marks_incomplete_summary() {
 
 #[test]
 fn sarif_preserves_locations_and_completion() {
-    let mut scan = report(vec![finding("one", "folder/a b#c.txt")]);
+    let mut merged = finding("one", "folder/a b#c.txt");
+    merged.matched_rule_ids = vec!["generic-api-key".into(), "test-rule".into()];
+    let mut scan = report(vec![merged]);
     scan.complete = false;
     scan.errors.push(ScanError {
         path: "missing".into(),
@@ -87,6 +89,10 @@ fn sarif_preserves_locations_and_completion() {
     let doc: Value = serde_json::from_slice(&out).unwrap();
     let run = &doc["runs"][0];
     assert_eq!(doc["version"], "2.1.0");
+    assert_eq!(
+        run["results"][0]["properties"]["matched_rule_ids"],
+        serde_json::json!(["generic-api-key", "test-rule"])
+    );
     assert_eq!(run["invocations"][0]["executionSuccessful"], false);
     let location = &run["results"][0]["locations"][0]["physicalLocation"];
     assert_eq!(location["artifactLocation"]["uri"], "folder/a%20b%23c.txt");
@@ -290,4 +296,44 @@ fn policy_digest_preserves_component_boundaries_and_does_not_embed_contents() {
     assert_ne!(policy_digest(&[b"ab", b"c"]), policy_digest(&[b"a", b"bc"]));
     assert_ne!(policy_digest(&[]), policy_digest(&[b""]));
     assert!(!policy_digest(&[SYNTHETIC]).contains("synthetic"));
+}
+
+#[test]
+fn streamed_errors_flush_immediately_and_preserve_flush_failures() {
+    use secret_scan::report::write_scan_event;
+    use secret_scan::scan::ScanEvent;
+    use std::io::{self, Write};
+    struct BufferedOutput {
+        pending: Vec<u8>,
+        visible: Vec<u8>,
+        fail_flush: bool,
+    }
+    impl Write for BufferedOutput {
+        fn write(&mut self, bytes: &[u8]) -> io::Result<usize> {
+            self.pending.extend_from_slice(bytes);
+            Ok(bytes.len())
+        }
+        fn flush(&mut self) -> io::Result<()> {
+            if self.fail_flush {
+                return Err(io::Error::new(io::ErrorKind::BrokenPipe, "synthetic pipe"));
+            }
+            self.visible.append(&mut self.pending);
+            Ok(())
+        }
+    }
+    let mut output = BufferedOutput {
+        pending: vec![],
+        visible: vec![],
+        fail_flush: false,
+    };
+    let event = ScanEvent::Error(ScanError {
+        path: "input".into(),
+        message: "read failed".into(),
+    });
+    write_scan_event(&event, &mut output).unwrap();
+    let record: Value = serde_json::from_slice(&output.visible).unwrap();
+    assert_eq!(record["type"], "error");
+    assert!(output.pending.is_empty());
+    output.fail_flush = true;
+    assert!(write_scan_event(&event, &mut output).is_err());
 }

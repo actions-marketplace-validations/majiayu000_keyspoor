@@ -506,7 +506,13 @@ fn multiline_assignment_only_accepts_an_immediately_following_quoted_literal() {
             .unwrap();
         let found: Vec<_> = findings
             .iter()
-            .filter(|finding| finding.rule_id.starts_with("generic-credential-"))
+            .filter(|finding| {
+                finding.rule_id.starts_with("generic-credential-")
+                    || finding
+                        .matched_rule_ids
+                        .iter()
+                        .any(|id| id.starts_with("generic-credential-"))
+            })
             .collect();
         assert_eq!(found.len(), 1);
         assert_eq!(found[0].line, 2);
@@ -939,4 +945,157 @@ fn restored_kubernetes_rule_preserves_full_match_allowlist() {
             .iter()
             .any(|finding| finding.rule_id == "kubernetes-secret-yaml")
     );
+}
+
+fn overlapping_rule_engine() -> (TempDir, Engine) {
+    custom_engine(
+        r#"{"rules":[
+        {"id":"generic-a","name":"Generic high confidence","pattern":"fixture_([A-Za-z0-9]{24})","secret_group":1,"confidence":"high"},
+        {"id":"provider-z","name":"Provider medium confidence","pattern":"fixture_([A-Za-z0-9]{24})","secret_group":1,"confidence":"medium"},
+        {"id":"provider-b","name":"Provider high confidence B","pattern":"fixture_([A-Za-z0-9]{24})","secret_group":1,"confidence":"high"},
+        {"id":"provider-a","name":"Provider high confidence A","pattern":"fixture_([A-Za-z0-9]{24})","secret_group":1,"confidence":"high"}
+    ]}"#,
+        None,
+    )
+}
+
+#[test]
+fn exact_span_merge_prefers_specific_confident_rule_and_retains_sorted_evidence() {
+    let (_dir, engine) = overlapping_rule_engine();
+    let input = format!("fixture_{TOKEN}");
+    let findings = engine.scan_bytes("settings", input.as_bytes()).unwrap();
+    assert_eq!(findings.len(), 1);
+    assert_eq!(findings[0].rule_id, "provider-a");
+    assert_eq!(
+        findings[0].matched_rule_ids,
+        ["generic-a", "provider-a", "provider-b", "provider-z"]
+    );
+    let (_single_dir, single) = custom_engine(
+        r#"{"rules":[{"id":"provider-a","name":"Provider high confidence A","pattern":"fixture_([A-Za-z0-9]{24})","secret_group":1,"confidence":"high"}]}"#,
+        None,
+    );
+    let original = single.scan_bytes("settings", input.as_bytes()).unwrap();
+    assert_eq!(original[0].fingerprint, findings[0].fingerprint);
+    assert!(original[0].matched_rule_ids.is_empty());
+    assert!(
+        !serde_json::to_string(&original)
+            .unwrap()
+            .contains("matched_rule_ids")
+    );
+    assert!(!serde_json::to_string(&findings).unwrap().contains(TOKEN));
+}
+
+#[test]
+fn exact_span_merge_preserves_adjacent_equal_and_different_values_and_partial_overlaps() {
+    let (_dir, engine) = overlapping_rule_engine();
+    let input = format!("fixture_{TOKEN} fixture_{TOKEN} fixture_Zb3dEf7hIj9kLm2nOp4qRs6t");
+    let findings = engine.scan_bytes("settings", input.as_bytes()).unwrap();
+    assert_eq!(findings.len(), 3);
+    assert_eq!(findings[0].fingerprint, findings[1].fingerprint);
+    assert_ne!(findings[1].fingerprint, findings[2].fingerprint);
+    assert!(findings.windows(2).all(|pair| pair[0].end < pair[1].start));
+    let (_other_dir, other) = custom_engine(
+        r#"{"rules":[
+        {"id":"whole","name":"Whole value","pattern":"fixture_([A-Za-z0-9]{24})","secret_group":1},
+        {"id":"part","name":"Part value","pattern":"fixture_([A-Za-z0-9]{12})","secret_group":1}
+    ]}"#,
+        None,
+    );
+    assert_eq!(
+        other
+            .scan_bytes("settings", format!("fixture_{TOKEN}").as_bytes())
+            .unwrap()
+            .len(),
+        2
+    );
+}
+
+#[test]
+fn base64_merge_preserves_equal_values_at_distinct_decoded_positions_and_source_layers() {
+    use base64::{Engine as _, engine::general_purpose};
+    let (_dir, engine) = overlapping_rule_engine();
+    let encoded = general_purpose::STANDARD.encode(format!("fixture_{TOKEN} fixture_{TOKEN}"));
+    let input = format!("fixture_{TOKEN}\n{encoded}");
+    let findings = engine.scan_bytes("settings", input.as_bytes()).unwrap();
+    assert_eq!(findings.len(), 3);
+    assert!(!findings[0].is_base64_encoded);
+    assert!(findings[1..].iter().all(|f| f.is_base64_encoded
+        && f.start == input.len() - encoded.len()
+        && f.end == input.len()));
+    assert_eq!(findings[1].fingerprint, findings[2].fingerprint);
+    assert_eq!(findings[1].matched_rule_ids.len(), 4);
+}
+
+#[test]
+fn merged_utf16_findings_retain_exact_source_coordinates() {
+    let (_dir, engine) = overlapping_rule_engine();
+    let input = format!("雪🦀\r\nfixture_{TOKEN}");
+    let bytes: Vec<u8> = [0xff, 0xfe]
+        .into_iter()
+        .chain(input.encode_utf16().flat_map(u16::to_le_bytes))
+        .collect();
+    let findings = engine.scan_bytes("settings", &bytes).unwrap();
+    assert_eq!(findings.len(), 1);
+    assert_eq!(
+        (
+            findings[0].start,
+            findings[0].end,
+            findings[0].line,
+            findings[0].column
+        ),
+        (28, 76, 2, 16)
+    );
+    assert_eq!(findings[0].matched_rule_ids.len(), 4);
+}
+
+#[test]
+fn merging_semantics_change_configuration_identity_from_v2() {
+    let (_dir, engine) = custom_engine(RULE, None);
+    let value: serde_json::Value = serde_json::from_str(RULE).unwrap();
+    let rules: Vec<secret_scan::rules::RuleSpec> =
+        serde_json::from_value(value["rules"].clone()).unwrap();
+    let config = EngineConfig::default();
+    let serialized = serde_json::to_vec(&(
+        &rules,
+        config.enable_base64,
+        config.min_entropy,
+        config.min_confidence,
+    ))
+    .unwrap();
+    let mut old = blake3::Hasher::new();
+    old.update(b"secret-scan/configuration/v2\0");
+    old.update(env!("CARGO_PKG_VERSION").as_bytes());
+    old.update(&(serialized.len() as u64).to_le_bytes());
+    old.update(&serialized);
+    old.update(b"unkeyed\0");
+    assert_ne!(engine.configuration_id(), old.finalize().to_hex().as_str());
+}
+
+#[test]
+fn single_and_multiple_candidate_paths_have_identical_plain_base64_and_utf16_findings() {
+    use base64::{Engine as _, engine::general_purpose};
+    let (_single_dir, single) = custom_engine(RULE, None);
+    let mut config: serde_json::Value = serde_json::from_str(RULE).unwrap();
+    // An unconditional, nonmatching rule forces the general merge path without
+    // changing detection evidence or primary rule selection.
+    config["rules"]
+        .as_array_mut()
+        .unwrap()
+        .push(serde_json::json!({
+            "id": "unconditional-control", "name": "Nonmatching control",
+            "pattern": "NEVER_MATCH_CONTROL", "confidence": "high"
+        }));
+    let (_multiple_dir, multiple) = custom_engine(&config.to_string(), None);
+    let encoded = general_purpose::STANDARD.encode(format!("fixture_{TOKEN} fixture_{TOKEN}"));
+    let text = format!("雪🦀\r\nfixture_{TOKEN} fixture_{TOKEN}\n{encoded}\n");
+    let utf16: Vec<_> = [0xff, 0xfe]
+        .into_iter()
+        .chain(text.encode_utf16().flat_map(u16::to_le_bytes))
+        .collect();
+    for bytes in [text.as_bytes(), utf16.as_slice()] {
+        let fast = single.scan_bytes("settings", bytes).unwrap();
+        let general = multiple.scan_bytes("settings", bytes).unwrap();
+        assert_eq!(fast.len(), 4);
+        assert_eq!(fast, general);
+    }
 }

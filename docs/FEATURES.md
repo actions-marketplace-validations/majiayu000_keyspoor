@@ -85,9 +85,9 @@
 | ID | 原候选 | 状态 | 实际边界 |
 | --- | --- | --- | --- |
 | A01 | Rust SDK | 实现 | 当前 crate 公共 API；并非已发布稳定版本承诺。 |
-| A02 | JSON/JSONL | 实现 | 版本化 ScanReport；JSONL finding/error/progress + summary。 |
+| A02 | JSON/JSONL | 实现 | 版本化 ScanReport；JSONL finding/error/progress + summary；常规进度按 100ms 节流，首末快照保留。 |
 | A03 | 默认遮盖 | 实现 | 结果无 raw secret、捕获值或源代码片段；保留调用方路径/ID。 |
-| A04 | Secret ID 与 occurrence 分离 | 部分 | 有稳定指纹、多个位置和基线代表记录；指纹含路径，不是跨路径统一 secret 实体模型。 |
+| A04 | Secret ID 与 occurrence 分离 | 部分 | 有稳定指纹、多个位置和基线代表记录；同视图精确 span 跨规则合并并保留 matched_rule_ids；指纹含主规则和路径，不是跨路径统一 secret 实体模型。 |
 | A05 | 确定性排序、指纹语义 | 实现 | 规则/路径/值指纹，行移位不变；路径或规则变化会变；可选 keyed BLAKE3。 |
 | A06 | 精确位置与转换 map | 部分 | 原始字节/UTF-16 回映/归档成员坐标；Base64 指向整个编码段，没有内部字符映射。 |
 | A07 | 命中、错误、未完成区分 | 实现 | complete/errors/exit 0、1、2；失败不伪装 clean。 |

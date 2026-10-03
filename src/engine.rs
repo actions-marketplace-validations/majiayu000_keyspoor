@@ -46,6 +46,10 @@ impl Default for EngineConfig {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Finding {
     pub rule_id: String,
+    /// Sorted rule evidence, including `rule_id`, when multiple rules matched
+    /// the same secret span in the same decoded content. Empty for single hits.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub matched_rule_ids: Vec<String>,
     pub path: String,
     /// Zero-based start byte offset in `coordinate_space`.
     pub start: usize,
@@ -76,6 +80,7 @@ impl Default for Finding {
     fn default() -> Self {
         Self {
             rule_id: String::new(),
+            matched_rule_ids: Vec::new(),
             path: String::new(),
             start: 0,
             end: 0,
@@ -235,12 +240,6 @@ impl Engine {
                 &b.fingerprint,
             ))
         });
-        findings.dedup_by(|a, b| {
-            a.rule_id == b.rule_id
-                && a.start == b.start
-                && a.end == b.end
-                && a.fingerprint == b.fingerprint
-        });
         Ok(findings)
     }
 
@@ -252,6 +251,9 @@ impl Engine {
         container: Option<(usize, usize)>,
         out: &mut Vec<Finding>,
     ) {
+        // Coordinates here refer to one content view, before Base64/UTF-16
+        // mapping. Equal spans therefore mean equal bytes and provenance.
+        let mut matches = Vec::new();
         let mut candidates = vec![false; self.rules.len()];
         for &id in &self.unconditional {
             candidates[id] = true;
@@ -263,6 +265,7 @@ impl Engine {
                 }
             }
         }
+        let single_candidate = candidates.iter().filter(|&&active| active).take(2).count() == 1;
         for (id, rule) in self.rules.iter().enumerate() {
             if !candidates[id]
                 || rule
@@ -325,30 +328,95 @@ impl Engine {
                 {
                     continue;
                 }
-                let (start, end) = container.unwrap_or((secret.start(), secret.end()));
-                let encoding = if container.is_some() {
-                    "; detected inside Base64 content"
+                if single_candidate {
+                    // captures_iter has non-overlapping matches. A single rule
+                    // cannot yield duplicate nonempty spans in this content view.
+                    out.push(self.make_finding(
+                        rule,
+                        path,
+                        identity,
+                        value,
+                        container.unwrap_or((secret.start(), secret.end())),
+                        container.is_some(),
+                    ));
                 } else {
-                    ""
-                };
-                out.push(Finding {
-                    rule_id: rule.spec.id.clone(),
-                    path: path.to_owned(),
-                    start,
-                    end,
-                    line: 0,
-                    column: 0,
-                    redacted: REDACTED.into(),
-                    fingerprint: self.fingerprint(&rule.spec.id, identity, value),
-                    explanation: format!(
-                        "Matched {} ({} confidence){}; not live-validated",
-                        rule.spec.name, rule.spec.confidence, encoding
-                    ),
-                    confidence: rule.spec.confidence.to_string(),
-                    is_base64_encoded: container.is_some(),
-                    coordinate_space: source_coordinates(),
-                });
+                    matches.push((secret.start(), secret.end(), id));
+                }
             }
+        }
+        // Prefer a provider-specific rule, then confidence, then rule ID. This
+        // selects a deterministic primary fingerprint without losing rule evidence.
+        matches.sort_by(|a, b| {
+            let rank = |index: usize| {
+                let spec = &self.rules[index].spec;
+                (
+                    spec.id.starts_with("generic-"),
+                    std::cmp::Reverse(spec.confidence),
+                    &spec.id,
+                )
+            };
+            (a.0, a.1, rank(a.2)).cmp(&(b.0, b.1, rank(b.2)))
+        });
+        let mut matches = matches.into_iter().peekable();
+        while let Some((secret_start, secret_end, id)) = matches.next() {
+            let rule = &self.rules[id];
+            let mut matched_rule_ids = Vec::new();
+            while let Some(&(next_start, next_end, next_id)) = matches.peek() {
+                if (secret_start, secret_end) != (next_start, next_end) {
+                    break;
+                }
+                if matched_rule_ids.is_empty() {
+                    matched_rule_ids.push(rule.spec.id.clone());
+                }
+                matched_rule_ids.push(self.rules[next_id].spec.id.clone());
+                matches.next();
+            }
+            matched_rule_ids.sort_unstable();
+            matched_rule_ids.dedup();
+            let mut finding = self.make_finding(
+                rule,
+                path,
+                identity,
+                &bytes[secret_start..secret_end],
+                container.unwrap_or((secret_start, secret_end)),
+                container.is_some(),
+            );
+            finding.matched_rule_ids = matched_rule_ids;
+            out.push(finding);
+        }
+    }
+
+    fn make_finding(
+        &self,
+        rule: &CompiledRule,
+        path: &str,
+        identity: &str,
+        value: &[u8],
+        (start, end): (usize, usize),
+        is_base64_encoded: bool,
+    ) -> Finding {
+        let encoding = if is_base64_encoded {
+            "; detected inside Base64 content"
+        } else {
+            ""
+        };
+        Finding {
+            rule_id: rule.spec.id.clone(),
+            matched_rule_ids: Vec::new(),
+            path: path.to_owned(),
+            start,
+            end,
+            line: 0,
+            column: 0,
+            redacted: REDACTED.into(),
+            fingerprint: self.fingerprint(&rule.spec.id, identity, value),
+            explanation: format!(
+                "Matched {} ({} confidence){}; not live-validated",
+                rule.spec.name, rule.spec.confidence, encoding
+            ),
+            confidence: rule.spec.confidence.to_string(),
+            is_base64_encoded,
+            coordinate_space: source_coordinates(),
         }
     }
 
@@ -539,7 +607,7 @@ fn configuration_id(rules: &[CompiledRule], config: &EngineConfig) -> Result<Str
     let serialized =
         serde_json::to_vec(&settings).context("serializing rule configuration identity")?;
     let mut digest = blake3::Hasher::new();
-    digest.update(b"secret-scan/configuration/v2\0");
+    digest.update(b"secret-scan/configuration/v3\0");
     digest.update(env!("CARGO_PKG_VERSION").as_bytes());
     digest.update(&(serialized.len() as u64).to_le_bytes());
     digest.update(&serialized);

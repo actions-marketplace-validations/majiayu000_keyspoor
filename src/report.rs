@@ -49,7 +49,7 @@ pub fn write_report(
     Ok(())
 }
 
-/// Write a redacted event; progress flushes completed file results to the caller.
+/// Write a redacted event; progress and errors flush buffered output.
 pub fn write_scan_event(event: &ScanEvent, mut writer: impl Write) -> Result<()> {
     let value = match event {
         ScanEvent::Finding(finding) => json!({"type":"finding", "finding":finding}),
@@ -58,7 +58,7 @@ pub fn write_scan_event(event: &ScanEvent, mut writer: impl Write) -> Result<()>
     };
     serde_json::to_writer(&mut writer, &value)?;
     writer.write_all(b"\n")?;
-    if matches!(event, ScanEvent::Progress(_)) {
+    if matches!(event, ScanEvent::Progress(_) | ScanEvent::Error(_)) {
         writer.flush()?;
     }
     Ok(())
@@ -108,6 +108,7 @@ fn write_sarif(report: &ScanReport, mut writer: impl Write) -> Result<()> {
                     "start": finding.start, "end": finding.end, "column": finding.column,
                     "coordinate_space": finding.coordinate_space,
                     "confidence": finding.confidence,
+                    "matched_rule_ids": finding.matched_rule_ids,
                     "is_base64_encoded": finding.is_base64_encoded,
                 }
             })

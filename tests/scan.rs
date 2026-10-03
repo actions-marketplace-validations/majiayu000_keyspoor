@@ -726,3 +726,100 @@ fn removing_nested_vcs_boundary_changes_context_with_unchanged_ignore_contents()
         );
     }
 }
+
+fn assert_throttled_progress(
+    progress: &[secret_scan::ScanStats],
+    summary: &secret_scan::scan::ScanSummary,
+) {
+    assert!(!progress.is_empty());
+    let final_stats = progress.last().unwrap();
+    assert_eq!(
+        serde_json::to_value(final_stats).unwrap(),
+        serde_json::to_value(&summary.stats).unwrap()
+    );
+    // The final snapshot is mandatory even when less than 100 ms has passed.
+    for pair in progress[..progress.len() - 1].windows(2) {
+        assert!(pair[1].elapsed_ms.saturating_sub(pair[0].elapsed_ms) >= 100);
+    }
+}
+
+#[test]
+fn filesystem_progress_is_throttled_without_losing_findings_or_final_stats() {
+    use secret_scan::scan::{ScanControl, ScanEvent, scan_paths_stream};
+    let dir = TempDir::new().unwrap();
+    let rules = TempDir::new().unwrap();
+    let engine = engine(rules.path(), None);
+    for index in 0..128 {
+        fs::write(dir.path().join(format!("{index}.txt")), FIXTURE).unwrap();
+    }
+    let mut progress = Vec::new();
+    let mut findings = 0;
+    let summary = scan_paths_stream(
+        &engine,
+        &[dir.path().to_path_buf()],
+        &ScanOptions::default(),
+        &ScanControl::default(),
+        &mut |event| {
+            match event {
+                ScanEvent::Finding(_) => findings += 1,
+                ScanEvent::Progress(stats) => progress.push(stats),
+                ScanEvent::Error(error) => panic!("unexpected scan error: {error:?}"),
+            }
+            Ok(())
+        },
+    )
+    .unwrap();
+    assert!(summary.complete);
+    assert_eq!(summary.stats.files, 128);
+    assert_eq!(findings, 128);
+    assert_eq!(summary.finding_count, findings);
+    assert_eq!(progress.first().unwrap().files, 1);
+    assert_throttled_progress(&progress, &summary);
+}
+
+#[test]
+fn git_metadata_and_blob_progress_share_one_throttle_and_keep_final_stats() {
+    use secret_scan::scan::{ScanControl, ScanEvent, scan_history_stream, scan_staged_stream};
+    let dir = repo();
+    let rules = TempDir::new().unwrap();
+    let engine = engine(rules.path(), None);
+    for index in 0..3 {
+        fs::write(dir.path().join(format!("{index}.txt")), FIXTURE).unwrap();
+        git(dir.path(), &["add", "."]);
+        git(dir.path(), &["commit", "-qm", "synthetic snapshot"]);
+    }
+    for staged in [false, true] {
+        if staged {
+            fs::write(dir.path().join("staged.txt"), FIXTURE).unwrap();
+            git(dir.path(), &["add", "."]);
+        }
+        let mut progress = Vec::new();
+        let mut findings = 0;
+        let mut sink = |event| {
+            match event {
+                ScanEvent::Finding(_) => findings += 1,
+                ScanEvent::Progress(stats) => progress.push(stats),
+                ScanEvent::Error(error) => panic!("unexpected scan error: {error:?}"),
+            }
+            Ok(())
+        };
+        let scan = if staged {
+            scan_staged_stream
+        } else {
+            scan_history_stream
+        };
+        let summary = scan(
+            &engine,
+            dir.path(),
+            &ScanOptions::default(),
+            &ScanControl::default(),
+            &mut sink,
+        )
+        .unwrap();
+        assert!(summary.complete);
+        assert_eq!(findings, if staged { 1 } else { 6 });
+        assert_eq!(summary.finding_count, findings);
+        assert_eq!(progress.first().unwrap().files, u64::from(staged));
+        assert_throttled_progress(&progress, &summary);
+    }
+}

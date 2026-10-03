@@ -315,7 +315,8 @@ def measure(binary, case, threads, timeout):
 
 def summarize(runs):
     summary = {"runs": runs}
-    for field in ("wall_ms", "first_finding_ms", "peak_rss_bytes", "user_ms", "system_ms"):
+    for field in ("wall_ms", "first_finding_ms", "peak_rss_bytes", "user_ms", "system_ms",
+                  "stdout_bytes", "stderr_bytes", "progress_records"):
         values = [run[field] for run in runs]
         summary[field] = {"median": statistics.median(values), "min": min(values), "max": max(values)}
     return summary
@@ -335,6 +336,8 @@ def main():
     parser.add_argument("--cases", nargs="+", choices=["newline", "manyfiles", "dense", "git"],
                         default=["newline", "manyfiles", "dense", "git"])
     args = parser.parse_args()
+    if args.output.exists():
+        parser.error("output already exists; choose a new path to preserve prior measurements")
     if platform.system() != "Darwin" or not hasattr(os, "wait4"):
         parser.error("requires macOS wait4; RSS is recorded in bytes")
     if min(args.many_files, args.git_commits, args.repeats, args.threads, args.timeout, *args.dense_counts) <= 0:
