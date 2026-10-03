@@ -1,6 +1,7 @@
 use secret_scan::baseline::Baseline;
 use secret_scan::context::{ScanContext, policy_digest};
-use secret_scan::report::{OutputFormat, write_report};
+use secret_scan::report::{OutputFormat, write_report, write_scan_event, write_scan_summary};
+use secret_scan::scan::{ScanEvent, ScanSummary};
 use secret_scan::{Finding, ScanError, ScanReport, ScanStats};
 use serde_json::Value;
 
@@ -72,6 +73,148 @@ fn jsonl_escapes_records_and_marks_incomplete_summary() {
     );
     assert!(records[2].get("errors").is_none());
     assert!(!text.contains("\"raw\""));
+}
+
+#[test]
+fn streamed_jsonl_preserves_every_event_payload_and_optional_field() {
+    let plain = finding("one", "路径/\"file\"\n.txt");
+    let mut merged = plain.clone();
+    merged.matched_rule_ids = vec!["generic-api-key".into(), "test-rule".into()];
+    let events = [
+        ScanEvent::Finding(plain),
+        ScanEvent::Finding(merged),
+        ScanEvent::Error(ScanError {
+            path: "failed\npath".into(),
+            message: "synthetic \"error\"".into(),
+        }),
+        ScanEvent::Progress(report(vec![]).stats),
+    ];
+    for event in &events {
+        let expected = match event {
+            ScanEvent::Finding(finding) => serde_json::json!({"type":"finding", "finding":finding}),
+            ScanEvent::Error(error) => serde_json::json!({"type":"error", "error":error}),
+            ScanEvent::Progress(stats) => serde_json::json!({"type":"progress", "stats":stats}),
+        };
+        let mut output = Vec::new();
+        write_scan_event(event, &mut output).unwrap();
+        assert_eq!(serde_json::from_slice::<Value>(&output).unwrap(), expected);
+        assert_eq!(output.iter().filter(|&&byte| byte == b'\n').count(), 1);
+    }
+    let mut output = Vec::new();
+    write_scan_event(&events[0], &mut output).unwrap();
+    let plain: Value = serde_json::from_slice(&output).unwrap();
+    assert!(plain["finding"].get("matched_rule_ids").is_none());
+}
+
+#[test]
+fn streamed_summary_matches_collected_report_with_and_without_context() {
+    for context in [None, report(vec![]).context] {
+        let mut scan = report(vec![finding("one", "a")]);
+        scan.context = context;
+        scan.complete = false;
+        scan.errors.push(ScanError {
+            path: "failed".into(),
+            message: "unreadable".into(),
+        });
+        let summary = ScanSummary {
+            complete: scan.complete,
+            finding_count: scan.findings.len() as u64,
+            error_count: scan.errors.len() as u64,
+            stats: scan.stats.clone(),
+            context: scan.context.clone(),
+        };
+        let expected = serde_json::json!({
+            "type":"summary", "schema_version":1, "complete":summary.complete,
+            "finding_count":summary.finding_count, "error_count":summary.error_count,
+            "stats":summary.stats, "context":summary.context,
+        });
+        let mut stream = Vec::new();
+        write_scan_event(&ScanEvent::Finding(scan.findings[0].clone()), &mut stream).unwrap();
+        write_scan_event(&ScanEvent::Error(scan.errors[0].clone()), &mut stream).unwrap();
+        let summary_start = stream.len();
+        write_scan_summary(&summary, &mut stream).unwrap();
+        assert_eq!(
+            serde_json::from_slice::<Value>(&stream[summary_start..]).unwrap(),
+            expected
+        );
+        let mut collected = Vec::new();
+        write_report(&scan, OutputFormat::Jsonl, &mut collected).unwrap();
+        assert_eq!(stream, collected);
+    }
+}
+
+#[test]
+fn jsonl_preserves_write_newline_and_flush_failure_contracts() {
+    use std::io::{self, Write};
+
+    #[derive(Default)]
+    struct Output {
+        bytes: Vec<u8>,
+        fail_after: Option<usize>,
+        fail_flush: bool,
+        flushes: usize,
+    }
+    impl Write for Output {
+        fn write(&mut self, bytes: &[u8]) -> io::Result<usize> {
+            let remaining = self.fail_after.unwrap_or(usize::MAX) - self.bytes.len();
+            if remaining == 0 {
+                return Err(io::Error::new(io::ErrorKind::BrokenPipe, "synthetic write"));
+            }
+            let count = bytes.len().min(remaining);
+            self.bytes.extend_from_slice(&bytes[..count]);
+            Ok(count)
+        }
+        fn flush(&mut self) -> io::Result<()> {
+            self.flushes += 1;
+            if self.fail_flush {
+                return Err(io::Error::new(io::ErrorKind::BrokenPipe, "synthetic flush"));
+            }
+            Ok(())
+        }
+    }
+    let events = [
+        Some(ScanEvent::Finding(finding("one", "a"))),
+        Some(ScanEvent::Error(ScanError {
+            path: "failed".into(),
+            message: "unreadable".into(),
+        })),
+        Some(ScanEvent::Progress(ScanStats::default())),
+        None,
+    ];
+    for event in &events {
+        let write = |output: &mut Output| match event {
+            Some(event) => write_scan_event(event, output),
+            None => write_scan_summary(&ScanSummary::default(), output),
+        };
+        let flushes = usize::from(!matches!(event, Some(ScanEvent::Finding(_))));
+        let mut output = Output::default();
+        write(&mut output).unwrap();
+        assert_eq!(output.flushes, flushes);
+        for fail_after in [0, output.bytes.len() - 1] {
+            let mut failed = Output {
+                fail_after: Some(fail_after),
+                ..Default::default()
+            };
+            let error = write(&mut failed).unwrap_err();
+            assert!(error.to_string().contains("synthetic write"));
+            assert_eq!(failed.flushes, 0);
+        }
+        let mut failed = Output {
+            fail_flush: true,
+            ..Default::default()
+        };
+        let result = write(&mut failed);
+        assert_eq!(failed.flushes, flushes);
+        if flushes == 0 {
+            result.unwrap();
+        } else {
+            let error = result.unwrap_err();
+            assert_eq!(
+                error.downcast_ref::<io::Error>().unwrap().kind(),
+                io::ErrorKind::BrokenPipe
+            );
+        }
+    }
 }
 
 #[test]

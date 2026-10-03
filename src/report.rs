@@ -2,16 +2,51 @@
 use std::{collections::BTreeMap, io::Write};
 
 use anyhow::Result;
+use serde::Serialize;
 use serde_json::json;
 
-use crate::ScanReport;
+use crate::context::ScanContext;
 use crate::scan::{ScanEvent, ScanSummary};
+use crate::{Finding, ScanError, ScanReport, ScanStats};
 
 #[derive(Debug, Clone, Copy)]
 pub enum OutputFormat {
     Json,
     Jsonl,
     Sarif,
+}
+
+#[derive(Serialize)]
+#[serde(tag = "type", rename_all = "lowercase")]
+enum JsonlRecord<'a> {
+    Finding {
+        finding: &'a Finding,
+    },
+    Error {
+        error: &'a ScanError,
+    },
+    Progress {
+        stats: &'a ScanStats,
+    },
+    Summary {
+        schema_version: u8,
+        complete: bool,
+        finding_count: u64,
+        error_count: u64,
+        stats: &'a ScanStats,
+        context: &'a Option<ScanContext>,
+    },
+}
+
+impl JsonlRecord<'_> {
+    fn write(&self, mut writer: impl Write) -> Result<()> {
+        serde_json::to_writer(&mut writer, self)?;
+        writer.write_all(b"\n")?;
+        if !matches!(self, Self::Finding { .. }) {
+            writer.flush()?;
+        }
+        Ok(())
+    }
 }
 
 /// Write a report, preserving incomplete status and propagating output failures.
@@ -27,21 +62,20 @@ pub fn write_report(
         }
         OutputFormat::Jsonl => {
             for finding in &report.findings {
-                write_scan_event(&ScanEvent::Finding(finding.clone()), &mut writer)?;
+                JsonlRecord::Finding { finding }.write(&mut writer)?;
             }
             for error in &report.errors {
-                write_scan_event(&ScanEvent::Error(error.clone()), &mut writer)?;
+                JsonlRecord::Error { error }.write(&mut writer)?;
             }
-            write_scan_summary(
-                &ScanSummary {
-                    complete: report.complete,
-                    finding_count: report.findings.len() as u64,
-                    error_count: report.errors.len() as u64,
-                    stats: report.stats.clone(),
-                    context: report.context.clone(),
-                },
-                &mut writer,
-            )?;
+            JsonlRecord::Summary {
+                schema_version: 1,
+                complete: report.complete,
+                finding_count: report.findings.len() as u64,
+                error_count: report.errors.len() as u64,
+                stats: &report.stats,
+                context: &report.context,
+            }
+            .write(&mut writer)?;
         }
         OutputFormat::Sarif => write_sarif(report, &mut writer)?,
     }
@@ -50,33 +84,26 @@ pub fn write_report(
 }
 
 /// Write a redacted event; progress and errors flush buffered output.
-pub fn write_scan_event(event: &ScanEvent, mut writer: impl Write) -> Result<()> {
-    let value = match event {
-        ScanEvent::Finding(finding) => json!({"type":"finding", "finding":finding}),
-        ScanEvent::Error(error) => json!({"type":"error", "error":error}),
-        ScanEvent::Progress(stats) => json!({"type":"progress", "stats":stats}),
-    };
-    serde_json::to_writer(&mut writer, &value)?;
-    writer.write_all(b"\n")?;
-    if matches!(event, ScanEvent::Progress(_) | ScanEvent::Error(_)) {
-        writer.flush()?;
+pub fn write_scan_event(event: &ScanEvent, writer: impl Write) -> Result<()> {
+    match event {
+        ScanEvent::Finding(finding) => JsonlRecord::Finding { finding },
+        ScanEvent::Error(error) => JsonlRecord::Error { error },
+        ScanEvent::Progress(stats) => JsonlRecord::Progress { stats },
     }
-    Ok(())
+    .write(writer)
 }
 
 /// Finish a JSONL stream without retaining findings or errors in memory.
-pub fn write_scan_summary(summary: &ScanSummary, mut writer: impl Write) -> Result<()> {
-    serde_json::to_writer(
-        &mut writer,
-        &json!({
-            "type":"summary", "schema_version":1, "complete":summary.complete,
-            "finding_count":summary.finding_count, "error_count":summary.error_count,
-            "stats":summary.stats, "context":summary.context,
-        }),
-    )?;
-    writer.write_all(b"\n")?;
-    writer.flush()?;
-    Ok(())
+pub fn write_scan_summary(summary: &ScanSummary, writer: impl Write) -> Result<()> {
+    JsonlRecord::Summary {
+        schema_version: 1,
+        complete: summary.complete,
+        finding_count: summary.finding_count,
+        error_count: summary.error_count,
+        stats: &summary.stats,
+        context: &summary.context,
+    }
+    .write(writer)
 }
 
 fn write_sarif(report: &ScanReport, mut writer: impl Write) -> Result<()> {
