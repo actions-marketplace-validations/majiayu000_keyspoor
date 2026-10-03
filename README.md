@@ -22,7 +22,7 @@ npm install -g keyspoor
 keyspoor scan . --format jsonl
 ```
 
-Initial release: **0.1.0**. The Rust API is pre-1.0 and may change. The npm
+Initial release: **0.1.1**. The Rust API is pre-1.0 and may change. The npm
 package bundles native binaries for macOS (Apple Silicon/Intel), Linux GNU
 (ARM64/x64) and Windows x64; it is a CLI launcher, not a JavaScript scanning SDK.
 There are no install hooks or runtime binary downloads.

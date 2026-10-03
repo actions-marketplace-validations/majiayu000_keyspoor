@@ -25,7 +25,7 @@ keyspoor scan . --format sarif
 keyspoor mcp --root /path/to/project
 ```
 
-初始版本为 **0.1.0**，Rust API 仍可能发生破坏性变更。npm 包内置 macOS
+初始版本为 **0.1.1**，Rust API 仍可能发生破坏性变更。npm 包内置 macOS
 Apple Silicon/Intel、Linux GNU ARM64/x64、Windows x64 的原生二进制，
 没有安装脚本或运行时二进制下载；它是 CLI 启动器，不是 JavaScript SDK。
 也可从 [GitHub Releases](https://github.com/majiayu000/keyspoor/releases)

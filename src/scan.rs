@@ -353,6 +353,8 @@ fn file_job(path: PathBuf, root: &Path) -> Result<FileJob> {
         .to_str()
         .context("filesystem path is not UTF-8")?
         .to_owned();
+    #[cfg(windows)]
+    let display = display.replace('\\', "/");
     let identity = path
         .to_str()
         .context("filesystem path is not UTF-8")?
