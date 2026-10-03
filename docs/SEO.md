@@ -14,8 +14,8 @@ tradeoffs are recorded in [DECISIONS.md](DECISIONS.md).
 | crates.io | 0.1.1 published, latest API version verified; fresh registry install passes clean/finding/error exits and redaction | [Crate](https://crates.io/crates/keyspoor) |
 | Rust API docs | Version 0.1.1 returns HTTP 200 | [docs.rs](https://docs.rs/keyspoor/0.1.1/keyspoor/) |
 | npm distribution | Real five-platform tarball, 8,959,704 bytes, installed successfully from public GitHub URL with scripts disabled | [Tarball](https://github.com/majiayu000/keyspoor/releases/download/v0.1.1/keyspoor-0.1.1.tgz) |
-| npm registry | **Not published**: actual publish returned E404 (not found or no permission); `npm whoami` returned 401 | Authenticate with `npm login`, then publish the verified tarball; see [release guide](RELEASING.md) |
-| Project homepage | HTTP 200; v0.1.1 content and registry-pending notice verified | [Website](https://majiayu000.github.io/keyspoor/) |
+| npm registry | **0.1.1 published** by lifcc after browser authentication; fresh registry installation with scripts disabled passes exits 0/1/2 and redaction | [npm package](https://www.npmjs.com/package/keyspoor) |
+| Project homepage | HTTP 200; v0.1.1 content verified; installation links updated to the published npm package | [Website](https://majiayu000.github.io/keyspoor/) |
 | Search Console / Google indexing | **Unverified**; no authenticated property access or indexing submission performed | Crawlable content is not proof of indexing or ranking |
 
 The Rust release commit is `eb1df810ae0368bf7f7495c3d501b21deafb30b8`.
@@ -28,8 +28,13 @@ crates.io 0.1.0 was uploaded earlier; 0.1.1 is the corrected current version.
 
 Published crate SHA-256:
 `c5d9dec419f9065100abce1ea1f24aad5a2edb51204293269a0b8b7e68ea2fb7`.
-Published npm tarball SHA-256:
+GitHub-hosted npm tarball SHA-256:
 `d189b9aaf65de5d506aede097503d3bc83146e15e4fa7f69b9eadcc11a2f1d00`.
+npm registry tarball SHA-256:
+`96f4efca974587b917771782a2a2edbb46a03e8b2c77327b895911f3481d0792`.
+The registry tarball differs from the earlier GitHub tarball only in README
+installation instructions; all five binaries, launcher and metadata match.
+
 All release binary hashes and license files were verified against SHA256SUMS;
 the tarball was added to the same checksum manifest after assembly.
 
@@ -58,6 +63,6 @@ the tarball was added to the same checksum manifest after assembly.
   `secret-scan` names and binary hashes are preserved; no fastest-tool or
   production-accuracy claims were introduced.
 
-The remaining registry step needs publisher authentication/permission. Google
-indexing requires separate verification through Search Console or observed
+All three distribution surfaces (GitHub, crates.io and npm) are published.
+Google indexing requires separate verification through Search Console or observed
 search results; no property verification file or indexing request was invented.
