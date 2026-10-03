@@ -1186,3 +1186,144 @@ fn single_and_multiple_candidate_paths_have_identical_plain_base64_and_utf16_fin
         assert_eq!(fast, general);
     }
 }
+
+#[test]
+fn fixed_offset_keyword_gate_matches_unconditional_regex() {
+    let cases: &[(&str, &[&str], &str)] = &[
+        (
+            r"\b(pat[A-Za-z0-9]{3}\.[a-f0-9]{8})\b",
+            &["pat"],
+            "patAb3.1a2b3c4d",
+        ),
+        (r"(pat)([A-Z]{2})::([0-9]{4,})", &["pat"], "patAZ::12345"),
+        (r"pat(?:AB|CD)\.[a-f0-9]{8}", &["pat"], "patCD.1a2b3c4d"),
+        (r"pat[A-Z]+\.[a-f0-9]{8}", &["pat"], "patABCDE.1a2b3c4d"),
+        (
+            r"(?:pat|key)[A-Z]{2}\.[a-f0-9]{8}",
+            &["pat", "key"],
+            "keyAZ.1a2b3c4d",
+        ),
+        (r"(?i:pat)[A-Z]{2}\.[a-f0-9]{8}", &["pat"], "PaTAZ.1a2b3c4d"),
+        (r"pat(?u:[é日])\.[a-f0-9]{8}", &["pat"], "pat日.1a2b3c4d"),
+        (r"pat(?u:[éê])\.[a-f0-9]{8}", &["pat"], "paté.1a2b3c4d"),
+        (
+            r"(?m)^pat[A-Z]{2}\.[a-f0-9]{8}$",
+            &["pat"],
+            "patAZ.1a2b3c4d",
+        ),
+        (
+            r"()\b(pat[A-Z]{2}\.[a-f0-9]{8})\b",
+            &["pat", "document"],
+            "patAZ.1a2b3c4d",
+        ),
+        (r"(aba)[A-Z]{2}\.[a-f0-9]{8}", &["aba"], "abaAZ.1a2b3c4d"),
+    ];
+    let mut state = 0x7139_8abc_u32;
+    for (pattern, keywords, positive) in cases {
+        let mut spec = serde_json::json!({"rules": [{
+            "id":"candidate-differential", "name":"Synthetic candidate differential",
+            "pattern":pattern, "keywords":keywords, "confidence":"high"
+        }]});
+        let (_guard_dir, guarded) = custom_engine(&spec.to_string(), None);
+        // Removing keyword gates gives an independent full-regex oracle with
+        // identical captures, filters, fingerprints and decoded-view mapping.
+        spec["rules"][0]["keywords"] = serde_json::json!([]);
+        let (_full_dir, full) = custom_engine(&spec.to_string(), None);
+        assert!(
+            !full
+                .scan_bytes("fixture", positive.as_bytes())
+                .unwrap()
+                .is_empty()
+        );
+        for trial in 0..32 {
+            let mut input = Vec::new();
+            for _ in 0..64 {
+                state = state.wrapping_mul(1664525).wrapping_add(1013904223);
+                input.extend_from_slice(match state % 5 {
+                    0 => b"pat",
+                    1 => b"PATno_separator ",
+                    2 => b"abababa",
+                    3 => b"patABx.0123 ",
+                    _ => b"\xff.\r\n",
+                });
+            }
+            if trial % 3 != 0 {
+                input.extend_from_slice(b"\n");
+                input.extend_from_slice(positive.as_bytes());
+                input.extend_from_slice(b"\n");
+                input.extend_from_slice(positive.as_bytes());
+            }
+            if trial % 2 == 0 {
+                input.extend_from_slice(b"\npat"); // Truncated last candidate.
+            }
+            assert_eq!(
+                guarded.scan_bytes("fixture", &input).unwrap(),
+                full.scan_bytes("fixture", &input).unwrap(),
+                "pattern {pattern}, trial {trial}"
+            );
+        }
+    }
+}
+
+#[test]
+fn fixed_offset_keyword_gate_preserves_decoded_views_and_custom_override() {
+    use base64::{Engine as _, engine::general_purpose};
+    // Deliberately reuse the provider ID with an unrelated custom format.
+    let mut spec = serde_json::json!({"rules": [{
+        "id":"airtable-personnal-access-token", "name":"Synthetic override",
+        "pattern":r"\b(custom_[A-Z0-9]{8}\.[a-f0-9]{16})\b",
+        "keywords":["custom_"], "confidence":"high"
+    }]});
+    let (_guard_dir, guarded) = custom_engine(&spec.to_string(), None);
+    spec["rules"][0]["keywords"] = serde_json::json!([]);
+    let (_full_dir, full) = custom_engine(&spec.to_string(), None);
+    let token = "custom_A1B2C3D4.0123456789abcdef";
+    let encoded = general_purpose::STANDARD.encode(format!("{token} {token}"));
+    let text = format!(
+        "雪🦀\r\n{}\n{token} {token}\n{encoded}\ncustom_",
+        "custom_wrong ".repeat(100)
+    );
+    let utf16: Vec<_> = [0xff, 0xfe]
+        .into_iter()
+        .chain(text.encode_utf16().flat_map(u16::to_le_bytes))
+        .collect();
+    for bytes in [text.as_bytes(), utf16.as_slice()] {
+        let expected = full.scan_bytes("fixture", bytes).unwrap();
+        assert_eq!(expected.len(), 4);
+        assert_eq!(guarded.scan_bytes("fixture", bytes).unwrap(), expected);
+    }
+}
+
+#[test]
+fn fixed_offset_keyword_gate_keeps_late_airtable_matches() {
+    let guarded = Engine::new(EngineConfig::default()).unwrap();
+    let mut catalog: serde_json::Value =
+        serde_json::from_str(include_str!("../src/builtin_rules.json")).unwrap();
+    let mut rule = catalog["rules"]
+        .as_array_mut()
+        .unwrap()
+        .iter()
+        .find(|rule| rule["id"] == "airtable-personnal-access-token")
+        .unwrap()
+        .clone();
+    rule["keywords"] = serde_json::json!([]);
+    let directory = tempfile::tempdir().unwrap();
+    let path = directory.path().join("override.json");
+    std::fs::write(&path, serde_json::json!({"rules":[rule]}).to_string()).unwrap();
+    let full = Engine::new(EngineConfig {
+        custom_rule_paths: vec![path],
+        ..Default::default()
+    })
+    .unwrap();
+    let token = format!("patAb3dEf7hIj9kLm.{}", "0123456789abcdef".repeat(4));
+    for source in [
+        token.clone(),
+        format!("{}\n{token}", "path pattern PATwrong ".repeat(1000)),
+        format!("{token}\n{}\n{token}\npat", "path pattern ".repeat(1000)),
+    ] {
+        assert_eq!(
+            guarded.scan_bytes("fixture", source.as_bytes()).unwrap(),
+            full.scan_bytes("fixture", source.as_bytes()).unwrap()
+        );
+    }
+}

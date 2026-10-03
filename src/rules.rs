@@ -3,7 +3,7 @@ use std::{
     collections::{BTreeMap, HashMap},
     fmt,
     path::{Path, PathBuf},
-    sync::Arc,
+    sync::{Arc, OnceLock},
 };
 
 use aho_corasick::AhoCorasick;
@@ -12,6 +12,7 @@ use regex::{
     Regex,
     bytes::{Regex as BytesRegex, RegexBuilder},
 };
+use regex_syntax::hir::{Hir, HirKind};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Copy, Default, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
@@ -146,6 +147,95 @@ pub(crate) struct CompiledRule {
     pub path: Option<Regex>,
     pub allowlist: Vec<CompiledAllowlist>,
     pub exclude_paths: Vec<Arc<Regex>>,
+    keyword_suffix: OnceLock<Option<KeywordSuffix>>,
+}
+
+impl CompiledRule {
+    pub fn keyword_matches(&self, bytes: &[u8], keyword_start: usize) -> bool {
+        self.keyword_suffix
+            .get_or_init(|| keyword_suffix(&self.spec.pattern, &self.spec.keywords))
+            .as_ref()
+            .is_none_or(|suffix| suffix.matches(bytes, keyword_start))
+    }
+}
+
+#[derive(Debug, PartialEq, Eq)]
+struct KeywordSuffix {
+    offset: usize,
+    literal: Box<[u8]>,
+}
+
+impl KeywordSuffix {
+    pub fn matches(&self, bytes: &[u8], keyword_start: usize) -> bool {
+        keyword_start
+            .checked_add(self.offset)
+            .and_then(|start| {
+                start
+                    .checked_add(self.literal.len())
+                    .and_then(|end| bytes.get(start..end))
+            })
+            .is_some_and(|candidate| candidate == self.literal.as_ref())
+    }
+}
+
+fn keyword_suffix(pattern: &str, keywords: &[String]) -> Option<KeywordSuffix> {
+    if keywords.is_empty() || keywords.iter().any(String::is_empty) {
+        return None;
+    }
+    let hir = regex_syntax::ParserBuilder::new()
+        .unicode(false)
+        .utf8(false)
+        .build()
+        .parse(pattern)
+        .ok()?;
+    let mut parts = Vec::new();
+    flatten_concat(&hir, &mut parts);
+    let mut parts = parts.into_iter();
+    let HirKind::Literal(prefix) = parts.next()?.kind() else {
+        return None;
+    };
+    if prefix.0.is_empty()
+        || !keywords
+            .iter()
+            .all(|keyword| keyword.as_bytes().eq_ignore_ascii_case(&prefix.0))
+    {
+        return None;
+    }
+    // Every match starts with this keyword and has the same byte width up to
+    // the required literal. Thus a real match always supplies an AC hit whose
+    // suffix check succeeds. Extra AC hits may pass, but cannot hide a match.
+    // Do not descend into alternatives/repetitions to select a literal: their
+    // individual children need not occur in every match.
+    let mut offset = prefix.0.len();
+    for part in parts {
+        if let HirKind::Literal(literal) = part.kind()
+            && !literal.0.is_empty()
+        {
+            return Some(KeywordSuffix {
+                offset,
+                literal: literal.0.clone(),
+            });
+        }
+        let width = part.properties().minimum_len()?;
+        if part.properties().maximum_len()? != width {
+            return None;
+        }
+        offset = offset.checked_add(width)?;
+    }
+    None
+}
+
+fn flatten_concat<'a>(hir: &'a Hir, parts: &mut Vec<&'a Hir>) {
+    match hir.kind() {
+        HirKind::Concat(children) => {
+            for child in children {
+                flatten_concat(child, parts);
+            }
+        }
+        HirKind::Capture(capture) => flatten_concat(&capture.sub, parts),
+        HirKind::Empty | HirKind::Look(_) => {}
+        _ => parts.push(hir),
+    }
 }
 
 pub(crate) fn compile(
@@ -312,6 +402,7 @@ pub(crate) fn compile(
             exclude_paths.push(filter);
         }
         compiled.push(CompiledRule {
+            keyword_suffix: OnceLock::new(),
             spec,
             pattern,
             path,
@@ -409,5 +500,68 @@ fn uri_password_rule() -> RuleSpec {
             r"(?i)^(?:your[_ -].*|replace[_ -].*|insert[_ -].*|example|sample|dummy|placeholder|redacted|<redacted>)$",
         ].into_iter().map(String::from).collect(), ..Default::default() }],
         exclude_paths: Vec::new(),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn suffix(pattern: &str, keywords: &[&str]) -> Option<KeywordSuffix> {
+        keyword_suffix(
+            pattern,
+            &keywords
+                .iter()
+                .map(|keyword| (*keyword).into())
+                .collect::<Vec<_>>(),
+        )
+    }
+
+    #[test]
+    fn keyword_suffix_uses_fixed_byte_offsets() {
+        for (pattern, offset) in [
+            (r"\b(pat[[:alnum:]]{14}\.[a-f0-9]{64})\b", 17),
+            (r"^((pat)([a-z]{2}))\..*$", 5),
+            (r"pat(?:ab|cd)\.x+", 5),
+            (r"pat(?u:[αβ])\.x+", 5),
+            (r"pat[\x80-\xff]{2}\.x+", 5),
+        ] {
+            let derived = suffix(pattern, &["pat", "PAT"]).expect(pattern);
+            assert_eq!(derived.offset, offset, "{pattern}");
+            assert!(derived.literal.starts_with(b"."), "{pattern}");
+        }
+    }
+
+    #[test]
+    fn keyword_suffix_declines_unproven_positions_and_keyword_branches() {
+        for (pattern, keywords) in [
+            (r"pat[a-z]+\.x", vec!["pat"]),
+            (r"pat[a-z]{1,2}\.x", vec!["pat"]),
+            (r"pat(?:ab|c)\.x", vec!["pat"]),
+            (r"pat(?u:[aα])\.x", vec!["pat"]),
+            (r"pat(?:\.[a-z])?", vec!["pat"]),
+            (r"pat[0-9]{2}(?:\.x|!y)", vec!["pat"]),
+            (r"(?i)pat[a-z]{2}\.x", vec!["pat"]),
+            (r"[a-z]pat[a-z]{2}\.x", vec!["pat"]),
+            (r"(?:pat|key)[a-z]{2}\.x", vec!["pat", "key"]),
+            (r"pat[a-z]{2}\.x", vec!["pat", "context"]),
+            (r"pat[a-z]{2}\.x", vec!["pa"]),
+            (r"pat[a-z]{2}\.x", vec![]),
+            (r"pat[a-z]{2}\.x", vec![""]),
+            (r"pat[a-z]{2}", vec!["pat"]),
+            (r"[", vec!["pat"]),
+        ] {
+            assert_eq!(suffix(pattern, &keywords), None, "{pattern} {keywords:?}");
+        }
+    }
+
+    #[test]
+    fn keyword_suffix_checks_bounds_and_exact_literal() {
+        let derived = suffix(r"pat[a-z]{2}\.[0-9]+", &["pat"]).unwrap();
+        assert!(derived.matches(b"xpatab.123", 1));
+        assert!(!derived.matches(b"xpatab!123", 1));
+        assert!(!derived.matches(b"xpatab", 1));
+        assert!(!derived.matches(b"xpatab.123", usize::MAX));
+        assert!(!derived.matches(b"xpatab.123", usize::MAX - derived.offset));
     }
 }

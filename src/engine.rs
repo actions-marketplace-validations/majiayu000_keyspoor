@@ -261,7 +261,9 @@ impl Engine {
         if let Some(keywords) = &self.keywords {
             for found in keywords.find_overlapping_iter(bytes) {
                 for &id in &self.keyword_rules[found.pattern().as_usize()] {
-                    candidates[id] = true;
+                    if !candidates[id] && self.rules[id].keyword_matches(bytes, found.start()) {
+                        candidates[id] = true;
+                    }
                 }
             }
         }

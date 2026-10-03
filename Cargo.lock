@@ -534,6 +534,7 @@ dependencies = [
  "ignore",
  "rayon",
  "regex",
+ "regex-syntax",
  "serde",
  "serde_json",
  "tar",

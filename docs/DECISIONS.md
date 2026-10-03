@@ -89,3 +89,39 @@ phrases, or only quoted/hyphenated dictionary keys, was rejected because it
 would sacrifice existing long-credential positives based on evaluation examples.
 The filter is unchanged. That observed dataset is now regression data; a new
 synthetic value/context corpus is frozen independently for this iteration.
+
+## Fixed-offset candidate activation
+
+The current requirement is to remove repeated matching work on frequent token
+prefixes without sacrificing the corrected Airtable coverage or changing SDK
+and Agent output. Adopt `regex-syntax` HIR byte-width information (already a
+transitive dependency), and build only a small necessary-condition check on
+existing Aho-Corasick occurrence positions. A proved initial literal must agree
+with all configured keywords; a later mandatory literal must have a fixed byte
+offset. Unknown structures keep the existing matching path. Successful candidate
+activation still uses the complete original regex and haystack.
+
+The relevant primary sources are the [HIR byte-length properties](https://docs.rs/regex-syntax/latest/regex_syntax/hir/struct.Properties.html)
+and [regex search/capture API](https://docs.rs/regex/latest/regex/bytes/struct.Regex.html#method.captures_read_at).
+The latter searches from an offset without anchoring there; invoking it once per
+candidate can repeatedly scan the suffix. A new windowed matcher, regex backend
+or provider-ID-specific predicate is unnecessary for this bounded requirement.
+No scanner SDK or rule-schema extension is introduced.
+
+The completeness argument is local: every actual regex match produces its
+required AC prefix occurrence, and its required interior literal necessarily
+passes the fixed-offset check. Bounds-safe failure rejects that occurrence only,
+not later occurrences. ASCII keyword folding may admit extra candidates, which
+the unchanged regex rejects. HIR parsing uses the byte regex's Unicode settings;
+fixed width means bytes, not characters. Conditional branches are not used as
+literal evidence. Differential tests compare full findings to an unconditional
+regex oracle, including binary bytes, captures, decoding, keyword overlap and
+custom overrides. Pair benchmarks measure the added per-occurrence check as
+well as avoided regex work; unmeasured speedups are not assumed.
+
+The initial eager derivation showed a small real-source CPU increase. Derive the
+optional check on a rule's first keyword hit instead and retain it in an
+engine-local `OnceLock`. Parallel scans share that one initialization; no global
+cache or public option is added. Later hits still pay the initialized-cell read,
+which is included in the final pair measurements. Rules and configuration
+identity are unchanged because this is only a proved candidate optimization.
