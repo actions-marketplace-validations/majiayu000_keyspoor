@@ -51,7 +51,7 @@ fn member_offsets_and_redaction_refer_to_unpacked_bytes() {
         .iter()
         .find(|f| f.rule_id == "github-pat")
         .unwrap();
-    assert_eq!(finding.path, "bundle.zip!dir/config.txt");
+    assert_eq!(finding.path.as_ref(), "bundle.zip!dir/config.txt");
     assert_eq!(finding.coordinate_space, "archive_member_bytes");
     assert_eq!(finding.line, 2);
     assert!(input[finding.start..finding.end].starts_with(b"ghp_"));
@@ -73,7 +73,7 @@ fn nested_zip_gzip_tar_retains_every_member_origin() {
         report
             .findings
             .iter()
-            .any(|f| f.path == "outer.zip!inner.tar.gz!inner.tar!config.txt")
+            .any(|f| f.path.as_ref() == "outer.zip!inner.tar.gz!inner.tar!config.txt")
     );
 }
 

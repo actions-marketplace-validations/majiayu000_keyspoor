@@ -148,9 +148,31 @@ pub(crate) struct CompiledRule {
     pub allowlist: Vec<CompiledAllowlist>,
     pub exclude_paths: Vec<Arc<Regex>>,
     keyword_suffix: OnceLock<Option<KeywordSuffix>>,
+    explanations: [OnceLock<Arc<str>>; 4],
 }
 
 impl CompiledRule {
+    pub fn explanation(&self, base64: bool, utf16: bool) -> Arc<str> {
+        let index = usize::from(base64) | (usize::from(utf16) << 1);
+        Arc::clone(self.explanations[index].get_or_init(|| {
+            let base64_suffix = if base64 {
+                "; detected inside Base64 content"
+            } else {
+                ""
+            };
+            let utf16_suffix = if utf16 {
+                "; decoded UTF-16 BOM text"
+            } else {
+                ""
+            };
+            format!(
+                "Matched {} ({} confidence){base64_suffix}; not live-validated{utf16_suffix}",
+                self.spec.name, self.spec.confidence
+            )
+            .into()
+        }))
+    }
+
     pub fn keyword_matches(&self, bytes: &[u8], keyword_start: usize) -> bool {
         self.keyword_suffix
             .get_or_init(|| keyword_suffix(&self.spec.pattern, &self.spec.keywords))
@@ -403,6 +425,7 @@ pub(crate) fn compile(
         }
         compiled.push(CompiledRule {
             keyword_suffix: OnceLock::new(),
+            explanations: std::array::from_fn(|_| OnceLock::new()),
             spec,
             pattern,
             path,

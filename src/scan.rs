@@ -1165,7 +1165,7 @@ fn scan_git_objects(
                                     break;
                                 }
                                 let mut found = found.clone();
-                                found.path = format!("git:{commit}:{}", found.path);
+                                found.path = format!("git:{commit}:{}", found.path).into();
                                 emit(summary, ScanEvent::Finding(found), sink)?;
                             }
                             for error in &partial.errors {

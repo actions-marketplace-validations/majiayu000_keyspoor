@@ -266,7 +266,7 @@ fn baseline_tracks_secret_identity_and_retains_human_labels() {
         refreshed.entries["stay"].disposition.as_deref(),
         Some("accepted: local fixture")
     );
-    assert_eq!(refreshed.entries["stay"].finding.path, "moved.txt");
+    assert_eq!(refreshed.entries["stay"].finding.path.as_ref(), "moved.txt");
     let mut out = Vec::new();
     refreshed.write(&mut out).unwrap();
     let roundtrip = Baseline::read(out.as_slice()).unwrap();

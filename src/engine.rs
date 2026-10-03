@@ -2,6 +2,7 @@
 use std::{
     collections::BTreeMap,
     path::{Component, Path, PathBuf},
+    sync::Arc,
 };
 
 use aho_corasick::AhoCorasick;
@@ -50,7 +51,7 @@ pub struct Finding {
     /// the same secret span in the same decoded content. Empty for single hits.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub matched_rule_ids: Vec<String>,
-    pub path: String,
+    pub path: Arc<str>,
     /// Zero-based start byte offset in `coordinate_space`.
     pub start: usize,
     /// Exclusive end byte offset. Base64 findings cover the encoded container.
@@ -62,7 +63,7 @@ pub struct Finding {
     pub redacted: String,
     /// Domain-separated digest of rule, path and secret; stable across line moves.
     pub fingerprint: String,
-    pub explanation: String,
+    pub explanation: Arc<str>,
     #[serde(default)]
     pub confidence: String,
     #[serde(default)]
@@ -81,14 +82,14 @@ impl Default for Finding {
         Self {
             rule_id: String::new(),
             matched_rule_ids: Vec::new(),
-            path: String::new(),
+            path: Arc::from(""),
             start: 0,
             end: 0,
             line: 0,
             column: 0,
             redacted: REDACTED.into(),
             fingerprint: String::new(),
-            explanation: String::new(),
+            explanation: Arc::from(""),
             confidence: String::new(),
             is_base64_encoded: false,
             coordinate_space: source_coordinates(),
@@ -108,6 +109,12 @@ pub struct Engine {
     min_entropy: Option<f32>,
     fingerprint_key: Option<[u8; 32]>,
     configuration_id: String,
+}
+
+#[derive(Clone, Copy)]
+struct ContentEncoding {
+    base64: bool,
+    utf16: bool,
 }
 
 impl Engine {
@@ -201,7 +208,8 @@ impl Engine {
             .as_ref()
             .map_or(bytes, |decoded| decoded.bytes.as_slice());
         let mut findings = Vec::new();
-        self.scan_content(path, identity, content, None, &mut findings);
+        let utf16 = decoded_utf16.is_some();
+        self.scan_content(path, identity, content, None, utf16, &mut findings);
         if self.enable_base64 {
             for candidate in self.base64_candidates.find_iter(content) {
                 let encoded = candidate.as_bytes();
@@ -219,6 +227,7 @@ impl Engine {
                         identity,
                         &decoded,
                         Some((candidate.start(), candidate.end())),
+                        utf16,
                         &mut findings,
                     );
                 }
@@ -249,6 +258,7 @@ impl Engine {
         identity: &str,
         bytes: &[u8],
         container: Option<(usize, usize)>,
+        utf16: bool,
         out: &mut Vec<Finding>,
     ) {
         // Coordinates here refer to one content view, before Base64/UTF-16
@@ -333,13 +343,19 @@ impl Engine {
                 if single_candidate {
                     // captures_iter has non-overlapping matches. A single rule
                     // cannot yield duplicate nonempty spans in this content view.
+                    let shared_path = out
+                        .last()
+                        .map_or_else(|| Arc::from(path), |finding| Arc::clone(&finding.path));
                     out.push(self.make_finding(
                         rule,
-                        path,
+                        shared_path,
                         identity,
                         value,
                         container.unwrap_or((secret.start(), secret.end())),
-                        container.is_some(),
+                        ContentEncoding {
+                            base64: container.is_some(),
+                            utf16,
+                        },
                     ));
                 } else {
                     matches.push((secret.start(), secret.end(), id));
@@ -377,11 +393,15 @@ impl Engine {
             matched_rule_ids.dedup();
             let mut finding = self.make_finding(
                 rule,
-                path,
+                out.last()
+                    .map_or_else(|| Arc::from(path), |finding| Arc::clone(&finding.path)),
                 identity,
                 &bytes[secret_start..secret_end],
                 container.unwrap_or((secret_start, secret_end)),
-                container.is_some(),
+                ContentEncoding {
+                    base64: container.is_some(),
+                    utf16,
+                },
             );
             finding.matched_rule_ids = matched_rule_ids;
             out.push(finding);
@@ -391,33 +411,25 @@ impl Engine {
     fn make_finding(
         &self,
         rule: &CompiledRule,
-        path: &str,
+        path: Arc<str>,
         identity: &str,
         value: &[u8],
         (start, end): (usize, usize),
-        is_base64_encoded: bool,
+        encoding: ContentEncoding,
     ) -> Finding {
-        let encoding = if is_base64_encoded {
-            "; detected inside Base64 content"
-        } else {
-            ""
-        };
         Finding {
             rule_id: rule.spec.id.clone(),
             matched_rule_ids: Vec::new(),
-            path: path.to_owned(),
+            path,
             start,
             end,
             line: 0,
             column: 0,
             redacted: REDACTED.into(),
             fingerprint: self.fingerprint(&rule.spec.id, identity, value),
-            explanation: format!(
-                "Matched {} ({} confidence){}; not live-validated",
-                rule.spec.name, rule.spec.confidence, encoding
-            ),
+            explanation: rule.explanation(encoding.base64, encoding.utf16),
             confidence: rule.spec.confidence.to_string(),
-            is_base64_encoded,
+            is_base64_encoded: encoding.base64,
             coordinate_space: source_coordinates(),
         }
     }
@@ -583,9 +595,6 @@ fn map_utf16_findings(source: &[u8], little: bool, findings: &mut [Finding]) -> 
         }
         utf8_offset = utf8_end;
     })?;
-    for finding in findings {
-        finding.explanation.push_str("; decoded UTF-16 BOM text");
-    }
     Ok(())
 }
 

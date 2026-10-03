@@ -63,7 +63,7 @@ fn staged_reads_index_when_worktree_has_changed() {
     let report = scan_staged(&engine, dir.path(), &ScanOptions::default()).unwrap();
     assert!(report.complete);
     assert_eq!(report.findings.len(), 1);
-    assert_eq!(report.findings[0].path, "partial.txt");
+    assert_eq!(report.findings[0].path.as_ref(), "partial.txt");
     fs::write(&file, "clean index\n").unwrap();
     git(dir.path(), &["add", "partial.txt"]);
     fs::write(&file, FIXTURE).unwrap();
@@ -93,7 +93,7 @@ fn history_reuses_blob_reads_but_respects_every_path_and_commit() {
     let paths: Vec<_> = report
         .findings
         .iter()
-        .map(|finding| finding.path.as_str())
+        .map(|finding| finding.path.as_ref())
         .collect();
     assert!(paths.contains(&format!("git:{first}:z-target.txt").as_str()));
     assert!(paths.contains(&format!("git:{second}:z-target.txt").as_str()));
@@ -158,7 +158,7 @@ fn staged_handles_git_paths_containing_protocol_delimiters() {
     let report = scan_staged(&engine, dir.path(), &ScanOptions::default()).unwrap();
     assert!(report.complete);
     assert_eq!(report.findings.len(), 1);
-    assert_eq!(report.findings[0].path, path);
+    assert_eq!(report.findings[0].path.as_ref(), path);
 }
 
 #[test]
@@ -229,7 +229,7 @@ fn git_archives_preserve_index_member_paths_fingerprints_and_every_commit() {
     assert_eq!(staged.stats.bytes, compressed.len() as u64);
     assert_eq!(staged.stats.detection_passes, 2);
     assert_eq!(staged.findings.len(), 1);
-    assert_eq!(staged.findings[0].path, member_path);
+    assert_eq!(staged.findings[0].path.as_ref(), member_path);
     assert_eq!(staged.findings[0].fingerprint, direct[0].fingerprint);
     assert_eq!(staged.findings[0].coordinate_space, "archive_member_bytes");
 
@@ -250,7 +250,7 @@ fn git_archives_preserve_index_member_paths_fingerprints_and_every_commit() {
         let finding = history
             .findings
             .iter()
-            .find(|finding| finding.path == format!("git:{commit}:{member_path}"))
+            .find(|finding| finding.path.as_ref() == format!("git:{commit}:{member_path}"))
             .unwrap();
         assert_eq!(finding.fingerprint, direct[0].fingerprint);
         assert_eq!(finding.coordinate_space, "archive_member_bytes");
@@ -292,7 +292,10 @@ fn git_archive_errors_and_expansion_limits_remain_incomplete_with_other_findings
     assert_eq!(history.exit_code(), 2);
     assert_eq!(history.findings.len(), 1);
     assert_eq!(history.stats.skipped, 1);
-    assert_eq!(history.findings[0].path, format!("git:{commit}:good.txt"));
+    assert_eq!(
+        history.findings[0].path.as_ref(),
+        format!("git:{commit}:good.txt")
+    );
     assert!(
         history
             .errors
@@ -362,7 +365,7 @@ fn filesystem_identity_is_canonical_while_rule_paths_are_root_relative() {
         secret_scan::scan::scan_paths(&engine, &[dir.path().to_path_buf()], &options).unwrap();
     let alias = secret_scan::scan::scan_paths(&engine, &[dir.path().join(".")], &options).unwrap();
     assert_eq!(one.findings.len(), 1);
-    assert_eq!(one.findings[0].path, "nested/fixture.txt");
+    assert_eq!(one.findings[0].path.as_ref(), "nested/fixture.txt");
     assert_eq!(one.findings[0].fingerprint, alias.findings[0].fingerprint);
     assert_eq!(one.context, alias.context);
     let canonical = fs::canonicalize(dir.path().join("nested/fixture.txt")).unwrap();
@@ -503,7 +506,10 @@ fn git_history_range_selects_complete_commit_snapshots_and_rejects_options() {
     .unwrap();
     assert!(report.complete);
     assert_eq!(report.findings.len(), 1);
-    assert_eq!(report.findings[0].path, format!("git:{second}:fixture.txt"));
+    assert_eq!(
+        report.findings[0].path.as_ref(),
+        format!("git:{second}:fixture.txt")
+    );
     assert_eq!(report.stats.detection_passes, 1);
     assert!(
         secret_scan::scan::scan_history_range(

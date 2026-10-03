@@ -763,7 +763,7 @@ fn identity_is_separate_from_display_path_and_lexical_paths_are_stable() {
     let first = engine.scan_bytes("config.env", input.as_bytes()).unwrap();
     let dotted = engine.scan_bytes("./config.env", input.as_bytes()).unwrap();
     assert_eq!(first[0].fingerprint, dotted[0].fingerprint);
-    assert_eq!(dotted[0].path, "./config.env");
+    assert_eq!(dotted[0].path.as_ref(), "./config.env");
     let a = engine
         .scan_bytes_with_identity("config.env", "checkout-a/config.env", input.as_bytes())
         .unwrap();
@@ -775,7 +775,7 @@ fn identity_is_separate_from_display_path_and_lexical_paths_are_stable() {
         .scan_bytes_with_identity("alternate.env", "checkout-a/config.env", input.as_bytes())
         .unwrap();
     assert_eq!(a[0].fingerprint, same_identity[0].fingerprint);
-    assert_eq!(same_identity[0].path, "alternate.env");
+    assert_eq!(same_identity[0].path.as_ref(), "alternate.env");
     assert!(
         engine
             .scan_bytes_with_identity("excluded.txt", "config.env", input.as_bytes())
@@ -1325,5 +1325,64 @@ fn fixed_offset_keyword_gate_keeps_late_airtable_matches() {
             guarded.scan_bytes("fixture", source.as_bytes()).unwrap(),
             full.scan_bytes("fixture", source.as_bytes()).unwrap()
         );
+    }
+}
+
+#[test]
+fn findings_share_paths_and_encoding_specific_explanations_without_changing_json() {
+    use base64::{Engine as _, engine::general_purpose};
+    use std::sync::Arc;
+
+    let (_directory, engine) = custom_engine(RULE, None);
+    let token = format!("fixture_{TOKEN}");
+    let encoded = general_purpose::STANDARD.encode(format!("{token} {token}"));
+    let text = format!("{token} {token}\n{encoded}");
+    let utf16: Vec<_> = [0xff, 0xfe]
+        .into_iter()
+        .chain(text.encode_utf16().flat_map(u16::to_le_bytes))
+        .collect();
+    for (bytes, is_utf16) in [(text.as_bytes(), false), (utf16.as_slice(), true)] {
+        let findings = engine.scan_bytes("settings.conf", bytes).unwrap();
+        let other = engine.scan_bytes("other.conf", bytes).unwrap();
+        assert_eq!(findings.len(), 4);
+        assert_eq!(other.len(), 4);
+        for (finding, other_finding) in findings.iter().zip(&other) {
+            assert!(Arc::ptr_eq(&findings[0].path, &finding.path));
+            assert!(Arc::ptr_eq(
+                &finding.explanation,
+                &other_finding.explanation
+            ));
+            assert!(!Arc::ptr_eq(&finding.path, &other_finding.path));
+            assert_ne!(finding.fingerprint, other_finding.fingerprint);
+            let base64 = if finding.is_base64_encoded {
+                "; detected inside Base64 content"
+            } else {
+                ""
+            };
+            let utf16 = if is_utf16 {
+                "; decoded UTF-16 BOM text"
+            } else {
+                ""
+            };
+            let expected = format!(
+                "Matched Synthetic fixture token (high confidence){base64}; not live-validated{utf16}"
+            );
+            assert_eq!(finding.explanation.as_ref(), expected);
+            let json = serde_json::to_value(finding).unwrap();
+            assert_eq!(json["path"], "settings.conf");
+            assert_eq!(json["explanation"], expected);
+            assert_eq!(serde_json::from_value::<Finding>(json).unwrap(), *finding);
+        }
+        for encoded in [false, true] {
+            let same_encoding: Vec<_> = findings
+                .iter()
+                .filter(|finding| finding.is_base64_encoded == encoded)
+                .collect();
+            assert_eq!(same_encoding.len(), 2);
+            assert!(Arc::ptr_eq(
+                &same_encoding[0].explanation,
+                &same_encoding[1].explanation
+            ));
+        }
     }
 }

@@ -125,3 +125,27 @@ engine-local `OnceLock`. Parallel scans share that one initialization; no global
 cache or public option is added. Later hits still pay the initialized-cell read,
 which is included in the final pair measurements. Rules and configuration
 identity are unchanged because this is only a proved candidate optimization.
+
+## Shared result metadata
+
+Allocator instrumentation on the existing dense-result workload confirmed
+repeated path and explanation allocations. Change only these two public
+`Finding` fields to `Arc<str>`, using serde's existing `rc` support to preserve
+plain JSON strings. The Rust field-type change is intentional and documented;
+no compatibility wrapper or wire-format version is added.
+
+Allocate a path only for the first finding in one scan and clone its Arc for
+later findings, including decoded views. Each rule lazily retains at most four
+explanation variants (plain, Base64, UTF-16 and both). These contain only rule
+metadata and encoding annotations, never source buffers or captured secrets.
+Keep the previous annotation text/order and mapping errors. Owned Arcs let
+findings outlive the engine and move through existing worker queues without
+introducing borrowing constraints or a global interning pool. Git commit-path
+projection still constructs a display path per projected finding; that limit is
+explicit rather than introducing another cache in this change.
+
+Measure allocations separately from timing: a standalone, single-thread warmed
+GlobalAlloc probe counts requested layout bytes, then ordinary CLI pair runs
+measure CPU, RSS and output latency without that instrumentation. Complete
+serialized findings must match between binaries; pointer-sharing assertions
+check that the intended allocation reduction is actually connected to results.

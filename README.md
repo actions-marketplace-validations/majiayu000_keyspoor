@@ -89,7 +89,17 @@ fn main() -> anyhow::Result<()> {
 ```
 
 Reuse an engine across calls and threads to avoid repeated compilation. It does
-not install a global runtime, logger or executor. Custom JSON rule files use
+not install a global runtime, logger or executor.
+
+`Finding.path` and `Finding.explanation` are shared `Arc<str>` values. This is a
+breaking Rust API change from `String`: use `.into()` when assigning an owned
+string, `.as_ref()` to read `&str`, and replace the field to change its text.
+JSON still contains ordinary strings; fingerprints, scan context and baseline
+identity are unchanged. Generated findings share paths within one engine scan
+and explanations across calls using the same engine. Deserialization does not
+intern repeated strings.
+
+Custom JSON rule files use
 `{"rules": [...]}` and can be supplied with `--rules path.json` or a rules
 directory. `--no-builtin` selects only custom rules. Each rule has `id`, `name`,
 `pattern`, optional `secret_group`, `keywords`, `min_entropy`, `confidence`,
