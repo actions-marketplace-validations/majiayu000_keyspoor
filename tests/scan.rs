@@ -1,5 +1,5 @@
-use secret_scan::scan::{ScanOptions, scan_history, scan_staged};
-use secret_scan::{Engine, EngineConfig};
+use keyspoor::scan::{ScanOptions, scan_history, scan_staged};
+use keyspoor::{Engine, EngineConfig};
 use std::{fs, path::Path, process::Command};
 use tempfile::TempDir;
 
@@ -188,13 +188,13 @@ fn reader_integrates_archive_decoding_and_corruption_status() {
     encoder.write_all(FIXTURE.as_bytes()).unwrap();
     let compressed = encoder.finish().unwrap();
     let report =
-        secret_scan::scan::scan_reader(&engine, "fixture.txt.gz", compressed.as_slice(), 4096);
+        keyspoor::scan::scan_reader(&engine, "fixture.txt.gz", compressed.as_slice(), 4096);
     assert!(report.complete);
     assert_eq!(report.findings.len(), 1);
     assert_eq!(report.stats.detection_passes, 1);
     assert_eq!(report.findings[0].coordinate_space, "archive_member_bytes");
     let broken =
-        secret_scan::scan::scan_reader(&engine, "broken.zip", b"PK\x03\x04broken".as_slice(), 4096);
+        keyspoor::scan::scan_reader(&engine, "broken.zip", b"PK\x03\x04broken".as_slice(), 4096);
     assert!(!broken.complete);
     assert_eq!(broken.exit_code(), 2);
 }
@@ -324,7 +324,7 @@ fn reader_errors_keep_kind_without_echoing_untrusted_details() {
     }
     let rules = TempDir::new().unwrap();
     let engine = engine(rules.path(), None);
-    let report = secret_scan::scan::scan_reader(&engine, "reader-input", FailedReader, 4096);
+    let report = keyspoor::scan::scan_reader(&engine, "reader-input", FailedReader, 4096);
     assert!(!report.complete);
     assert_eq!(report.exit_code(), 2);
     assert_eq!(report.errors[0].path, "reader-input");
@@ -340,7 +340,7 @@ fn invalid_ignore_rules_are_incomplete_without_echoing_rule_contents() {
     let engine = engine(rules.path(), None);
     fs::write(dir.path().join(".gitignore"), format!("{SYNTHETIC}[z-a]\n")).unwrap();
     fs::write(dir.path().join("good.txt"), FIXTURE).unwrap();
-    let report = secret_scan::scan::scan_paths(
+    let report = keyspoor::scan::scan_paths(
         &engine,
         &[dir.path().to_path_buf()],
         &ScanOptions::default(),
@@ -361,9 +361,8 @@ fn filesystem_identity_is_canonical_while_rule_paths_are_root_relative() {
     fs::create_dir(dir.path().join("nested")).unwrap();
     fs::write(dir.path().join("nested/fixture.txt"), FIXTURE).unwrap();
     let options = ScanOptions::default();
-    let one =
-        secret_scan::scan::scan_paths(&engine, &[dir.path().to_path_buf()], &options).unwrap();
-    let alias = secret_scan::scan::scan_paths(&engine, &[dir.path().join(".")], &options).unwrap();
+    let one = keyspoor::scan::scan_paths(&engine, &[dir.path().to_path_buf()], &options).unwrap();
+    let alias = keyspoor::scan::scan_paths(&engine, &[dir.path().join(".")], &options).unwrap();
     assert_eq!(one.findings.len(), 1);
     assert_eq!(one.findings[0].path.as_ref(), "nested/fixture.txt");
     assert_eq!(one.findings[0].fingerprint, alias.findings[0].fingerprint);
@@ -381,7 +380,7 @@ fn filesystem_identity_is_canonical_while_rule_paths_are_root_relative() {
 
 #[test]
 fn filesystem_stream_cancels_after_first_finding_and_reports_partial_counts() {
-    use secret_scan::scan::{ScanControl, ScanEvent, scan_paths_stream};
+    use keyspoor::scan::{ScanControl, ScanEvent, scan_paths_stream};
     let dir = TempDir::new().unwrap();
     let rules = TempDir::new().unwrap();
     let engine = engine(rules.path(), None);
@@ -425,7 +424,7 @@ fn filesystem_stream_cancels_after_first_finding_and_reports_partial_counts() {
 
 #[test]
 fn filesystem_stream_sink_failure_stops_delivery_without_deadlocking_workers() {
-    use secret_scan::scan::{ScanControl, scan_paths_stream};
+    use keyspoor::scan::{ScanControl, scan_paths_stream};
     let dir = TempDir::new().unwrap();
     let rules = TempDir::new().unwrap();
     let engine = engine(rules.path(), None);
@@ -464,14 +463,14 @@ fn filesystem_context_changes_when_ignore_policy_changes() {
     let engine = engine(rules.path(), None);
     fs::write(dir.path().join("fixture.txt"), FIXTURE).unwrap();
     fs::write(dir.path().join(".gitignore"), "unrelated.txt\n").unwrap();
-    let before = secret_scan::scan::scan_paths(
+    let before = keyspoor::scan::scan_paths(
         &engine,
         &[dir.path().to_path_buf()],
         &ScanOptions::default(),
     )
     .unwrap();
     fs::write(dir.path().join(".gitignore"), "fixture.txt\n").unwrap();
-    let after = secret_scan::scan::scan_paths(
+    let after = keyspoor::scan::scan_paths(
         &engine,
         &[dir.path().to_path_buf()],
         &ScanOptions::default(),
@@ -497,7 +496,7 @@ fn git_history_range_selects_complete_commit_snapshots_and_rejects_options() {
     let first = git(dir.path(), &["rev-parse", "HEAD"]);
     git(dir.path(), &["commit", "--allow-empty", "-qm", "second"]);
     let second = git(dir.path(), &["rev-parse", "HEAD"]);
-    let report = secret_scan::scan::scan_history_range(
+    let report = keyspoor::scan::scan_history_range(
         &engine,
         dir.path(),
         &format!("{first}..{second}"),
@@ -512,19 +511,14 @@ fn git_history_range_selects_complete_commit_snapshots_and_rejects_options() {
     );
     assert_eq!(report.stats.detection_passes, 1);
     assert!(
-        secret_scan::scan::scan_history_range(
-            &engine,
-            dir.path(),
-            "--all",
-            &ScanOptions::default()
-        )
-        .is_err()
+        keyspoor::scan::scan_history_range(&engine, dir.path(), "--all", &ScanOptions::default())
+            .is_err()
     );
 }
 
 #[test]
 fn git_stream_cancels_projection_and_sink_failure_is_returned() {
-    use secret_scan::scan::{ScanControl, ScanEvent, scan_history_stream, scan_staged_stream};
+    use keyspoor::scan::{ScanControl, ScanEvent, scan_history_stream, scan_staged_stream};
     let dir = repo();
     let rules = TempDir::new().unwrap();
     let engine = engine(rules.path(), None);
@@ -586,7 +580,7 @@ fn linked_worktree_context_tracks_shared_git_exclude_policy() {
         ],
     );
     assert!(linked.path().join(".git").is_file());
-    let before = secret_scan::scan::scan_paths(
+    let before = keyspoor::scan::scan_paths(
         &engine,
         &[linked.path().to_path_buf()],
         &ScanOptions::default(),
@@ -595,7 +589,7 @@ fn linked_worktree_context_tracks_shared_git_exclude_policy() {
     assert!(before.complete, "{:?}", before.errors);
     assert_eq!(before.findings.len(), 1);
     fs::write(main.path().join(".git/info/exclude"), "fixture.txt\n").unwrap();
-    let after = secret_scan::scan::scan_paths(
+    let after = keyspoor::scan::scan_paths(
         &engine,
         &[linked.path().to_path_buf()],
         &ScanOptions::default(),
@@ -676,14 +670,14 @@ fn removing_root_repository_boundary_changes_context_before_resolution() {
     fs::write(root.join("secret.txt"), FIXTURE).unwrap();
     let rules = TempDir::new().unwrap();
     let engine = engine(rules.path(), None);
-    let before = secret_scan::scan::scan_paths(
+    let before = keyspoor::scan::scan_paths(
         &engine,
         std::slice::from_ref(&root),
         &ScanOptions::default(),
     )
     .unwrap();
     fs::remove_dir(root.join(".git")).unwrap();
-    let after = secret_scan::scan::scan_paths(
+    let after = keyspoor::scan::scan_paths(
         &engine,
         std::slice::from_ref(&root),
         &ScanOptions::default(),
@@ -710,14 +704,14 @@ fn removing_nested_vcs_boundary_changes_context_with_unchanged_ignore_contents()
         fs::write(child.join("secret.txt"), FIXTURE).unwrap();
         let rules = TempDir::new().unwrap();
         let engine = engine(rules.path(), None);
-        let before = secret_scan::scan::scan_paths(
+        let before = keyspoor::scan::scan_paths(
             &engine,
             &[root.path().to_path_buf()],
             &ScanOptions::default(),
         )
         .unwrap();
         fs::remove_dir(child.join(marker)).unwrap();
-        let after = secret_scan::scan::scan_paths(
+        let after = keyspoor::scan::scan_paths(
             &engine,
             &[root.path().to_path_buf()],
             &ScanOptions::default(),
@@ -734,8 +728,8 @@ fn removing_nested_vcs_boundary_changes_context_with_unchanged_ignore_contents()
 }
 
 fn assert_throttled_progress(
-    progress: &[secret_scan::ScanStats],
-    summary: &secret_scan::scan::ScanSummary,
+    progress: &[keyspoor::ScanStats],
+    summary: &keyspoor::scan::ScanSummary,
 ) {
     assert!(!progress.is_empty());
     let final_stats = progress.last().unwrap();
@@ -751,7 +745,7 @@ fn assert_throttled_progress(
 
 #[test]
 fn filesystem_progress_is_throttled_without_losing_findings_or_final_stats() {
-    use secret_scan::scan::{ScanControl, ScanEvent, scan_paths_stream};
+    use keyspoor::scan::{ScanControl, ScanEvent, scan_paths_stream};
     let dir = TempDir::new().unwrap();
     let rules = TempDir::new().unwrap();
     let engine = engine(rules.path(), None);
@@ -785,7 +779,7 @@ fn filesystem_progress_is_throttled_without_losing_findings_or_final_stats() {
 
 #[test]
 fn git_metadata_and_blob_progress_share_one_throttle_and_keep_final_stats() {
-    use secret_scan::scan::{ScanControl, ScanEvent, scan_history_stream, scan_staged_stream};
+    use keyspoor::scan::{ScanControl, ScanEvent, scan_history_stream, scan_staged_stream};
     let dir = repo();
     let rules = TempDir::new().unwrap();
     let engine = engine(rules.path(), None);

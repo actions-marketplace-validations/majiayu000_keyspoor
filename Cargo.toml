@@ -1,11 +1,17 @@
 [package]
-name = "secret-scan"
+name = "keyspoor"
 version = "0.1.0"
 edition = "2024"
 rust-version = "1.96"
-description = "Independent Rust secret detection engine with an agent-friendly CLI"
+description = "Offline secret scanner and Rust library for Git, CI and AI agents, with MCP, JSONL and SARIF"
+repository = "https://github.com/majiayu000/keyspoor"
+homepage = "https://majiayu000.github.io/keyspoor/"
+documentation = "https://docs.rs/keyspoor"
+readme = "README.md"
+keywords = ["secret-scanning", "security", "credentials", "mcp", "git"]
+categories = ["command-line-utilities", "development-tools"]
 license = "Apache-2.0"
-include = ["/src/**", "/tests/**", "/examples/**", "/docs/**", "/Cargo.toml", "/Cargo.lock", "/README.md", "/LICENSE", "/THIRD_PARTY_NOTICES"]
+include = ["/src/**", "/tests/**", "/examples/**", "/docs/**", "/Cargo.toml", "/Cargo.lock", "/README.md", "/README.zh-CN.md", "/LICENSE", "/THIRD_PARTY_NOTICES"]
 
 [dependencies]
 anyhow = "1"

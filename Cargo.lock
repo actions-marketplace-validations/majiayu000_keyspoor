@@ -522,7 +522,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "secret-scan"
+name = "keyspoor"
 version = "0.1.0"
 dependencies = [
  "aho-corasick",

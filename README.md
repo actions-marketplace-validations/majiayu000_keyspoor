@@ -1,6 +1,48 @@
-# secret-scan
+# Keyspoor
 
-An independent Rust secret detection engine, reusable library and offline CLI.
+**Offline secret scanning for Rust applications, CI and AI coding agents.**
+Keyspoor scans files, staged Git changes, local Git history and ZIP/tar/gzip
+archives, with redacted JSON, JSONL and SARIF results. Use it as a native CLI,
+a reusable Rust library or a read-only MCP server.
+
+[Website](https://majiayu000.github.io/keyspoor/) ·
+[Rust API](https://docs.rs/keyspoor) ·
+[crates.io](https://crates.io/crates/keyspoor) ·
+[npm](https://www.npmjs.com/package/keyspoor) ·
+[Releases](https://github.com/majiayu000/keyspoor/releases) ·
+[简体中文](README.zh-CN.md)
+
+```sh
+# Rust toolchain (1.96 or newer)
+cargo install keyspoor --locked
+
+# Or Node.js 20+: the npm package runs the native Rust CLI
+npm install -g keyspoor
+
+keyspoor scan . --format jsonl
+```
+
+Initial release: **0.1.0**. The Rust API is pre-1.0 and may change. The npm
+package bundles native binaries for macOS (Apple Silicon/Intel), Linux GNU
+(ARM64/x64) and Windows x64; it is a CLI launcher, not a JavaScript scanning SDK.
+There are no install hooks or runtime binary downloads.
+[Standalone binaries](https://github.com/majiayu000/keyspoor/releases) are also
+available through GitHub Releases. To build from source, run
+`cargo build --release --locked` and use `target/release/keyspoor`.
+
+## Why Keyspoor
+
+- **Offline by design:** scanning does not call credential providers, and reports
+  omit raw secrets and source snippets.
+- **Reusable Rust engine:** compile rules once and share an `Engine` across calls
+  and threads; no scanner SDK dependency.
+- **Agent interfaces:** MCP `scan_text` / `scan_paths`, persistent JSONL requests,
+  progress and cancellation, plus explicit incomplete-scan reporting.
+- **Repository-aware inputs:** staged index contents, local Git history, bounded
+  archive expansion, ignore files and fingerprint baselines.
+- **Evidence you can inspect:** versioned rules, documented exclusions and
+  reproducible quality, throughput and allocation measurements.
+
 The matching, keyword dispatch, filtering, decoding, location mapping, Git
 acquisition and agent interfaces are implemented here. This project does not
 depend on Kingfisher or another secret scanner SDK. It uses general-purpose
@@ -18,17 +60,16 @@ and rejected SDK and wrapper alternatives.
 ## Use
 
 ```sh
-cargo build --release --locked
-target/release/secret-scan scan /path/to/project --format json
-target/release/secret-scan staged /path/to/repository
-target/release/secret-scan history /path/to/repository
-target/release/secret-scan history /path/to/repository --range main..HEAD
-target/release/secret-scan scan - --format jsonl
-target/release/secret-scan scan /path/to/project --write-baseline baseline.json
-target/release/secret-scan scan /path/to/project --baseline baseline.json
-target/release/secret-scan rules
-target/release/secret-scan serve
-target/release/secret-scan mcp --root /path/to/project
+keyspoor scan /path/to/project --format json
+keyspoor staged /path/to/repository
+keyspoor history /path/to/repository
+keyspoor history /path/to/repository --range main..HEAD
+keyspoor scan - --format jsonl
+keyspoor scan /path/to/project --write-baseline baseline.json
+keyspoor scan /path/to/project --baseline baseline.json
+keyspoor rules
+keyspoor serve
+keyspoor mcp --root /path/to/project
 ```
 
 Exit codes: **0** means the selected scan completed with no reported findings;
@@ -77,8 +118,10 @@ unique inputs; `detection_passes` counts actual path-sensitive engine calls.
 
 ## Library and custom rules
 
+Add `keyspoor = "0.1"` and `anyhow = "1"` to your dependencies for this example.
+
 ```rust
-use secret_scan::{Engine, EngineConfig};
+use keyspoor::{Engine, EngineConfig};
 
 fn main() -> anyhow::Result<()> {
     let engine = Engine::new(EngineConfig::default())?;
@@ -176,17 +219,33 @@ hardware, binary fingerprints, time, memory, parser completeness and unsupported
 capabilities are retained. Online verification is disabled. These measurements
 do not establish production accuracy or universal speed leadership.
 
-Measured results: [implementation and measured findings](docs/RESULTS.md),
-[current duplicate/progress iteration](bench/results/v3/README.md),
-[previous holdout comparison](bench/results/v2/holdout-current.md),
-[current regression/performance comparison](bench/results/v2/regression-current.md),
-[historical cross-tool comparison](bench/results/final.md),
-[machine-readable evidence](bench/results/final.json),
-[persistent agent latency](bench/results/agent-latency.json) and
-[UTF-16 memory comparison](bench/results/utf16-memory.json) and
-[current whole-version stress comparison](bench/results/v2/stress-comparison.json).
+The latest [v6 allocation and performance report](bench/results/v6/README.md)
+measured 20 alternating before/after pairs on Apple M2 Max/macOS. For one
+100,000-finding synthetic JSONL workload, scanner peak RSS fell from 99.86 to
+59.59 MiB and scanner CPU time fell 8.74%; regular throughput and Git workloads
+were broadly unchanged. These are changes within this project, not competitor
+speed rankings. Previously observed synthetic regression sets retained
+600 true positives, 25 false positives and zero false negatives; this is not a
+real-world precision estimate.
+
+See [measured results](docs/RESULTS.md), the
+[versioned cross-tool comparison](bench/results/v4/quality-comparison.md),
+[comparison methodology](bench/README.md) and
+[feature-by-feature research](docs/FEATURES.md). The research covers 22 external
+projects; unsupported, unavailable and cloud-dependent entries are identified
+rather than scored as failures. Historical artifacts call this project
+`secret-scan`, its name before Keyspoor; their recorded commands and binary
+hashes have been preserved.
 
 [Feature implementation matrix](docs/FEATURES.md) maps every item in the research
 catalog to implemented, partial or unimplemented status. Cloud connectors,
 credential validation/revocation, GPU/ML backends and language bindings are not
 implied by the presence of a CLI or MCP server.
+
+## License and support
+
+Keyspoor is [Apache-2.0 licensed](LICENSE). Adapted rule data retains its upstream
+MIT license and attribution in [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES).
+Report reproducible bugs or request features in
+[GitHub Issues](https://github.com/majiayu000/keyspoor/issues); use synthetic
+examples and do not include real credentials.

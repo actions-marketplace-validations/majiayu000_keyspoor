@@ -5,15 +5,15 @@ use std::time::Instant;
 
 use anyhow::{Context, Result, bail};
 use clap::{Args, Parser, Subcommand};
-use secret_scan::baseline::Baseline;
-use secret_scan::engine::Confidence;
-use secret_scan::report::{OutputFormat, write_report, write_scan_event, write_scan_summary};
-use secret_scan::scan::{
+use keyspoor::baseline::Baseline;
+use keyspoor::engine::Confidence;
+use keyspoor::report::{OutputFormat, write_report, write_scan_event, write_scan_summary};
+use keyspoor::scan::{
     ScanControl, ScanOptions, scan_buffer, scan_history, scan_history_range,
     scan_history_range_stream, scan_history_stream, scan_paths, scan_paths_stream, scan_reader,
     scan_staged, scan_staged_stream,
 };
-use secret_scan::{Engine, EngineConfig, ScanReport};
+use keyspoor::{Engine, EngineConfig, ScanReport};
 use serde::Deserialize;
 
 #[derive(Parser)]
@@ -30,7 +30,7 @@ struct Cli {
 
 #[derive(Args)]
 struct EngineArgs {
-    /// Additional rules in secret-scan JSON format.
+    /// Additional rules in keyspoor JSON format.
     #[arg(long, global = true)]
     rules: Vec<PathBuf>,
     #[arg(long, global = true)]
@@ -156,7 +156,7 @@ fn save_baseline(path: &Path, report: &ScanReport) -> Result<()> {
 fn tempfile_for_baseline(parent: &Path) -> Result<(PathBuf, std::fs::File)> {
     for counter in 0..32 {
         let path = parent.join(format!(
-            ".secret-scan-baseline-{}-{counter}.tmp",
+            ".keyspoor-baseline-{}-{counter}.tmp",
             std::process::id()
         ));
         let mut options = std::fs::OpenOptions::new();
@@ -242,7 +242,7 @@ fn run(cli: Cli) -> Result<u8> {
             return Ok(0);
         }
         Action::Mcp { root, max_bytes } => {
-            secret_scan::mcp::serve(&engine, &root, max_bytes)?;
+            keyspoor::mcp::serve(&engine, &root, max_bytes)?;
             return Ok(0);
         }
         Action::Scan(args) => ("files", args),
@@ -274,7 +274,7 @@ fn run(cli: Cli) -> Result<u8> {
             write_scan_event(&event, &mut output)?;
             // Progress is throttled. Deliver the first finding immediately;
             // subsequent output retains BufWriter batching for dense results.
-            if first_finding && matches!(event, secret_scan::scan::ScanEvent::Finding(_)) {
+            if first_finding && matches!(event, keyspoor::scan::ScanEvent::Finding(_)) {
                 output.flush()?;
                 first_finding = false;
             }
@@ -345,7 +345,7 @@ fn main() -> ExitCode {
         Ok(code) => ExitCode::from(code),
         Err(error) => {
             // Configuration/runtime errors are distinct from a clean empty scan.
-            eprintln!("secret-scan: {error:#}");
+            eprintln!("keyspoor: {error:#}");
             ExitCode::from(2)
         }
     }

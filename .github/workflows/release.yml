@@ -1,0 +1,91 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_BUILD_JOBS: 2
+
+jobs:
+  build:
+    name: Build (${{ matrix.target }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            target: x86_64-unknown-linux-gnu
+            suffix: ''
+          - runner: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-gnu
+            suffix: ''
+          - runner: macos-15-intel
+            target: x86_64-apple-darwin
+            suffix: ''
+          - runner: macos-15
+            target: aarch64-apple-darwin
+            suffix: ''
+          - runner: windows-2025
+            target: x86_64-pc-windows-msvc
+            suffix: .exe
+    runs-on: ${{ matrix.runner }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install stable Rust
+        run: rustup toolchain install stable --profile minimal --target '${{ matrix.target }}'
+      - name: Build release binary
+        run: cargo +stable build --release --locked --target '${{ matrix.target }}' --bin keyspoor
+      - name: Check version and stage asset
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+          TARGET: ${{ matrix.target }}
+          EXE_SUFFIX: ${{ matrix.suffix }}
+        run: |
+          binary="target/$TARGET/release/keyspoor$EXE_SUFFIX"
+          version="$("$binary" --version)"
+          test "$version" = "keyspoor ${RELEASE_TAG#v}"
+          mkdir -p dist
+          cp "$binary" "dist/keyspoor-$RELEASE_TAG-$TARGET$EXE_SUFFIX"
+      - name: Upload binary
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: keyspoor-${{ matrix.target }}
+          path: dist/*
+          if-no-files-found: error
+
+  publish:
+    name: Publish GitHub release
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Download binaries
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: keyspoor-*
+          path: dist
+          merge-multiple: true
+      - name: Create checksums
+        working-directory: dist
+        run: sha256sum keyspoor-* > SHA256SUMS
+      - name: Create release from tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: gh release create "$RELEASE_TAG" dist/* --verify-tag --title "Keyspoor $RELEASE_TAG" --generate-notes

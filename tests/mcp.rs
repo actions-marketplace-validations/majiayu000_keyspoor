@@ -43,7 +43,7 @@ struct Client {
 
 impl Client {
     fn new(root: &Path, max_bytes: u64, rules: Option<&Path>) -> Self {
-        let mut command = Command::new(env!("CARGO_BIN_EXE_secret-scan"));
+        let mut command = Command::new(env!("CARGO_BIN_EXE_keyspoor"));
         if let Some(rules) = rules {
             command.arg("--no-builtin").arg("--rules").arg(rules);
         }
@@ -430,7 +430,7 @@ fn active_scan_accepts_ping_and_cancellation_and_rejects_busy_calls() {
 #[test]
 fn scan_worker_output_failure_exits_with_error() {
     let root = TempDir::new().unwrap();
-    let mut child = Command::new(env!("CARGO_BIN_EXE_secret-scan"))
+    let mut child = Command::new(env!("CARGO_BIN_EXE_keyspoor"))
         .arg("mcp")
         .arg("--root")
         .arg(root.path())

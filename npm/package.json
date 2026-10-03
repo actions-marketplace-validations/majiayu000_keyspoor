@@ -1,0 +1,46 @@
+{
+  "name": "keyspoor",
+  "version": "0.1.0",
+  "description": "Offline Rust secret scanner for source code and Git history, with JSON, SARIF and MCP for AI agents",
+  "license": "Apache-2.0",
+  "bin": {
+    "keyspoor": "cli.cjs"
+  },
+  "files": [
+    "cli.cjs",
+    "bin/**",
+    "README.md",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.cjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/majiayu000/keyspoor.git",
+    "directory": "npm"
+  },
+  "homepage": "https://majiayu000.github.io/keyspoor/",
+  "bugs": {
+    "url": "https://github.com/majiayu000/keyspoor/issues"
+  },
+  "keywords": [
+    "secret-scanner",
+    "secret-detection",
+    "credential-scanner",
+    "security",
+    "git",
+    "rust",
+    "sarif",
+    "mcp",
+    "ai-agent",
+    "cli"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -224,7 +224,7 @@ fn dispatch(
             json!({
                 "protocolVersion":PROTOCOL_VERSION,
                 "capabilities":{"tools":{}},
-                "serverInfo":{"name":"secret-scan","version":env!("CARGO_PKG_VERSION")}
+                "serverInfo":{"name":"keyspoor","version":env!("CARGO_PKG_VERSION")}
             })
         }
         "tools/list" | "tools/call" if *state != State::Ready => {

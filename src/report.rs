@@ -157,7 +157,7 @@ fn write_sarif(report: &ScanReport, mut writer: impl Write) -> Result<()> {
             "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
             "version": "2.1.0",
             "runs": [{
-                "tool": {"driver": {"name": "secret-scan", "version": env!("CARGO_PKG_VERSION"),
+                "tool": {"driver": {"name": "keyspoor", "version": env!("CARGO_PKG_VERSION"),
                     "rules": rules.into_values().collect::<Vec<_>>() }},
                 "results": results,
                 "invocations": [{"executionSuccessful": report.complete,

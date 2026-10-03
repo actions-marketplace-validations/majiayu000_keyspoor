@@ -1,4 +1,4 @@
-use secret_scan::{Engine, EngineConfig, Finding};
+use keyspoor::{Engine, EngineConfig, Finding};
 use tempfile::TempDir;
 
 const RULE: &str = r#"{"rules":[{"id":"synthetic.fixture","name":"Synthetic fixture token","pattern":"fixture_([A-Za-z0-9]{24})","secret_group":1,"keywords":["fixture_"],"confidence":"high"}]}"#;
@@ -813,7 +813,7 @@ fn configuration_identity_tracks_actual_rules_semantics_and_key_identity() {
             ..config.clone()
         },
         EngineConfig {
-            min_confidence: secret_scan::rules::Confidence::High,
+            min_confidence: keyspoor::rules::Confidence::High,
             ..config.clone()
         },
         EngineConfig {
@@ -1139,7 +1139,7 @@ fn merged_utf16_findings_retain_exact_source_coordinates() {
 fn merging_semantics_change_configuration_identity_from_v2() {
     let (_dir, engine) = custom_engine(RULE, None);
     let value: serde_json::Value = serde_json::from_str(RULE).unwrap();
-    let rules: Vec<secret_scan::rules::RuleSpec> =
+    let rules: Vec<keyspoor::rules::RuleSpec> =
         serde_json::from_value(value["rules"].clone()).unwrap();
     let config = EngineConfig::default();
     let serialized = serde_json::to_vec(&(

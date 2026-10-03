@@ -149,3 +149,31 @@ GlobalAlloc probe counts requested layout bytes, then ordinary CLI pair runs
 measure CPU, RSS and output latency without that instrumentation. Complete
 serialized findings must match between binaries; pointer-sharing assertions
 check that the intended allocation reduction is actually connected to results.
+
+## Public identity and distribution
+
+Publish the initial release as **Keyspoor**, with `keyspoor` for the GitHub
+repository, Cargo package, Rust import and CLI, and npm package. On 2026-10-04,
+the npm and crates.io exact-name endpoints returned 404 and GitHub repository
+name search returned no matches. This is an availability check, not a trademark
+clearance. Historical benchmark reports retain their original `secret-scan`
+name and binary hashes. Fingerprint/configuration domain separators also retain
+their exact bytes: changing a product label must not change detection identity.
+
+The Rust engine remains the implementation. npm distributes the same native
+CLI, not a JavaScript SDK or a second scanner. Adapt the native-tool distribution
+pattern used by [esbuild](https://github.com/evanw/esbuild/tree/main/npm) and
+[vscode-ripgrep](https://github.com/microsoft/vscode-ripgrep): for this small
+initial release, bundle all five supported binaries in one package rather than
+introduce per-platform packages or installation-time downloads. This costs a
+larger download but requires no lifecycle install script, network fetch or
+compiler on the consumer machine. Node only forwards arguments, stdio, signals
+and exit status. Linux assets target GNU libc; musl and Windows ARM64 are not
+included. Rust users can build supported additional targets themselves.
+
+Release binaries come from native GitHub-hosted runners. Publish source and
+checksummed binaries on GitHub, validate the assembled npm tarball and an
+independent Cargo consumer, then verify each registry independently. Search
+metadata and a static Pages homepage improve crawlability; they do not establish
+Google indexing or rankings. Registry login and Search Console ownership remain
+separate external prerequisites, not application features.

@@ -29,7 +29,7 @@ def main() -> None:
     subprocess.run(command, cwd=ROOT, check=True)
     name = f'{package["name"]}-{package["version"]}'
     archive = Path(metadata["target_directory"]) / "package" / f"{name}.crate"
-    with tempfile.TemporaryDirectory(prefix="secret-scan-package-") as temp:
+    with tempfile.TemporaryDirectory(prefix="keyspoor-package-") as temp:
         directory = Path(temp)
         with tarfile.open(archive) as bundle:
             if any(member.name.startswith((f"{name}/bench/", f"{name}/target/")) for member in bundle.getmembers()):
@@ -39,8 +39,8 @@ def main() -> None:
         consumer = directory / "consumer"
         (consumer / "src").mkdir(parents=True)
         (consumer / "Cargo.toml").write_text(
-            '[package]\nname = "secret-scan-package-consumer"\nversion = "0.0.0"\nedition = "2024"\n'
-            '\n[dependencies]\nsecret-scan = { path = '
+            '[package]\nname = "keyspoor-package-consumer"\nversion = "0.0.0"\nedition = "2024"\n'
+            '\n[dependencies]\nkeyspoor = { path = '
             + json.dumps(unpacked.as_posix()) + ' }\n', encoding="utf-8",
         )
         shutil.copyfile(unpacked / "examples/scan.rs", consumer / "src/main.rs")
@@ -50,7 +50,7 @@ def main() -> None:
         env["CARGO_TARGET_DIR"] = str(directory / "target")
         subprocess.run(["cargo", "generate-lockfile", "--offline"], cwd=consumer, env=env, check=True)
         subprocess.run(["cargo", "build", "--locked", "--offline"], cwd=consumer, env=env, check=True)
-        binary = directory / "target/debug" / ("secret-scan-package-consumer.exe" if os.name == "nt" else "secret-scan-package-consumer")
+        binary = directory / "target/debug" / ("keyspoor-package-consumer.exe" if os.name == "nt" else "keyspoor-package-consumer")
         fixture = directory / "input.conf"
         # Synthetic format-only value. This checker never uses provider APIs.
         token = "ghp_" + "A1b2C3d4E5f6G7h8I9j0K1l2M3n4O5p6Q7r8"

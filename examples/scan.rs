@@ -1,6 +1,6 @@
 //! Run with `cargo run --example scan -- path/to/scan`.
-use secret_scan::scan::{ScanOptions, scan_paths};
-use secret_scan::{Engine, EngineConfig};
+use keyspoor::scan::{ScanOptions, scan_paths};
+use keyspoor::{Engine, EngineConfig};
 use std::{error::Error, path::PathBuf, process::ExitCode};
 
 fn main() -> Result<ExitCode, Box<dyn Error>> {

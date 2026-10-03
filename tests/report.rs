@@ -1,8 +1,8 @@
-use secret_scan::baseline::Baseline;
-use secret_scan::context::{ScanContext, policy_digest};
-use secret_scan::report::{OutputFormat, write_report, write_scan_event, write_scan_summary};
-use secret_scan::scan::{ScanEvent, ScanSummary};
-use secret_scan::{Finding, ScanError, ScanReport, ScanStats};
+use keyspoor::baseline::Baseline;
+use keyspoor::context::{ScanContext, policy_digest};
+use keyspoor::report::{OutputFormat, write_report, write_scan_event, write_scan_summary};
+use keyspoor::scan::{ScanEvent, ScanSummary};
+use keyspoor::{Finding, ScanError, ScanReport, ScanStats};
 use serde_json::Value;
 
 fn finding(fingerprint: &str, path: &str) -> Finding {
@@ -443,8 +443,8 @@ fn policy_digest_preserves_component_boundaries_and_does_not_embed_contents() {
 
 #[test]
 fn streamed_errors_flush_immediately_and_preserve_flush_failures() {
-    use secret_scan::report::write_scan_event;
-    use secret_scan::scan::ScanEvent;
+    use keyspoor::report::write_scan_event;
+    use keyspoor::scan::ScanEvent;
     use std::io::{self, Write};
     struct BufferedOutput {
         pending: Vec<u8>,

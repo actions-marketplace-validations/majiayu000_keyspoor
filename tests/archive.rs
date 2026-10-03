@@ -2,7 +2,7 @@ use std::io::{Cursor, Write};
 use std::sync::LazyLock;
 
 use flate2::{Compression, write::GzEncoder};
-use secret_scan::{Engine, EngineConfig, archive::scan_archive};
+use keyspoor::{Engine, EngineConfig, archive::scan_archive};
 
 static ENGINE: LazyLock<Engine> = LazyLock::new(|| Engine::new(EngineConfig::default()).unwrap());
 
@@ -195,7 +195,7 @@ fn truncated_tar_member_does_not_become_clean() {
 
 #[test]
 fn nested_members_use_stable_identity_without_changing_display_paths() {
-    use secret_scan::{archive::scan_archive_with_identity, scan::ScanControl};
+    use keyspoor::{archive::scan_archive_with_identity, scan::ScanControl};
     let input = fixture();
     let outer = zip(&[("inner.gz", &gzip(&input))]);
     let scan = |name| {
@@ -223,7 +223,7 @@ fn nested_members_use_stable_identity_without_changing_display_paths() {
 
 #[test]
 fn cancelled_archive_is_incomplete_before_any_member_is_scanned() {
-    use secret_scan::{archive::scan_archive_with_identity, scan::ScanControl};
+    use keyspoor::{archive::scan_archive_with_identity, scan::ScanControl};
     let control = ScanControl::default();
     control.cancel();
     let input = fixture();

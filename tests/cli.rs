@@ -11,7 +11,7 @@ fn setup() -> (TempDir, std::path::PathBuf) {
 }
 
 fn cli(rule: &std::path::Path) -> Command {
-    let mut cmd = Command::new(env!("CARGO_BIN_EXE_secret-scan"));
+    let mut cmd = Command::new(env!("CARGO_BIN_EXE_keyspoor"));
     cmd.args(["--no-builtin", "--rules"]).arg(rule);
     cmd
 }

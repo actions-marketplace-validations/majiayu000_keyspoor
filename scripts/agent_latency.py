@@ -38,7 +38,7 @@ def summary(values):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--binary", type=Path, default=Path("target/release/secret-scan"))
+    parser.add_argument("--binary", type=Path, default=Path("target/release/keyspoor"))
     parser.add_argument("--output", type=Path, default=Path("bench/results/agent-latency.json"))
     parser.add_argument("--requests", type=int, default=100)
     args = parser.parse_args()

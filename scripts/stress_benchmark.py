@@ -336,7 +336,7 @@ def summarize(runs):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--before", type=Path, default=Path("bench/tools/secret-scan-2113800"))
-    parser.add_argument("--after", type=Path, default=Path("target/release/secret-scan"))
+    parser.add_argument("--after", type=Path, default=Path("target/release/keyspoor"))
     parser.add_argument("--output", type=Path, default=Path("bench/results/stress-comparison.json"))
     parser.add_argument("--many-files", type=int, default=10000)
     parser.add_argument("--dense-counts", type=int, nargs="+", default=[10000, 100000])
