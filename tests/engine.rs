@@ -884,6 +884,93 @@ fn sparse_line_mapping_handles_out_of_order_rules_crlf_binary_and_base64() {
 }
 
 #[test]
+fn airtable_tokens_are_detected_without_provider_context() {
+    let engine = Engine::new(EngineConfig {
+        enable_base64: false,
+        ..Default::default()
+    })
+    .unwrap();
+    // Constructed format-only fixtures; never issued credentials.
+    let first = format!("patAb3dEf7hIj9kLm.{}", "0123456789abcdef".repeat(4));
+    let second = format!("patN2pQ4rS6tU8vW0.{}", "f0e1d2c3b4a59687".repeat(4));
+    for (source, expected) in [
+        (first.clone(), vec![first.as_str()]),
+        (
+            format!("const left = \"{first}\"; const right = \"{second}\";\n"),
+            vec![first.as_str(), second.as_str()],
+        ),
+        (
+            format!("const left = \"{first}\"; const right = \"{first}\";\n"),
+            vec![first.as_str(), first.as_str()],
+        ),
+    ] {
+        assert!(!source.to_ascii_lowercase().contains("airtable"));
+        let findings = engine
+            .scan_bytes("settings.conf", source.as_bytes())
+            .unwrap();
+        assert_eq!(findings.len(), expected.len());
+        for (finding, value) in findings.iter().zip(expected) {
+            assert_eq!(finding.rule_id, "airtable-personnal-access-token");
+            assert_eq!(&source[finding.start..finding.end], value);
+        }
+        assert!(findings.windows(2).all(|pair| pair[0].end < pair[1].start));
+    }
+}
+
+#[test]
+fn airtable_provider_detection_survives_generic_stopword_substrings() {
+    let engine = Engine::new(EngineConfig {
+        enable_base64: false,
+        ..Default::default()
+    })
+    .unwrap();
+    // `feed` is a generic-api-key stopword but valid hexadecimal token content.
+    let token = format!("patAb3dEf7hIj9kLm.feed{}", "0123456789ab".repeat(5));
+    let source = format!("runtime:\n  credential: \"{token}\"\n");
+    let findings = engine
+        .scan_bytes("settings.yaml", source.as_bytes())
+        .unwrap();
+    assert_eq!(findings.len(), 1);
+    let finding = &findings[0];
+    assert_eq!(finding.rule_id, "airtable-personnal-access-token");
+    assert_eq!(&source[finding.start..finding.end], token);
+    assert_eq!((finding.line, finding.column), (2, 15));
+    assert!(
+        !finding
+            .matched_rule_ids
+            .iter()
+            .any(|id| id == "generic-api-key")
+    );
+}
+
+#[test]
+fn airtable_keyword_gate_does_not_accept_malformed_tokens() {
+    let engine = Engine::new(EngineConfig {
+        enable_base64: false,
+        ..Default::default()
+    })
+    .unwrap();
+    let suffix = "0123456789abcdef".repeat(4);
+    for malformed in [
+        format!("patAb3dEf7hIj9kL.{suffix}"),
+        format!("patAb3dEf7hIj9kLmN.{suffix}"),
+        format!("patAb3dEf7hIj9kLm.{}", &suffix[..63]),
+        format!("patAb3dEf7hIj9kLm.{suffix}0"),
+        format!("patAb3dEf7hIj9kLm.g{}", &suffix[1..]),
+        format!("patAb3dEf7hIj9kLm_{suffix}"),
+        format!("xpatAb3dEf7hIj9kLm.{suffix}"),
+        "pat".to_owned(),
+    ] {
+        assert!(
+            engine
+                .scan_bytes("settings.conf", malformed.as_bytes())
+                .unwrap()
+                .is_empty()
+        );
+    }
+}
+
+#[test]
 fn restored_catalog_detectors_cover_nonfirst_capture_branches() {
     let engine = Engine::new(EngineConfig {
         enable_base64: false,

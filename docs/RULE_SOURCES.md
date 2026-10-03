@@ -23,7 +23,8 @@ The full upstream MIT notice is retained in `THIRD_PARTY_NOTICES`. The importer 
 
 ## Transformations
 
-- Preserve rule IDs, descriptions, regexes, keyword gates, entropy thresholds, and positive path constraints.
+- Preserve rule IDs, descriptions, regexes, entropy thresholds, and positive path constraints. Preserve keyword gates except for the documented correction below.
+- For `airtable-personnal-access-token` (upstream spelling retained), replace the contextual keyword `airtable` with the required token prefix `pat`. The regex accepts standalone `pat`-prefixed tokens without the provider name; requiring that name suppresses valid matches. This local adaptation changes candidate selection only, retaining the token format, captures and allowlists. The importer applies it during regeneration. Regression tests cover standalone and adjacent tokens, hexadecimal content containing a generic stopword, and malformed near-matches; this is not an audit of every rule's keyword gate.
 - Escape unescaped Go literal braces where Rust's regex parser requires escaping. Quantifiers retain their original meaning.
 - Map a positive explicit `secretGroup` to `secret_group`. An omitted or zero upstream value becomes `null`: select the first nonempty capture and fall back to the whole match if none exists. This preserves alternative-branch captures in the Atlassian and curl-header rules. Explicit `0` in our custom schema means whole match and is therefore different from upstream zero.
 - Keep each upstream allowlist as an independent structured group. Groups are ORed. Within a group, each nonempty category (`regexes`, `paths`, `stopwords`) matches any item, then category results are combined according to `condition: "or"` or `"and"`. Absent categories do not participate. Preserve each regex target as `secret`, `match`, or `line`; stopwords always match the extracted secret as case-insensitive substrings, regardless of regex target.

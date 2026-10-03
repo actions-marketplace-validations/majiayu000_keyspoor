@@ -461,7 +461,7 @@
       "pattern": "\\b(pat[[:alnum:]]{14}\\.[a-f0-9]{64})\\b",
       "secret_group": null,
       "keywords": [
-        "airtable"
+        "pat"
       ],
       "min_entropy": 0,
       "confidence": "medium",

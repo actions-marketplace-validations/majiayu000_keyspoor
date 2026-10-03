@@ -95,9 +95,14 @@ def convert(config: dict) -> dict:
         # Gitleaks omitted/zero secretGroup selects the first nonempty capture;
         # our null represents that behavior (our explicit zero means whole match).
         group = upstream.get("secretGroup") or None
+        keywords = upstream.get("keywords", [])
+        if identity == "airtable-personnal-access-token":
+            # The token regex requires `pat`, not the contextual word `airtable`.
+            # Keep this local correction reproducible when regenerating assets.
+            keywords = ["pat"]
         rules.append({"id": identity, "name": upstream["description"],
                       "pattern": rust_pattern(upstream["regex"]), "secret_group": group,
-                      "keywords": upstream.get("keywords", []),
+                      "keywords": keywords,
                       "min_entropy": upstream.get("entropy", 0),
                       "confidence": "medium", "path": rust_pattern(upstream["path"]) if "path" in upstream else None,
                       "allowlist": groups, "exclude_paths": []})
