@@ -19,12 +19,15 @@ cargo install keyspoor --locked
 # Or Node.js 20+: the npm package runs the native Rust CLI
 npm install -g keyspoor
 
+# Or Homebrew (macOS / Linux)
+brew install majiayu000/tap/keyspoor
+
 keyspoor scan . --format jsonl
 ```
 
 The native CLI is available through both npm and GitHub Releases.
 
-Current release: **0.1.1**. The Rust API is pre-1.0 and may change. The npm
+Current release: **0.1.2**. The Rust API is pre-1.0 and may change. The npm
 package bundles native binaries for macOS (Apple Silicon/Intel), Linux GNU
 (ARM64/x64) and Windows x64; it is a CLI launcher, not a JavaScript scanning SDK.
 There are no install hooks or runtime binary downloads.
@@ -117,6 +120,40 @@ mode scans locally reachable commits, reads each unique blob once and retains
 commit/path occurrences. It does not fetch LFS, submodules or remote refs, and
 also unpacks supported archives in Git blobs, retaining commit/member paths. `stats.files/bytes` count
 unique inputs; `detection_passes` counts actual path-sensitive engine calls.
+
+## GitHub Action
+
+```yaml
+permissions:
+  contents: read
+steps:
+  - uses: actions/checkout@v7
+  - uses: majiayu000/keyspoor@v1
+    id: secrets
+    with:
+      path: .
+      format: sarif
+  - uses: actions/upload-artifact@v7
+    if: always() && steps.secrets.outputs.report-path != ''
+    with:
+      name: keyspoor-report
+      path: ${{ steps.secrets.outputs.report-path }}
+```
+
+Place these steps in a job. The Action installs the exact npm package version
+recorded at its source ref, scans the selected path and saves a redacted report
+outside the checkout. `report-path` points to that file; `exit-code` preserves
+0 (clean), 1 (findings), or 2 (error/incomplete). Findings and errors fail the
+step; reports may be incomplete after an error. Use a full commit SHA to pin
+the Action immutably instead of the maintained `v1` ref. Supported report
+formats are SARIF (default), JSON and JSONL. Installation needs npm registry
+access; detection itself remains offline. The Action scans files; use the CLI
+for staged/history modes and custom engine options.
+
+Releases publish through [GitHub Actions](.github/workflows/release.yml) with
+npm and crates.io trusted publishing. Homebrew updates in the existing tap
+run hourly and may be delayed by GitHub scheduling. See the
+[release guide](docs/RELEASING.md) for triggers and verification.
 
 ## Library and custom rules
 

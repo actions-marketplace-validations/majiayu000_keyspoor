@@ -18,6 +18,9 @@ cargo install keyspoor --locked
 # 或通过 Node.js 20+ 安装原生 Rust CLI
 npm install -g keyspoor
 
+# 或通过 Homebrew（macOS / Linux）
+brew install majiayu000/tap/keyspoor
+
 keyspoor scan . --format jsonl
 keyspoor staged /path/to/repository
 keyspoor history /path/to/repository --range main..HEAD
@@ -27,7 +30,7 @@ keyspoor mcp --root /path/to/project
 
 原生 CLI 已发布到 npm，也可通过 GitHub Releases 下载安装包。
 
-当前版本为 **0.1.1**，Rust API 仍可能发生破坏性变更。npm 包内置 macOS
+当前版本为 **0.1.2**，Rust API 仍可能发生破坏性变更。npm 包内置 macOS
 Apple Silicon/Intel、Linux GNU ARM64/x64、Windows x64 的原生二进制，
 没有安装脚本或运行时二进制下载；它是 CLI 启动器，不是 JavaScript SDK。
 也可从 [GitHub Releases](https://github.com/majiayu000/keyspoor/releases)
@@ -51,6 +54,27 @@ Apple Silicon/Intel、Linux GNU ARM64/x64、Windows x64 的原生二进制，
 扫描完全离线，不检查凭据是否有效，不执行撤销。云连接器、GPU/ML、跨函数分析、
 Python/JS 进程内绑定未实现。完整范围见 [功能矩阵](docs/FEATURES.md)、
 [规则来源](docs/RULE_SOURCES.md) 和 [英文使用说明](README.md)。
+
+## GitHub Action 与自动发布
+
+其他仓库可在 checkout 后添加扫描步骤：
+
+```yaml
+- uses: majiayu000/keyspoor@v1
+  id: secrets
+  with:
+    path: .
+    format: sarif
+```
+
+默认生成 SARIF，也支持 JSON/JSONL。`report-path` 输出指向 runner 临时目录中的
+脱敏报告；`exit-code` 保留 0/1/2 语义，发现密钥或扫描出错会让该步骤失败。
+保存报告时用 `if: always()`；完整示例见 [英文说明](README.md#github-action)。
+需要固定不可变版本时使用完整 commit SHA。安装会访问 npm，检测本身离线。
+
+完整版本标签触发五平台构建和质量检查，再通过 OIDC 自动发布 npm、crates.io
+及 GitHub Release。现有 Homebrew tap 每小时检查新版本，安装测试通过后自动更新；
+GitHub 调度可能延迟。详见 [发布流程](docs/RELEASING.md)。
 
 ## Benchmark 与证据
 

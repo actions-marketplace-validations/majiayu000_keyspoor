@@ -1,0 +1,74 @@
+name: Published scanner Action
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15, windows-2025]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Create synthetic fixtures
+        id: fixtures
+        run: |
+          python - <<'PY'
+          import os, pathlib, tempfile
+          directory = pathlib.Path(tempfile.mkdtemp(prefix='keyspoor action ', dir=os.environ['RUNNER_TEMP']))
+          (directory / 'clean.txt').write_text('ordinary configuration\n')
+          token = 'ghp_' + 'A1b2C3d4E5f6G7h8I9j0K1l2M3n4O5p6Q7r8'
+          (directory / 'finding.txt').write_text(f'token = "{token}"\n')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              for name in ['clean', 'finding', 'missing']:
+                  print(f'{name}={directory / (name + ".txt")}', file=output)
+          PY
+      - name: Scan clean input
+        id: clean
+        uses: majiayu000/keyspoor@v1
+        with:
+          path: ${{ steps.fixtures.outputs.clean }}
+      - name: Scan synthetic credential
+        id: finding
+        continue-on-error: true
+        uses: majiayu000/keyspoor@v1
+        with:
+          path: ${{ steps.fixtures.outputs.finding }}
+      - name: Scan missing input
+        id: missing
+        continue-on-error: true
+        uses: majiayu000/keyspoor@v1
+        with:
+          path: ${{ steps.fixtures.outputs.missing }}
+      - name: Verify public Action reports and failure semantics
+        env:
+          CLEAN_CODE: ${{ steps.clean.outputs.exit-code }}
+          FINDING_CODE: ${{ steps.finding.outputs.exit-code }}
+          MISSING_CODE: ${{ steps.missing.outputs.exit-code }}
+          FINDING_OUTCOME: ${{ steps.finding.outcome }}
+          MISSING_OUTCOME: ${{ steps.missing.outcome }}
+          CLEAN_REPORT: ${{ steps.clean.outputs.report-path }}
+          FINDING_REPORT: ${{ steps.finding.outputs.report-path }}
+          MISSING_REPORT: ${{ steps.missing.outputs.report-path }}
+        run: |
+          python - <<'PY'
+          import json, os, pathlib
+          assert [os.environ[x + '_CODE'] for x in ['CLEAN', 'FINDING', 'MISSING']] == ['0', '1', '2']
+          assert os.environ['FINDING_OUTCOME'] == os.environ['MISSING_OUTCOME'] == 'failure'
+          reports = {}
+          for name in ['CLEAN', 'FINDING', 'MISSING']:
+              text = pathlib.Path(os.environ[name + '_REPORT']).read_text()
+              assert 'ghp_' not in text
+              reports[name] = json.loads(text)['runs'][0]
+          assert reports['CLEAN']['results'] == []
+          assert reports['FINDING']['results']
+          assert not reports['MISSING']['invocations'][0]['executionSuccessful']
+          print('Public Action: exits 0/1/2, valid SARIF and redaction verified')
+          PY

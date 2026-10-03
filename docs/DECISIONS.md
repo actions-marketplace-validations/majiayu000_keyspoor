@@ -177,3 +177,28 @@ independent Cargo consumer, then verify each registry independently. Search
 metadata and a static Pages homepage improve crawlability; they do not establish
 Google indexing or rankings. Registry login and Search Console ownership remain
 separate external prerequisites, not application features.
+
+## GitHub Action and automated distribution
+
+Adapt the tag-triggered native builds used in the owner's
+[rclean](https://github.com/majiayu000/rclean/blob/main/.github/workflows/release.yml)
+and [remem](https://github.com/majiayu000/remem/blob/main/.github/workflows/release.yml)
+projects, and the reusable scanner boundary illustrated by
+[argus](https://github.com/majiayu000/argus/blob/main/action.yml).
+Keep the existing five native Keyspoor binaries and single npm package.
+The scanning Action runs that package rather than implementing another detector;
+its source ref determines the scanner package version. Reports live in runner
+temporary storage so the scan does not acquire its own output.
+
+Reuse the repository CI workflow as the release quality gate, assemble and smoke
+the actual npm tarball, then publish through GitHub Actions. npm and crates.io
+trust only this repository's `release.yml`, with no environment restriction.
+Use their official OIDC exchanges instead of copying the other projects'
+persistent publishing tokens. Both trust configurations were created and read
+back through their supported CLI/API. A real patch release validates the exchanges.
+
+Use the existing `majiayu000/homebrew-tap` for Homebrew. A tap-local scheduled
+workflow checks public Keyspoor releases and updates only its formula with the
+tap's own temporary GITHUB_TOKEN. This avoids a cross-repository personal token;
+updates are eventual rather than part of the main release transaction. Check
+actual install/test behavior and the scheduled updater before reporting it ready.

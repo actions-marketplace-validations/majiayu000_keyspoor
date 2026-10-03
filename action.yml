@@ -1,0 +1,40 @@
+name: Keyspoor secret scan
+description: Scan files with the native Keyspoor scanner and save a redacted SARIF or JSON report.
+inputs:
+  path:
+    description: File or directory to scan, relative to the workspace or absolute.
+    required: false
+    default: .
+  format:
+    description: Report format (sarif, json, or jsonl).
+    required: false
+    default: sarif
+outputs:
+  report-path:
+    description: Report file in runner temporary storage; may be incomplete on scan errors.
+    value: ${{ steps.scan.outputs.report-path }}
+  exit-code:
+    description: Scanner exit code (0 clean, 1 findings, 2 error); empty if installation failed.
+    value: ${{ steps.scan.outputs.exit-code }}
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+      with:
+        node-version: '24'
+        package-manager-cache: false
+    - id: scan
+      shell: bash
+      working-directory: ${{ runner.temp }}
+      env:
+        KEYSPOOR_SCAN_PATH: ${{ inputs.path }}
+        KEYSPOOR_FORMAT: ${{ inputs.format }}
+      run: |
+        package_dir="$(node -p 'require("node:fs").mkdtempSync(require("node:path").join(process.env.RUNNER_TEMP, "keyspoor-package-"))')"
+        version="$(node -p 'require(process.env.GITHUB_ACTION_PATH + "/npm/package.json").version')"
+        npm install --prefix "$package_dir" --registry=https://registry.npmjs.org --ignore-scripts --no-audit --no-fund --package-lock=false "keyspoor@$version" >&2
+        export KEYSPOOR_CLI="$package_dir/node_modules/keyspoor/cli.cjs"
+        node "$GITHUB_ACTION_PATH/action/run.cjs"
+branding:
+  icon: key
+  color: blue
