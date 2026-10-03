@@ -185,6 +185,31 @@ jobs:
           node-version: '24'
       - name: Pin npm
         run: npm install --global npm@11.21.0
+      - name: Wait for npm registry visibility
+        env:
+          VERSION: ${{ needs.version.outputs.version }}
+        run: |
+          python3 - <<'PYTHON'
+          import json, os, time, urllib.error, urllib.request
+          version = os.environ['VERSION']
+          url = f'https://registry.npmjs.org/keyspoor/{version}'
+          deadline = time.monotonic() + 600
+          while True:
+              try:
+                  with urllib.request.urlopen(url, timeout=30) as response:
+                      if json.load(response)['version'] != version:
+                          raise SystemExit('Registry returned an unexpected version')
+                  print(f'keyspoor@{version} is visible in the npm registry')
+                  break
+              except urllib.error.HTTPError as error:
+                  if error.code != 404:
+                      raise
+                  remaining = deadline - time.monotonic()
+                  if remaining <= 0:
+                      raise SystemExit('npm package remained unavailable for 10 minutes') from error
+                  print('npm is still processing the published version; checking again shortly', flush=True)
+                  time.sleep(min(30, remaining))
+          PYTHON
       - name: Verify registry install
         env:
           VERSION: ${{ needs.version.outputs.version }}

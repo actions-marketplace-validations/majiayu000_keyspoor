@@ -28,7 +28,10 @@ Node 24 and pinned npm 11.21.0 with OIDC trusted publishing and provenance;
 crates.io uses the pinned official `rust-lang/crates-io-auth-action` to obtain
 a short-lived token. npm publishes the exact tested tarball, then the workflow
 performs a fresh registry install and repeats the CLI checks in a separate job,
-so a failed installation can be retried without republishing. Cargo publishes
+so a failed installation can be retried without republishing. npm may take a
+few minutes to make an accepted publication visible: this job waits up to ten
+minutes for the exact version, retrying only HTTP 404 responses. Other errors
+and the actual CLI verification fail immediately. Cargo publishes
 with `--locked`. The GitHub release is created after both registry jobs succeed.
 It includes the same npm tarball, five binaries, license files and `SHA256SUMS`.
 
