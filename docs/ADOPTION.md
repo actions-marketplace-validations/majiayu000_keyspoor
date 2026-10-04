@@ -50,6 +50,31 @@ Run durations in seconds, in execution order:
 - rclean: 0.428, 0.365, 0.359, 0.359, 0.351.
 - argus: 0.563, 0.551, 0.546, 0.552, 0.559.
 
+A follow-up using the **public macOS ARM64 native 0.1.3 release binary** on
+the same snapshots removed npm-launcher overhead. Five sequential new-process
+runs per repository, with filesystem caches uncleared, produced:
+
+| Snapshot | Native median seconds | Cached npm median seconds |
+|---|---:|---:|
+| remem | 0.532 | 0.824 |
+| rclean | 0.047 | 0.359 |
+| argus | 0.258 | 0.552 |
+
+Native run durations in seconds, in execution order:
+
+- remem: 1.838, 0.532, 0.530, 0.530, 0.533.
+- rclean: 0.060, 0.047, 0.047, 0.048, 0.047.
+- argus: 0.295, 0.255, 0.260, 0.256, 0.258.
+
+The first remem native invocation was slower; its cause was not isolated, so
+the median must not be presented as guaranteed first-launch latency. All runs
+were complete and had zero errors, with the same file/byte and finding counts
+as the npm trials. Invoke the downloaded platform binary directly with
+`scan <snapshot> --format json` to reproduce. These were separate sequential
+sessions, not an alternating paired experiment; differences do not establish
+an exact constant npm overhead. Native CLI hooks and persistent MCP servers
+avoid paying an npm launcher startup on each scan.
+
 All three snapshots passed baseline suppression, detection of a newly inserted
 synthetic finding, and staged scanning against Git index contents differing
 from the working file. Baselines were temporary test artifacts; existing
