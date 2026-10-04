@@ -2,6 +2,7 @@ name: Published scanner Action
 
 on:
   workflow_dispatch:
+  workflow_call:
 
 permissions:
   contents: read
@@ -72,3 +73,14 @@ jobs:
           assert not reports['MISSING']['invocations'][0]['executionSuccessful']
           print('Public Action: exits 0/1/2, valid SARIF and redaction verified')
           PY
+      - name: Retain redacted reports after finding and missing-input failures
+        if: always() && steps.clean.outputs.report-path != ''
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: keyspoor-action-reports-${{ matrix.os }}
+          path: |
+            ${{ steps.clean.outputs.report-path }}
+            ${{ steps.finding.outputs.report-path }}
+            ${{ steps.missing.outputs.report-path }}
+          if-no-files-found: error
+          retention-days: 7

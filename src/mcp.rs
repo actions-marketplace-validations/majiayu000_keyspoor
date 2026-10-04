@@ -547,3 +547,57 @@ fn execute(
     }
     preview.result()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn active_scan_accepts_ping_and_cancellation_and_rejects_busy_calls() {
+        let mut state = State::Ready;
+        let mut active = None;
+        let (jobs, pending) = mpsc::sync_channel(1);
+        let call = |id| {
+            json!({"jsonrpc":"2.0","id":id,"method":"tools/call",
+            "params":{"name":"scan_text","arguments":{"text":"safe"}}})
+        };
+        assert!(dispatch(&mut state, &mut active, &jobs, call(2)).is_none());
+        // Hold the queued job instead of racing a worker against fixture I/O.
+        let job = pending.recv().unwrap();
+        assert!(!job.done.load(Ordering::Acquire));
+        let busy = dispatch(&mut state, &mut active, &jobs, call(3)).unwrap();
+        assert_eq!(busy["id"], 3);
+        assert_eq!(busy["result"]["isError"], true);
+        assert_eq!(busy["result"]["structuredContent"]["complete"], false);
+        assert!(matches!(pending.try_recv(), Err(mpsc::TryRecvError::Empty)));
+        let ping = dispatch(
+            &mut state,
+            &mut active,
+            &jobs,
+            json!({"jsonrpc":"2.0","id":4,"method":"ping"}),
+        )
+        .unwrap();
+        assert_eq!(ping["id"], 4);
+        assert_eq!(ping["result"], json!({}));
+        let cancel = |id| {
+            json!({"jsonrpc":"2.0","method":"notifications/cancelled",
+            "params":{"requestId":id}})
+        };
+        assert!(dispatch(&mut state, &mut active, &jobs, cancel(999)).is_none());
+        assert!(!job.control.is_cancelled());
+        assert!(!job.cancelled_by_client.load(Ordering::Acquire));
+        assert!(dispatch(&mut state, &mut active, &jobs, cancel(2)).is_none());
+        assert!(job.control.is_cancelled());
+        assert!(job.cancelled_by_client.load(Ordering::Acquire));
+
+        let engine = Engine::new(crate::EngineConfig::default()).unwrap();
+        let output = Arc::new(Mutex::new(io::stdout()));
+        let result = execute(&engine, Path::new("."), 1024, &job, &output).unwrap();
+        assert_eq!(result["isError"], true);
+        assert_eq!(result["structuredContent"]["complete"], false);
+        assert_eq!(
+            result["structuredContent"]["errors"][0]["message"],
+            "Scan cancelled"
+        );
+    }
+}

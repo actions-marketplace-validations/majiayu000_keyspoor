@@ -36,12 +36,19 @@ jobs:
           python3 - <<'PY'
           import json, os, pathlib, tomllib
           cargo = tomllib.loads(pathlib.Path('Cargo.toml').read_text())['package']['version']
-          npm = json.loads(pathlib.Path('npm/package.json').read_text())['version']
-          if cargo != npm:
-              raise SystemExit('Cargo and npm versions must match')
+          npm = json.loads(pathlib.Path('npm/package.json').read_text())
+          server = json.loads(pathlib.Path('server.json').read_text())
+          if cargo != npm['version'] or cargo != server['version'] or cargo != server['packages'][0]['version']:
+              raise SystemExit('Cargo, npm and MCP versions must match')
+          if npm['mcpName'] != server['name']:
+              raise SystemExit('npm mcpName must match the MCP Registry name')
           tag = f'v{cargo}'
           if os.environ['EVENT_NAME'] == 'push' and os.environ['REF_NAME'] != tag:
               raise SystemExit('Release tag must match the package version')
+          heading = f'## {tag} release notes\n'
+          document = pathlib.Path('docs/RELEASING.md').read_text()
+          if heading not in document or not document.split(heading, 1)[1].split('\n## ', 1)[0].strip():
+              raise SystemExit('Add release notes to docs/RELEASING.md before tagging')
           with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
               output.write(f'version={cargo}\ntag={tag}\n')
           PY
@@ -260,4 +267,54 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           RELEASE_TAG: ${{ needs.version.outputs.tag }}
-        run: gh release create "$RELEASE_TAG" dist/* --verify-tag --title "Keyspoor $RELEASE_TAG" --generate-notes
+        run: |
+          python3 - <<'PY'
+          import os, pathlib
+          document = pathlib.Path('docs/RELEASING.md').read_text()
+          heading = f"## {os.environ['RELEASE_TAG']} release notes\n"
+          notes = document.split(heading, 1)[1].split('\n## ', 1)[0].strip()
+          pathlib.Path('release-notes.md').write_text(notes + '\n')
+          PY
+          gh release create "$RELEASE_TAG" dist/* --verify-tag --title "Keyspoor $RELEASE_TAG" --notes-file release-notes.md
+
+  mcp:
+    name: Publish MCP Registry metadata
+    if: github.event_name == 'push'
+    needs: [npm-check]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Download verified MCP publisher
+        run: |
+          curl --fail --location --retry 3 --output mcp-publisher.tar.gz https://github.com/modelcontextprotocol/registry/releases/download/v1.8.1/mcp-publisher_linux_amd64.tar.gz
+          echo 'a06c9096dcb9727c13555b6be26c7effa707b01f06a4c561ba7a3635443cf2cc  mcp-publisher.tar.gz' | sha256sum --check
+          tar -xzf mcp-publisher.tar.gz mcp-publisher
+      - name: Authenticate with temporary GitHub identity
+        run: ./mcp-publisher login github-oidc
+      - name: Publish the tested package's metadata
+        run: ./mcp-publisher publish server.json
+
+  action-alias:
+    name: Update maintained scanner Action
+    if: github.event_name == 'push'
+    needs: [github]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Point v1 at the published release commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: gh api --method PATCH "repos/$GH_REPO/git/refs/tags/v1" -f "sha=$GITHUB_SHA" -F force=true
+
+  action-checks:
+    name: Published scanner Action checks
+    if: github.event_name == 'push'
+    needs: [action-alias]
+    uses: ./.github/workflows/action-smoke.yml

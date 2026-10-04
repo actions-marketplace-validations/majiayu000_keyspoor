@@ -21,6 +21,22 @@ The scanner implementation is our Rust code. The built-in catalogue is **third-p
 
 The full upstream MIT notice is retained in `THIRD_PARTY_NOTICES`. The importer reads only these pinned source bytes and never inspects benchmark fixtures, scores, or scanner findings. The release tag was resolved to the commit above through GitHub's Git reference API; regeneration fetches by commit, not by mutable branch or tag.
 
+## Google API Key example allowlist
+
+The imported `gcp-api-key` allowlist contains 16 literal Google API Key-format
+values. The pinned upstream [generator](https://github.com/gitleaks/gitleaks/blob/83d9cd684c87d95d656c1458ef04895a7f1cbd8e/cmd/generate/config/rules/gcp.go#L38)
+identifies them as examples from `firebase/firebase-android-sdk`; the generated
+TOML omits that provenance comment. All 16 GitHub secret-scanning alerts in this
+repository matched those upstream entries exactly. They are suppression rule
+data, not credentials used by Keyspoor. Their ownership and present validity
+were not independently checked, and no provider authentication was attempted.
+
+These entries are retained in this release. GitHub alerts remain open with
+validity `unknown`; no claim of revocation follows from their presence in an
+upstream allowlist. [Gitleaks issue #2295](https://github.com/gitleaks/gitleaks/issues/2295)
+requests preserving the example provenance in generated configuration and
+providing downstream guidance. No literal values are reproduced here.
+
 ## Transformations
 
 - Preserve rule IDs, descriptions, regexes, entropy thresholds, and positive path constraints. Preserve keyword gates except for the documented correction below.

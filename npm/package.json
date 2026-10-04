@@ -1,6 +1,6 @@
 {
   "name": "keyspoor",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Offline Rust secret scanner for source code and Git history, with JSON, SARIF and MCP for AI agents",
   "license": "Apache-2.0",
   "bin": {
@@ -42,5 +42,6 @@
   ],
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "mcpName": "io.github.majiayu000/keyspoor"
 }

@@ -9,10 +9,32 @@ This npm package provides the **native command-line tool**, not a JavaScript SDK
 For the Rust library, source, rule provenance and measured benchmarks, see the
 [Keyspoor repository](https://github.com/majiayu000/keyspoor).
 
+## Try it in 60 seconds
+
+With Node.js 20+, run this in a macOS/Linux terminal. The input is deliberately
+made up for the demo and is not a credential:
+
+```sh
+printf 'password=KspDemo_7zQ2mX9pL4vN6sR8\n' | npx -y keyspoor@0.1.3 scan - --format json
+echo "exit=$?"
+```
+
+Expected: `exit=1`, `complete=true`, one `generic-credential-unquoted` finding
+at line 1, byte column 9, and `redacted="[REDACTED]"`. The report contains no
+raw value or source snippet. PowerShell users can pipe the same string through
+`npx.cmd` and check `$LASTEXITCODE`.
+
+| Use case | Guide |
+| --- | --- |
+| CLI and Git scans | [Repository commands](https://github.com/majiayu000/keyspoor#cli-and-repository-scans) |
+| Pull request checks | [Complete CI workflow](https://github.com/majiayu000/keyspoor/blob/main/docs/CI_SETUP.md) |
+| Codex, Claude Code, Cursor | [MCP setup](https://github.com/majiayu000/keyspoor/blob/main/docs/AGENT_SETUP.md) |
+| Embed in Rust | [Rust API](https://docs.rs/keyspoor) |
+
 ## Install and scan
 
 ```sh
-npm install --global keyspoor
+npm install --global keyspoor@0.1.3
 keyspoor scan . --format json
 keyspoor staged .
 keyspoor history .
@@ -20,7 +42,7 @@ keyspoor scan - --format jsonl
 keyspoor mcp --root /absolute/path/to/project
 ```
 
-You can also run `npx keyspoor scan . --format sarif` without a global
+You can also run `npx -y keyspoor@0.1.3 scan . --format sarif` without a global
 installation. A standalone npm-format tarball is available on GitHub Releases.
 
 The package bundles native binaries for Linux x64/ARM64 (GNU libc), macOS
@@ -34,6 +56,19 @@ Git must be installed for staged and history scans.
 Exit codes are **0** for a completed scan with no reported findings, **1** for a
 completed scan with findings, and **2** for errors or an incomplete scan. The
 launcher passes arguments and standard streams directly to the Rust CLI.
+Check the other outcomes with synthetic input:
+
+```sh
+printf 'ordinary configuration\n' | npx -y keyspoor@0.1.3 scan - --format json
+echo "exit=$?" # 0: complete=true, findings=[]
+printf 'ordinary configuration\n' | npx -y keyspoor@0.1.3 scan - --max-bytes 4 --format json
+echo "exit=$?" # 2: complete=false, errors contains "input exceeds 4 byte limit"
+```
+
+Investigate errors before treating a scan as complete. Review findings locally
+at their reported positions and rotate real credentials that have been exposed.
+MCP offers tools to agents; use required CI checks or Git hooks for enforcement.
+First-time package installation accesses npm; detection itself stays offline.
 
 Scanning is offline and does not verify whether credentials are active. Findings
 are redacted; the scanner does not print raw secrets. Detection has false positives

@@ -6,13 +6,14 @@ confirmation or stored registry token is needed for this workflow. Both
 registries must have a trusted publisher configured for repository
 `majiayu000/keyspoor`, workflow `release.yml`, with no environment name.
 
-Update `Cargo.toml`, `Cargo.lock` and `npm/package.json` together, commit the
+Update `Cargo.toml`, `Cargo.lock`, `npm/package.json` and the two version fields
+in `server.json` together, add versioned release notes below, then commit the
 change, then push the release commit and tag:
 
 ```sh
 git push origin main
-git tag v0.1.2
-git push origin v0.1.2
+git tag v0.1.3
+git push origin v0.1.3
 gh run list --workflow release.yml
 ```
 
@@ -35,13 +36,13 @@ and the actual CLI verification fail immediately. Cargo publishes
 with `--locked`. The GitHub release is created after both registry jobs succeed.
 It includes the same npm tarball, five binaries, license files and `SHA256SUMS`.
 
-| Target | Asset for v0.1.2 | Native runner |
+| Target | Asset for v0.1.3 | Native runner |
 |---|---|---|
-| Linux x64, glibc | `keyspoor-v0.1.2-x86_64-unknown-linux-gnu` | `ubuntu-24.04` |
-| Linux ARM64, glibc | `keyspoor-v0.1.2-aarch64-unknown-linux-gnu` | `ubuntu-24.04-arm` |
-| macOS Intel | `keyspoor-v0.1.2-x86_64-apple-darwin` | `macos-15-intel` |
-| macOS Apple Silicon | `keyspoor-v0.1.2-aarch64-apple-darwin` | `macos-15` |
-| Windows x64 | `keyspoor-v0.1.2-x86_64-pc-windows-msvc.exe` | `windows-2025` |
+| Linux x64, glibc | `keyspoor-v0.1.3-x86_64-unknown-linux-gnu` | `ubuntu-24.04` |
+| Linux ARM64, glibc | `keyspoor-v0.1.3-aarch64-unknown-linux-gnu` | `ubuntu-24.04-arm` |
+| macOS Intel | `keyspoor-v0.1.3-x86_64-apple-darwin` | `macos-15-intel` |
+| macOS Apple Silicon | `keyspoor-v0.1.3-aarch64-apple-darwin` | `macos-15` |
+| Windows x64 | `keyspoor-v0.1.3-x86_64-pc-windows-msvc.exe` | `windows-2025` |
 
 On Linux, verify downloaded assets with `sha256sum --check SHA256SUMS`; on
 macOS, use `shasum -a 256 --check SHA256SUMS`. Mark a downloaded Unix binary
@@ -59,18 +60,16 @@ uploading the verified `release-assets` Actions artifact. It does not publish
 to a registry or create a GitHub release. The `v1` scanner Action alias does
 not trigger publication: only full numeric version tags do.
 
-The scanner Action has a separately maintained `v1` alias. After a package
-release succeeds, point that alias at the tested release commit and verify
-the public consumer workflow (Linux, macOS and Windows):
+After the GitHub release succeeds, the workflow updates the maintained scanner
+Action `v1` alias to the published commit and runs the public Action consumer
+checks on Linux, macOS and Windows. Full numeric version tags remain immutable.
+A failed alias/consumer job can be retried independently of registry publication.
 
-```sh
-git tag -f v1 v0.1.2
-git push origin refs/tags/v1 --force
-gh workflow run action-smoke.yml --ref main
-```
-
-Only the moving Action alias is updated this way; never move a full published
-version tag. The first `v1` alias points to the v0.1.2 release commit.
+The MCP Registry job runs after the npm registry installation check. It uses
+pinned `mcp-publisher` 1.8.1, verifies its download hash, authenticates through
+GitHub OIDC, and publishes `server.json`. The npm package's `mcpName` matches
+`io.github.majiayu000/keyspoor`. Registry metadata describes the stdio command
+and a required project-root argument; the registry stores metadata, not binaries.
 
 The Homebrew tap has its own scheduled workflow that reads the published
 GitHub release and updates the formula using the tap repository's temporary
@@ -86,3 +85,35 @@ for changed package contents.
 Trusted publisher references: [npm](https://docs.npmjs.com/trusted-publishers/),
 [crates.io](https://crates.io/docs/trusted-publishing), and
 [official crates.io authentication action](https://github.com/rust-lang/crates-io-auth-action).
+
+## v0.1.3 release notes
+
+Keyspoor now has a complete first-use path: a pinned npm demo with expected
+redacted output, setup guides for Codex, Claude Code and Cursor, and a copyable
+PR/push workflow that retains reports after failed scans. A native staged Git
+hook and reviewed local-baseline examples explain how to introduce scanning
+into existing repositories.
+
+The MCP concurrency test no longer assumes filesystem work remains active
+long enough for a ping to be one of the first two responses. Dispatch behavior
+is checked with a held job queue; the real-process test permits legitimate
+completion/cancellation ordering. Scanner production behavior is unchanged.
+
+Release automation now publishes MCP Registry metadata using GitHub OIDC,
+advances the maintained `v1` scanner Action after package publication, and
+checks that public Action on Linux, macOS and Windows. npm registry verification
+waits for newly published versions to become visible.
+
+Install the native CLI:
+
+```sh
+npm install -g keyspoor@0.1.3
+# Or: brew install majiayu000/tap/keyspoor
+# Or: cargo install keyspoor --version 0.1.3 --locked
+```
+
+Start with the [Agent setup guide](https://github.com/majiayu000/keyspoor/blob/main/docs/AGENT_SETUP.md)
+or [complete CI setup](https://github.com/majiayu000/keyspoor/blob/main/docs/CI_SETUP.md).
+Google API Key example literals inherited from the Gitleaks allowlist remain
+unchanged; their Firebase example provenance is now documented. They are not
+scanner authentication settings and their present validity has not been checked.

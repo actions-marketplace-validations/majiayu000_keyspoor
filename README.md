@@ -12,12 +12,42 @@ a reusable Rust library or a read-only MCP server.
 [Releases](https://github.com/majiayu000/keyspoor/releases) ·
 [简体中文](README.zh-CN.md)
 
+## Try it in 60 seconds
+
+With Node.js 20+, paste this into a macOS/Linux terminal. The value below is
+made up for this demo and is not a credential:
+
+```sh
+printf 'password=KspDemo_7zQ2mX9pL4vN6sR8\n' | npx -y keyspoor@0.1.3 scan - --format json
+echo "exit=$?"
+```
+
+Expected: `exit=1` and one finding. The relevant report fields are:
+
+```json
+{"complete":true,"findings":[{"rule_id":"generic-credential-unquoted","path":"stdin","line":1,"column":9,"redacted":"[REDACTED]"}],"errors":[]}
+```
+
+This is an excerpt; the actual report also includes ranges, fingerprints,
+statistics and scan context. It contains neither the value nor a source snippet.
+On Windows PowerShell, pipe the same synthetic string to
+`npx.cmd -y keyspoor@0.1.3 scan - --format json`, then check `$LASTEXITCODE`.
+
+| Your goal | Start here |
+| --- | --- |
+| Scan a repository or staged changes | [CLI commands](#cli-and-repository-scans) |
+| Block pull requests and save a report | [Complete CI setup](docs/CI_SETUP.md) · [copyable workflow](examples/github-actions/keyspoor.yml) |
+| Give a coding agent scanning tools | [Codex, Claude Code and Cursor setup](docs/AGENT_SETUP.md) |
+| Embed a scanner in Rust | [Library example](#library-and-custom-rules) · [Rust API](https://docs.rs/keyspoor) |
+
+## Install
+
 ```sh
 # Rust toolchain (1.96 or newer)
-cargo install keyspoor --locked
+cargo install keyspoor --version 0.1.3 --locked
 
 # Or Node.js 20+: the npm package runs the native Rust CLI
-npm install -g keyspoor
+npm install -g keyspoor@0.1.3
 
 # Or Homebrew (macOS / Linux)
 brew install majiayu000/tap/keyspoor
@@ -25,15 +55,14 @@ brew install majiayu000/tap/keyspoor
 keyspoor scan . --format jsonl
 ```
 
-The native CLI is available through both npm and GitHub Releases.
-
-Current release: **0.1.2**. The Rust API is pre-1.0 and may change. The npm
+Current release: **0.1.3**. The Rust API is pre-1.0 and may change. The npm
 package bundles native binaries for macOS (Apple Silicon/Intel), Linux GNU
 (ARM64/x64) and Windows x64; it is a CLI launcher, not a JavaScript scanning SDK.
-There are no install hooks or runtime binary downloads.
+There are no install hooks or runtime binary downloads. First-time npm/npx
+installation requires registry access; scanning itself is offline.
 [Standalone binaries](https://github.com/majiayu000/keyspoor/releases) are also
-available through GitHub Releases. To build from source, run
-`cargo build --release --locked` and use `target/release/keyspoor`.
+available. To build from source, run `cargo build --release --locked` and use
+`target/release/keyspoor`.
 
 ## Why Keyspoor
 
@@ -62,7 +91,7 @@ engine: rule semantics that cannot be preserved are explicitly excluded.
 The [implementation decision](docs/DECISIONS.md) records the build/adapt boundary
 and rejected SDK and wrapper alternatives.
 
-## Use
+## CLI and repository scans
 
 ```sh
 keyspoor scan /path/to/project --format json
@@ -79,6 +108,20 @@ keyspoor mcp --root /path/to/project
 
 Exit codes: **0** means the selected scan completed with no reported findings;
 **1** means it completed with findings; **2** means an error or incomplete scan.
+You can check both other outcomes with synthetic input:
+
+```sh
+printf 'ordinary configuration\n' | npx -y keyspoor@0.1.3 scan - --format json
+echo "exit=$?" # 0: complete=true, findings=[]
+printf 'ordinary configuration\n' | npx -y keyspoor@0.1.3 scan - --max-bytes 4 --format json
+echo "exit=$?" # 2: complete=false, errors contains "input exceeds 4 byte limit"
+```
+
+When a finding appears, inspect its path and position locally, remove exposed
+credentials from tracked files and rotate any real credential that was exposed.
+Review known intentional findings before recording a baseline. Investigate every
+`2` result before treating the scan as complete.
+
 An ignored finding is not evidence that the original input contained no secret.
 Baselines suppress existing fingerprints but preserve changed secret values.
 An incomplete scan cannot replace a baseline. Baseline schema 2 binds the scan
@@ -122,6 +165,11 @@ also unpacks supported archives in Git blobs, retaining commit/member paths. `st
 unique inputs; `detection_passes` counts actual path-sensitive engine calls.
 
 ## GitHub Action
+
+Copy the [complete pull request workflow](examples/github-actions/keyspoor.yml)
+into `.github/workflows/keyspoor.yml`, or follow the [CI setup guide](docs/CI_SETUP.md)
+for reports, permissions, baselines and failure handling. Its scan job can be
+required in branch protection. The core steps are:
 
 ```yaml
 permissions:
@@ -205,6 +253,11 @@ as a long punctuated phrase can still be missed. Provider rules retain upstream
 limitations; see the rule provenance document.
 
 ## Agent interfaces
+
+Start with the [tested configuration guide for Codex, Claude Code and Cursor](docs/AGENT_SETUP.md).
+MCP exposes read-only tools; whether an agent calls them depends on the client,
+its permissions and the task. Use a required CI check or Git hook when scans
+must run before changes are accepted.
 
 `serve` accepts one JSON object per line: `{"id":1,"path":"file.txt","text":"..."}`.
 Responses contain the same id and a complete redacted scan report. Rules are

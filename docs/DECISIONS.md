@@ -202,3 +202,13 @@ workflow checks public Keyspoor releases and updates only its formula with the
 tap's own temporary GITHUB_TOKEN. This avoids a cross-repository personal token;
 updates are eventual rather than part of the main release transaction. Check
 actual install/test behavior and the scheduled updater before reporting it ready.
+
+## MCP discovery and first-use documentation
+
+Publish the existing native npm launcher as MCP Registry metadata under
+`io.github.majiayu000/keyspoor`, using the official registry publisher's GitHub
+OIDC authentication. Reuse the existing release job ordering so registration
+occurs only after a verified npm registry installation. The registry is a
+discovery surface, not another scanning engine or hosted service. Client
+configuration examples use a pinned package and an explicit project root.
+The original JSON/JSONL/SARIF and MCP contracts remain unchanged.

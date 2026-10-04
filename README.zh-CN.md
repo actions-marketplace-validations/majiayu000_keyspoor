@@ -9,14 +9,41 @@ JSON、JSONL 或 SARIF。既可作为原生 CLI 使用，也提供 Rust 库和�
 [npm](https://www.npmjs.com/package/keyspoor) ·
 [发行版本](https://github.com/majiayu000/keyspoor/releases)
 
-## 安装与使用
+## 60 秒体验
+
+需要 Node.js 20+。在 macOS/Linux 终端复制执行，下面的值是专为演示编造的，
+不是真实凭据：
+
+```sh
+printf 'password=KspDemo_7zQ2mX9pL4vN6sR8\n' | npx -y keyspoor@0.1.3 scan - --format json
+echo "exit=$?"
+```
+
+预期：退出码 `1`，一个发现。报告中的关键字段如下：
+
+```json
+{"complete":true,"findings":[{"rule_id":"generic-credential-unquoted","path":"stdin","line":1,"column":9,"redacted":"[REDACTED]"}],"errors":[]}
+```
+
+这里只展示字段节选，完整报告还有位置范围、指纹、统计和扫描上下文；
+报告不会包含原值或源码片段。Windows PowerShell 可把同一个合成字符串传给
+`npx.cmd -y keyspoor@0.1.3 scan - --format json`，用 `$LASTEXITCODE` 查看退出码。
+
+| 你的目标 | 接入入口 |
+| --- | --- |
+| 扫描仓库、暂存区或历史 | [CLI 使用](#安装与-cli-使用) |
+| 检查 PR 并保存报告 | [CI 完整指南](docs/CI_SETUP.md) · [可复制工作流](examples/github-actions/keyspoor.yml) |
+| 给编程助手接入扫描工具 | [Codex、Claude Code、Cursor 配置](docs/AGENT_SETUP.md) |
+| 在 Rust 中复用引擎 | [库示例](README.md#library-and-custom-rules) · [Rust API](https://docs.rs/keyspoor) |
+
+## 安装与 CLI 使用
 
 ```sh
 # Rust 1.96 或更新版本
-cargo install keyspoor --locked
+cargo install keyspoor --version 0.1.3 --locked
 
 # 或通过 Node.js 20+ 安装原生 Rust CLI
-npm install -g keyspoor
+npm install -g keyspoor@0.1.3
 
 # 或通过 Homebrew（macOS / Linux）
 brew install majiayu000/tap/keyspoor
@@ -28,17 +55,28 @@ keyspoor scan . --format sarif
 keyspoor mcp --root /path/to/project
 ```
 
-原生 CLI 已发布到 npm，也可通过 GitHub Releases 下载安装包。
-
-当前版本为 **0.1.2**，Rust API 仍可能发生破坏性变更。npm 包内置 macOS
+当前版本为 **0.1.3**，Rust API 仍可能发生破坏性变更。npm 包内置 macOS
 Apple Silicon/Intel、Linux GNU ARM64/x64、Windows x64 的原生二进制，
 没有安装脚本或运行时二进制下载；它是 CLI 启动器，不是 JavaScript SDK。
+首次 npm/npx 安装需要访问 registry，扫描过程离线。
 也可从 [GitHub Releases](https://github.com/majiayu000/keyspoor/releases)
 下载独立二进制，或通过 `cargo build --release --locked` 编译，执行
 `target/release/keyspoor`。
 
 退出码：`0` 表示完整扫描且没有报告命中，`1` 表示完整扫描且有命中，
-`2` 表示错误或扫描未完成。忽略项和基线会影响报告结果，不能据此断言输入中没有密钥。
+`2` 表示错误或扫描未完成。可以再验证两个结果：
+
+```sh
+printf 'ordinary configuration\n' | npx -y keyspoor@0.1.3 scan - --format json
+echo "exit=$?" # 0：complete=true，findings=[]
+printf 'ordinary configuration\n' | npx -y keyspoor@0.1.3 scan - --max-bytes 4 --format json
+echo "exit=$?" # 2：complete=false，errors 含 input exceeds 4 byte limit
+```
+
+发现问题后，根据路径和位置在本地检查文件，删除跟踪文件中的凭据；
+真实凭据已暴露时应轮换。只有审查已知发现后才记录基线。
+退出码 `2` 必须排查，不能当作检查通过。忽略项和基线会影响报告结果，
+不能据此断言输入中没有密钥。
 
 ## 主要能力与边界
 
@@ -57,7 +95,9 @@ Python/JS 进程内绑定未实现。完整范围见 [功能矩阵](docs/FEATURE
 
 ## GitHub Action 与自动发布
 
-其他仓库可在 checkout 后添加扫描步骤：
+将 [完整工作流](examples/github-actions/keyspoor.yml) 复制到
+`.github/workflows/keyspoor.yml`，再按 [CI 指南](docs/CI_SETUP.md) 配置报告和
+必需检查。核心扫描步骤如下：
 
 ```yaml
 - uses: majiayu000/keyspoor@v1
@@ -71,6 +111,9 @@ Python/JS 进程内绑定未实现。完整范围见 [功能矩阵](docs/FEATURE
 脱敏报告；`exit-code` 保留 0/1/2 语义，发现密钥或扫描出错会让该步骤失败。
 保存报告时用 `if: always()`；完整示例见 [英文说明](README.md#github-action)。
 需要固定不可变版本时使用完整 commit SHA。安装会访问 npm，检测本身离线。
+
+MCP 暴露只读工具，是否调用取决于客户端、权限和任务，不能保证每次提交都会扫描。
+需要强制检查时，配置必需 CI 检查或 Git hook。
 
 完整版本标签触发五平台构建和质量检查，再通过 OIDC 自动发布 npm、crates.io
 及 GitHub Release。现有 Homebrew tap 每小时检查新版本，安装测试通过后自动更新；
