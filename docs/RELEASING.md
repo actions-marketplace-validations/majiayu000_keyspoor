@@ -31,8 +31,11 @@ a short-lived token. npm publishes the exact tested tarball, then the workflow
 performs a fresh registry install and repeats the CLI checks in a separate job,
 so a failed installation can be retried without republishing. npm may take a
 few minutes to make an accepted publication visible: this job waits up to ten
-minutes for the exact version, retrying only HTTP 404 responses. Other errors
-and the actual CLI verification fail immediately. Cargo publishes
+minutes for the version in npm's installation index, retrying HTTP 404 or an
+index that does not yet list the version. It requests the same abbreviated
+metadata format as npm install because the separate exact-version endpoint can
+become visible earlier. Other errors, malformed metadata and the actual CLI
+verification fail immediately. Cargo publishes
 with `--locked`. The GitHub release is created after both registry jobs succeed.
 It includes the same npm tarball, five binaries, license files and `SHA256SUMS`.
 

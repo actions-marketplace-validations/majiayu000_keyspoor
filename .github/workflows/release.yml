@@ -199,23 +199,30 @@ jobs:
           python3 - <<'PYTHON'
           import json, os, time, urllib.error, urllib.request
           version = os.environ['VERSION']
-          url = f'https://registry.npmjs.org/keyspoor/{version}'
+          request = urllib.request.Request(
+              'https://registry.npmjs.org/keyspoor',
+              headers={'Accept': 'application/vnd.npm.install-v1+json'},
+          )
           deadline = time.monotonic() + 600
           while True:
               try:
-                  with urllib.request.urlopen(url, timeout=30) as response:
-                      if json.load(response)['version'] != version:
-                          raise SystemExit('Registry returned an unexpected version')
-                  print(f'keyspoor@{version} is visible in the npm registry')
-                  break
+                  with urllib.request.urlopen(request, timeout=30) as response:
+                      versions = json.load(response)['versions']
+                      if not isinstance(versions, dict):
+                          raise SystemExit('Registry returned an invalid versions index')
+                      if version in versions:
+                          if versions[version]['version'] != version:
+                              raise SystemExit('Registry returned an unexpected version')
+                          print(f'keyspoor@{version} is visible in the npm install index')
+                          break
               except urllib.error.HTTPError as error:
                   if error.code != 404:
                       raise
-                  remaining = deadline - time.monotonic()
-                  if remaining <= 0:
-                      raise SystemExit('npm package remained unavailable for 10 minutes') from error
-                  print('npm is still processing the published version; checking again shortly', flush=True)
-                  time.sleep(min(30, remaining))
+              remaining = deadline - time.monotonic()
+              if remaining <= 0:
+                  raise SystemExit('npm package remained unavailable for 10 minutes')
+              print('npm is still processing the published version; checking again shortly', flush=True)
+              time.sleep(min(30, remaining))
           PYTHON
       - name: Verify registry install
         env:
