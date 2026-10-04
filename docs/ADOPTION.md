@@ -26,10 +26,75 @@ The source snapshots have no original Git history; a local Git marker enables
 repository ignore behavior. This experiment measures checked-out file scanning,
 not history or PR-diff scanning.
 
-Measurements and source commits will be recorded here after testing the public
-0.1.3 package. Raw private credentials are not collected. Findings in these
-unlabelled repositories are detection counts, not a measured false-positive
-rate; classifying them needs a separate reviewed ground truth.
+Measured on 2026-10-04 using the **public npm 0.1.3 package**, on macOS 26.5.2
+ARM64. A fresh npm cache took **5.01 seconds** to install and finish the first
+synthetic stdin scan. Five subsequent offline npm-launcher scans had a median
+of **0.323 seconds**. Installation time depends on the registry and network.
+
+Each repository row below is the median of five end-to-end runs through
+`npx --offline --yes keyspoor@0.1.3 scan <snapshot> --format json`, after package
+installation. Times include launcher and scanner startup; filesystem caches
+were not flushed. This is an adoption smoke benchmark, not a cold-disk or
+cross-tool performance comparison. Byte counts are the scanner's processed
+bytes, not downloaded archive sizes.
+
+| Public snapshot | Files | Processed bytes | Median seconds | Findings | Errors / complete |
+|---|---:|---:|---:|---:|---|
+| [remem @ 3722f808](https://github.com/majiayu000/remem/tree/3722f8083d08774a58d5234ceda817ec3951b7d7) | 2,687 | 163,358,510 | 0.824 | 73 | 0 / true |
+| [rclean @ 3ea1704d](https://github.com/majiayu000/rclean/tree/3ea1704d05363c67b46b4e7619eeb02a3400862d) | 351 | 2,064,038 | 0.359 | 0 | 0 / true |
+| [argus @ f2f0490e](https://github.com/majiayu000/argus/tree/f2f0490e94c3972cc86a52b6e2b38fc336c8bf09) | 658 | 10,572,461 | 0.552 | 46 | 0 / true |
+
+Run durations in seconds, in execution order:
+
+- remem: 0.933, 0.818, 0.817, 0.827, 0.824.
+- rclean: 0.428, 0.365, 0.359, 0.359, 0.351.
+- argus: 0.563, 0.551, 0.546, 0.552, 0.559.
+
+All three snapshots passed baseline suppression, detection of a newly inserted
+synthetic finding, and staged scanning against Git index contents differing
+from the working file. Baselines were temporary test artifacts; existing
+findings were not reviewed or accepted as safe. Do not automatically baseline
+unreviewed findings in a production repository.
+
+To reproduce the snapshot workload, download the linked commits as source
+archives, extract each into a temporary directory, run `git init` there to
+activate repository ignore behavior, install the pinned package once, and run
+the scan command above five times. No project build or original Git history is
+needed. Existing cross-tool evaluations and ground-truth methodology are in
+[bench/README.md](../bench/README.md).
+
+Raw credential values were not collected in the published measurements.
+Findings in these unlabelled repositories are detection counts, not a measured
+false-positive rate; classifying them needs a separately reviewed ground truth.
+
+## Client and distribution results
+
+- CLI clean/finding/incomplete exits 0/1/2 and redaction passed through the
+  published npm package.
+- Published npm MCP passed initialization, tool discovery, text and path scans,
+  an absolute root containing spaces, rejection of paths outside that root,
+  missing-path errors and incomplete scans. stdout contained JSON-RPC only.
+- A real Codex 0.160.0 model invoked `scan_text` against the native 0.1.3 server:
+  one finding, complete=true, zero errors, no truncation and `[REDACTED]`.
+  This one-call model smoke test took 33.78 seconds, including model/tool startup;
+  it is distinct from scanner throughput. The first test prompt prevented tool
+  discovery; permitting discovery for that exact tool made the retry pass.
+- Claude Code 2.1.234 project configuration and native MCP connection passed.
+  Its model invocation was not tested because the client was not logged in.
+  Cursor configuration JSON parsed successfully; its UI/model invocation was
+  not exercised.
+- The [0.1.3 release run](https://github.com/majiayu000/keyspoor/actions/runs/37183934247)
+  passed Linux/macOS/Windows CI, five native builds, registry installation and
+  public `uses: majiayu000/keyspoor@v1` scans on all three operating systems.
+  All nine clean/finding/error SARIF reports survived expected failing scan
+  steps and were downloaded and parsed after the run.
+
+- Homebrew updated automatically to 0.1.3; the official tap upgrade,
+  `brew test` and strict audit passed. The updater now uses its existing short-lived
+  GitHub token for release metadata, avoiding anonymous API rate limits.
+
+These checks establish working installation and specific integrations. They
+are not evidence of external user retention or production detection accuracy.
 
 ## Invite a first-time user
 
@@ -88,7 +153,9 @@ Website: https://majiayu000.github.io/keyspoor/
 
 ## Directory and outreach status
 
-MCP Registry registration and public release checks are part of this release.
-GitHub Marketplace publishing has a separate web confirmation flow. External
+[MCP Registry registration](https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.majiayu000%2Fkeyspoor)
+for `io.github.majiayu000/keyspoor` version 0.1.3 is public and was verified via
+the registry API. GitHub Marketplace publishing still requires its separate
+web confirmation flow; no listing has been claimed. External
 invitations and community posts need an intended audience/account; prepared
 material is not evidence that those messages have been sent or users recruited.
