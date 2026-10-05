@@ -180,7 +180,9 @@ Website: https://majiayu000.github.io/keyspoor/
 
 [MCP Registry registration](https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.majiayu000%2Fkeyspoor)
 for `io.github.majiayu000/keyspoor` version 0.1.3 is public and was verified via
-the registry API. GitHub Marketplace publishing still requires its separate
-web confirmation flow; no listing has been claimed. External
+the registry API. [GitHub Marketplace](https://github.com/marketplace/actions/keyspoor-secret-scan)
+was verified publicly listed on 2026-10-05 as **Keyspoor secret scan**, version
+0.1.3, in Security and Continuous integration. Its installation button provides
+`uses: majiayu000/keyspoor@v0.1.3`. External
 invitations and community posts need an intended audience/account; prepared
 material is not evidence that those messages have been sent or users recruited.

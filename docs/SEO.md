@@ -18,7 +18,7 @@ credential footprints. Distribution decisions are recorded in [DECISIONS.md](DEC
 | Homebrew | 0.1.3 formula automatically committed; official local upgrade, brew test and strict audit passed after authenticating release metadata queries | [Update run](https://github.com/majiayu000/homebrew-tap/actions/runs/37184919966) · [Formula commit](https://github.com/majiayu000/homebrew-tap/commit/68592110af2e11d31812ba70488f383438555d28) |
 | Project homepage | HTTP 200; live v0.1.3 content, Homebrew installation and scanning Action verified | [Website](https://majiayu000.github.io/keyspoor/) |
 | MCP Registry | 0.1.3 registered through GitHub OIDC; public API entry matches npm package and version | [Registry API](https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.majiayu000%2Fkeyspoor) |
-| GitHub Marketplace | Listing not yet confirmed; web publication step pending | [Prepared release](https://github.com/majiayu000/keyspoor/releases/edit/v0.1.3) |
+| GitHub Marketplace | Verified on 2026-10-05: Keyspoor secret scan v0.1.3 publicly listed in Security and Continuous integration; installation button resolves to `majiayu000/keyspoor@v0.1.3` | [Marketplace listing](https://github.com/marketplace/actions/keyspoor-secret-scan) |
 | Search Console / Google indexing | **Unverified**; no authenticated property access or indexing submission performed | Crawlable content is not proof of indexing or ranking |
 
 Release commit: `a0dc5d5b3d1ee1743fa41a75ed00228db3e5fd79`.
