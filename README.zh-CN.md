@@ -1,8 +1,9 @@
 # Keyspoor
 
-**面向 Rust 应用、CI 和 AI 编程 Agent 的离线密钥扫描器。**
+**面向 AI 编程工作流的离线密钥扫描器。**
 支持文件、Git 暂存区、本地 Git 历史和 ZIP/tar/gzip 归档，输出默认脱敏的
 JSON、JSONL 或 SARIF。既可作为原生 CLI 使用，也提供 Rust 库和只读 MCP 服务。
+Agent 通过 MCP 调用扫描；Git hook 或必需的 CI 检查负责拦截提交或合并。
 
 [English](README.md) · [官网](https://majiayu000.github.io/keyspoor/) ·
 [Rust API](https://docs.rs/keyspoor) · [crates.io](https://crates.io/crates/keyspoor) ·
@@ -28,6 +29,21 @@ echo "exit=$?"
 这里只展示字段节选，完整报告还有位置范围、指纹、统计和扫描上下文；
 报告不会包含原值或源码片段。Windows PowerShell 可把同一个合成字符串传给
 `npx.cmd -y keyspoor@0.1.3 scan - --format json`，用 `$LASTEXITCODE` 查看退出码。
+
+### 完整演示：检出 → 拦截提交 → 修复 → 通过
+
+![Keyspoor 检出合成凭据、拦截提交，并在修复后允许提交](site/first-scan.gif)
+
+安装 Git 和 `keyspoor` CLI 后，在项目检出目录执行：
+
+```sh
+sh examples/first-scan.sh
+```
+
+脚本只操作自己的临时仓库，结束后删除。动画来自实际 0.1.3 运行，输入为编造的样例：
+扫描退出码 `1`、提交被阻止；移除明文后退出码 `0`、提交成功。
+这是 Git hook 演示。MCP 提供工具，不保证 Agent 每次提交前都会调用；
+需要强制拦截时使用 [CI 或 hook](docs/CI_SETUP.md)。
 
 | 你的目标 | 接入入口 |
 | --- | --- |

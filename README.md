@@ -1,9 +1,10 @@
 # Keyspoor
 
-**Offline secret scanning for Rust applications, CI and AI coding agents.**
+**Offline secret scanning for AI coding workflows.**
 Keyspoor scans files, staged Git changes, local Git history and ZIP/tar/gzip
 archives, with redacted JSON, JSONL and SARIF results. Use it as a native CLI,
-a reusable Rust library or a read-only MCP server.
+a reusable Rust library or a read-only MCP server. Connect agents through MCP;
+use a staged hook or a required CI check to block commits or merges.
 
 [Website](https://majiayu000.github.io/keyspoor/) ·
 [Rust API](https://docs.rs/keyspoor) ·
@@ -32,6 +33,22 @@ This is an excerpt; the actual report also includes ranges, fingerprints,
 statistics and scan context. It contains neither the value nor a source snippet.
 On Windows PowerShell, pipe the same synthetic string to
 `npx.cmd -y keyspoor@0.1.3 scan - --format json`, then check `$LASTEXITCODE`.
+
+### Watch a commit get blocked, then repaired
+
+![Keyspoor detects a staged synthetic credential, blocks the commit, and accepts the repair](site/first-scan.gif)
+
+With Git and an installed `keyspoor` CLI, run the complete demo from a checkout:
+
+```sh
+sh examples/first-scan.sh
+```
+
+It creates and deletes its own temporary repository. The recording comes from
+an actual 0.1.3 run with invented input: finding exit **1**, blocked commit,
+repair exit **0**, accepted commit. No agent is involved in this hook demo.
+[MCP setup](docs/AGENT_SETUP.md) gives agents tools; it does not guarantee they
+call them before each commit. [CI and hooks](docs/CI_SETUP.md) provide enforcement.
 
 | Your goal | Start here |
 | --- | --- |

@@ -1,9 +1,10 @@
-# Keyspoor — offline secret scanner
+# Keyspoor — offline secret scanning for AI coding workflows
 
 Keyspoor finds API keys, passwords and other credentials in source code, local
 Git history and supported archives. Its independent Rust engine includes 225
 rules, redacted findings, baseline support, JSON/JSONL/SARIF output and an MCP
-stdio server for AI agents.
+stdio server for AI agents. Connect agents through MCP; use Git hooks or required
+CI checks for enforcement.
 
 This npm package provides the **native command-line tool**, not a JavaScript SDK.
 For the Rust library, source, rule provenance and measured benchmarks, see the
@@ -23,6 +24,10 @@ Expected: `exit=1`, `complete=true`, one `generic-credential-unquoted` finding
 at line 1, byte column 9, and `redacted="[REDACTED]"`. The report contains no
 raw value or source snippet. PowerShell users can pipe the same string through
 `npx.cmd` and check `$LASTEXITCODE`.
+
+[Watch the complete commit-blocking demo](https://majiayu000.github.io/keyspoor/#demo)
+and [run its script](https://github.com/majiayu000/keyspoor/blob/main/examples/first-scan.sh).
+The demo uses an isolated temporary Git repository and synthetic input.
 
 | Use case | Guide |
 | --- | --- |

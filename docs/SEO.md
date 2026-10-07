@@ -73,3 +73,19 @@ GitHub, crates.io and npm are published; Homebrew and the reusable scanning
 Action are recorded above with their installation checks.
 Google indexing requires separate verification through Search Console or observed
 search results; no property verification file or indexing request was invented.
+
+## Positioning update on 2026-10-08
+
+The repository READMEs and static homepage now lead with **offline secret
+scanning for AI coding workflows**. The first paths are MCP setup and Git
+hook/CI enforcement; the reusable Rust engine remains documented. Title,
+description and social metadata use the same positioning. The homepage and
+READMEs include a recording and runnable isolated commit-blocking demo, verified
+with the public 0.1.3 CLI. MCP availability is explicitly distinguished from
+mandatory checks.
+
+The source npm README is updated for the next package publication; this change
+does not republish the existing 0.1.3 npm tarball. [Usage evidence](USAGE.md) and
+[the finding review](FINDING_REVIEW.md) record what is known and what remains
+unresolved. No new search indexing, search ranking or external adoption result
+is claimed.

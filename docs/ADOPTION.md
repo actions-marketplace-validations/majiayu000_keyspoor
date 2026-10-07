@@ -1,6 +1,7 @@
 # Keyspoor trial guide and launch material
 
 Start with the [60-second CLI example](../README.md#try-it-in-60-seconds),
+the [complete commit-blocking demo](../examples/first-scan.sh),
 [Agent setup](AGENT_SETUP.md), or [complete CI setup](CI_SETUP.md).
 Use synthetic values for demonstrations and reports. Never send credentials,
 private source snippets, or raw provider responses as feedback.
@@ -89,8 +90,11 @@ needed. Existing cross-tool evaluations and ground-truth methodology are in
 [bench/README.md](../bench/README.md).
 
 Raw credential values were not collected in the published measurements.
-Findings in these unlabelled repositories are detection counts, not a measured
-false-positive rate; classifying them needs a separately reviewed ground truth.
+The [2026-10-08 context review](FINDING_REVIEW.md) records every one of the
+119 reported locations: 56 confirmed non-secret spans, 34 intentional test
+fixtures, 24 evaluation artifacts and five unresolved findings. This workload
+is not production ground truth and does not establish recall or production
+precision. Rule behavior remains unchanged in 0.1.3.
 
 ## Client and distribution results
 
@@ -186,3 +190,13 @@ was verified publicly listed on 2026-10-05 as **Keyspoor secret scan**, version
 `uses: majiayu000/keyspoor@v0.1.3`. External
 invitations and community posts need an intended audience/account; prepared
 material is not evidence that those messages have been sent or users recruited.
+
+## Follow-up on 2026-10-08
+
+The native 0.1.3 demo passed detection, pre-commit rejection, a clean repair and
+a successful repaired commit in an isolated temporary Git repository. Its
+[recording](../site/first-scan.gif) displays redacted report excerpts. The
+[usage baseline](USAGE.md) distinguishes downloads, GitHub Traffic and confirmed
+integrations, with returned dates and data-freshness limits. External recruitment
+is deferred at the maintainer's request; no invitations or community posts were
+sent in this follow-up.
