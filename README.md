@@ -19,7 +19,7 @@ With Node.js 20+, paste this into a macOS/Linux terminal. The value below is
 made up for this demo and is not a credential:
 
 ```sh
-printf 'password=KspDemo_7zQ2mX9pL4vN6sR8\n' | npx -y keyspoor@0.1.3 scan - --format json
+printf 'password=KspDemo_7zQ2mX9pL4vN6sR8\n' | npx -y keyspoor@0.1.4 scan - --format json
 echo "exit=$?"
 ```
 
@@ -32,7 +32,7 @@ Expected: `exit=1` and one finding. The relevant report fields are:
 This is an excerpt; the actual report also includes ranges, fingerprints,
 statistics and scan context. It contains neither the value nor a source snippet.
 On Windows PowerShell, pipe the same synthetic string to
-`npx.cmd -y keyspoor@0.1.3 scan - --format json`, then check `$LASTEXITCODE`.
+`npx.cmd -y keyspoor@0.1.4 scan - --format json`, then check `$LASTEXITCODE`.
 
 ### Watch a commit get blocked, then repaired
 
@@ -61,10 +61,10 @@ call them before each commit. [CI and hooks](docs/CI_SETUP.md) provide enforceme
 
 ```sh
 # Rust toolchain (1.96 or newer)
-cargo install keyspoor --version 0.1.3 --locked
+cargo install keyspoor --version 0.1.4 --locked
 
 # Or Node.js 20+: the npm package runs the native Rust CLI
-npm install -g keyspoor@0.1.3
+npm install -g keyspoor@0.1.4
 
 # Or Homebrew (macOS / Linux)
 brew install majiayu000/tap/keyspoor
@@ -72,7 +72,7 @@ brew install majiayu000/tap/keyspoor
 keyspoor scan . --format jsonl
 ```
 
-Current release: **0.1.3**. The Rust API is pre-1.0 and may change. The npm
+Current release: **0.1.4**. The Rust API is pre-1.0 and may change. The npm
 package bundles native binaries for macOS (Apple Silicon/Intel), Linux GNU
 (ARM64/x64) and Windows x64; it is a CLI launcher, not a JavaScript scanning SDK.
 There are no install hooks or runtime binary downloads. First-time npm/npx
@@ -123,14 +123,18 @@ keyspoor serve
 keyspoor mcp --root /path/to/project
 ```
 
+Version 0.1.4 changes credential-context matching and the engine configuration
+identity. Review and recreate older baselines. See the [correction results and
+Benchmark](bench/results/v7/README.md).
+
 Exit codes: **0** means the selected scan completed with no reported findings;
 **1** means it completed with findings; **2** means an error or incomplete scan.
 You can check both other outcomes with synthetic input:
 
 ```sh
-printf 'ordinary configuration\n' | npx -y keyspoor@0.1.3 scan - --format json
+printf 'ordinary configuration\n' | npx -y keyspoor@0.1.4 scan - --format json
 echo "exit=$?" # 0: complete=true, findings=[]
-printf 'ordinary configuration\n' | npx -y keyspoor@0.1.3 scan - --max-bytes 4 --format json
+printf 'ordinary configuration\n' | npx -y keyspoor@0.1.4 scan - --max-bytes 4 --format json
 echo "exit=$?" # 2: complete=false, errors contains "input exceeds 4 byte limit"
 ```
 

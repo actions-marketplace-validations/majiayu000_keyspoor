@@ -500,7 +500,9 @@ fn generic_assignment_rules() -> Vec<RuleSpec> {
             r"^\s*(?:\$|\{\{|<%|<|%[A-Z_]+%)",
             r"(?i)^(?:process\.env\.|(?:os\.)?environ\b|(?:getenv|env)\b|secrets\.|vars\.)",
             r"(?i)^(?:your[_ -].*|replace[_ -].*|insert[_ -].*|example|sample|dummy|placeholder|redacted|<redacted>)$",
-        ].into_iter().map(String::from).collect(), ..Default::default() }],
+        ].into_iter().map(String::from).chain(
+            (syntax == "unquoted").then_some(r"(?i)^config\.[a-z_]\w*(?:\.[a-z_]\w*)*$").into_iter().map(String::from)
+        ).collect(), ..Default::default() }],
         exclude_paths: Vec::new(),
     }).collect()
 }

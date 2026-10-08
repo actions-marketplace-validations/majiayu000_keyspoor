@@ -15,17 +15,17 @@ Git hook when a scan must run before changes are accepted.
 Install Node.js 20+ and warm the pinned package before starting the assistant:
 
 ```sh
-npx -y keyspoor@0.1.3 --version
+npx -y keyspoor@0.1.4 --version
 ```
 
-Expected: `keyspoor 0.1.3`. First-time installation needs npm registry access;
+Expected: `keyspoor 0.1.4`. First-time installation needs npm registry access;
 the installed scanner does not contact credential providers. Replace
 `/absolute/path/to/project` below with an existing absolute directory you want
 to scan. Quote paths with spaces in shell commands. Keyspoor resolves requested
 file paths relative to this root and rejects paths outside it.
 
 If you installed a standalone binary, use its absolute path as `command` and
-remove `-y` and `keyspoor@0.1.3` from `args`. Keep `mcp --root ...`.
+remove `-y` and `keyspoor@0.1.4` from `args`. Keep `mcp --root ...`.
 On Windows, use `npx.cmd` as the command; JSON paths use escaped backslashes or
 forward slashes, for example `C:/work/project`.
 
@@ -34,7 +34,7 @@ forward slashes, for example `C:/work/project`.
 Register the server using the Codex CLI:
 
 ```sh
-codex mcp add keyspoor -- npx -y keyspoor@0.1.3 mcp --root /absolute/path/to/project
+codex mcp add keyspoor -- npx -y keyspoor@0.1.4 mcp --root /absolute/path/to/project
 codex mcp get keyspoor
 codex mcp list
 ```
@@ -45,7 +45,7 @@ merge this table into that file, preserving other settings:
 ```toml
 [mcp_servers.keyspoor]
 command = "npx"
-args = ["-y", "keyspoor@0.1.3", "mcp", "--root", "/absolute/path/to/project"]
+args = ["-y", "keyspoor@0.1.4", "mcp", "--root", "/absolute/path/to/project"]
 ```
 
 Start a new Codex session in the project and use `/mcp` to inspect active tools.
@@ -60,7 +60,7 @@ From your project directory, register a server scoped to your own use in that
 project:
 
 ```sh
-claude mcp add --transport stdio --scope local keyspoor -- npx -y keyspoor@0.1.3 mcp --root /absolute/path/to/project
+claude mcp add --transport stdio --scope local keyspoor -- npx -y keyspoor@0.1.4 mcp --root /absolute/path/to/project
 claude mcp get keyspoor
 ```
 
@@ -82,7 +82,7 @@ servers:
     "keyspoor": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "keyspoor@0.1.3", "mcp", "--root", "${workspaceFolder}"]
+      "args": ["-y", "keyspoor@0.1.4", "mcp", "--root", "${workspaceFolder}"]
     }
   }
 }
@@ -130,7 +130,7 @@ into chat to test integration; use the synthetic text above.
 
 ## If tools do not appear
 
-Run `npx -y keyspoor@0.1.3 --version` in the same environment that starts the
+Run `npx -y keyspoor@0.1.4 --version` in the same environment that starts the
 client, check the configured root exists and restart the client. GUI apps may
 have a different PATH; configure the absolute path to `npx`, `npx.cmd` or the
 standalone binary if needed. Inspect the client's MCP status and stderr rather

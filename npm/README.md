@@ -16,7 +16,7 @@ With Node.js 20+, run this in a macOS/Linux terminal. The input is deliberately
 made up for the demo and is not a credential:
 
 ```sh
-printf 'password=KspDemo_7zQ2mX9pL4vN6sR8\n' | npx -y keyspoor@0.1.3 scan - --format json
+printf 'password=KspDemo_7zQ2mX9pL4vN6sR8\n' | npx -y keyspoor@0.1.4 scan - --format json
 echo "exit=$?"
 ```
 
@@ -39,7 +39,7 @@ The demo uses an isolated temporary Git repository and synthetic input.
 ## Install and scan
 
 ```sh
-npm install --global keyspoor@0.1.3
+npm install --global keyspoor@0.1.4
 keyspoor scan . --format json
 keyspoor staged .
 keyspoor history .
@@ -47,7 +47,7 @@ keyspoor scan - --format jsonl
 keyspoor mcp --root /absolute/path/to/project
 ```
 
-You can also run `npx -y keyspoor@0.1.3 scan . --format sarif` without a global
+You can also run `npx -y keyspoor@0.1.4 scan . --format sarif` without a global
 installation. A standalone npm-format tarball is available on GitHub Releases.
 
 The package bundles native binaries for Linux x64/ARM64 (GNU libc), macOS
@@ -64,9 +64,9 @@ launcher passes arguments and standard streams directly to the Rust CLI.
 Check the other outcomes with synthetic input:
 
 ```sh
-printf 'ordinary configuration\n' | npx -y keyspoor@0.1.3 scan - --format json
+printf 'ordinary configuration\n' | npx -y keyspoor@0.1.4 scan - --format json
 echo "exit=$?" # 0: complete=true, findings=[]
-printf 'ordinary configuration\n' | npx -y keyspoor@0.1.3 scan - --max-bytes 4 --format json
+printf 'ordinary configuration\n' | npx -y keyspoor@0.1.4 scan - --max-bytes 4 --format json
 echo "exit=$?" # 2: complete=false, errors contains "input exceeds 4 byte limit"
 ```
 

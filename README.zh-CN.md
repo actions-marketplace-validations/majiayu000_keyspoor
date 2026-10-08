@@ -16,7 +16,7 @@ Agent 通过 MCP 调用扫描；Git hook 或必需的 CI 检查负责拦截提�
 不是真实凭据：
 
 ```sh
-printf 'password=KspDemo_7zQ2mX9pL4vN6sR8\n' | npx -y keyspoor@0.1.3 scan - --format json
+printf 'password=KspDemo_7zQ2mX9pL4vN6sR8\n' | npx -y keyspoor@0.1.4 scan - --format json
 echo "exit=$?"
 ```
 
@@ -28,7 +28,7 @@ echo "exit=$?"
 
 这里只展示字段节选，完整报告还有位置范围、指纹、统计和扫描上下文；
 报告不会包含原值或源码片段。Windows PowerShell 可把同一个合成字符串传给
-`npx.cmd -y keyspoor@0.1.3 scan - --format json`，用 `$LASTEXITCODE` 查看退出码。
+`npx.cmd -y keyspoor@0.1.4 scan - --format json`，用 `$LASTEXITCODE` 查看退出码。
 
 ### 完整演示：检出 → 拦截提交 → 修复 → 通过
 
@@ -56,10 +56,10 @@ sh examples/first-scan.sh
 
 ```sh
 # Rust 1.96 或更新版本
-cargo install keyspoor --version 0.1.3 --locked
+cargo install keyspoor --version 0.1.4 --locked
 
 # 或通过 Node.js 20+ 安装原生 Rust CLI
-npm install -g keyspoor@0.1.3
+npm install -g keyspoor@0.1.4
 
 # 或通过 Homebrew（macOS / Linux）
 brew install majiayu000/tap/keyspoor
@@ -71,7 +71,7 @@ keyspoor scan . --format sarif
 keyspoor mcp --root /path/to/project
 ```
 
-当前版本为 **0.1.3**，Rust API 仍可能发生破坏性变更。npm 包内置 macOS
+当前版本为 **0.1.4**，Rust API 仍可能发生破坏性变更。npm 包内置 macOS
 Apple Silicon/Intel、Linux GNU ARM64/x64、Windows x64 的原生二进制，
 没有安装脚本或运行时二进制下载；它是 CLI 启动器，不是 JavaScript SDK。
 首次 npm/npx 安装需要访问 registry，扫描过程离线。
@@ -79,13 +79,16 @@ Apple Silicon/Intel、Linux GNU ARM64/x64、Windows x64 的原生二进制，
 下载独立二进制，或通过 `cargo build --release --locked` 编译，执行
 `target/release/keyspoor`。
 
+0.1.4 修复了凭据上下文误报，并更新了引擎配置标识。旧基线需要重新审查和生成。
+[修复结果与 Benchmark](bench/results/v7/README.md) 保留原始记录和适用边界。
+
 退出码：`0` 表示完整扫描且没有报告命中，`1` 表示完整扫描且有命中，
 `2` 表示错误或扫描未完成。可以再验证两个结果：
 
 ```sh
-printf 'ordinary configuration\n' | npx -y keyspoor@0.1.3 scan - --format json
+printf 'ordinary configuration\n' | npx -y keyspoor@0.1.4 scan - --format json
 echo "exit=$?" # 0：complete=true，findings=[]
-printf 'ordinary configuration\n' | npx -y keyspoor@0.1.3 scan - --max-bytes 4 --format json
+printf 'ordinary configuration\n' | npx -y keyspoor@0.1.4 scan - --max-bytes 4 --format json
 echo "exit=$?" # 2：complete=false，errors 含 input exceeds 4 byte limit
 ```
 

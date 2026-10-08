@@ -89,6 +89,32 @@ Trusted publisher references: [npm](https://docs.npmjs.com/trusted-publishers/),
 [crates.io](https://crates.io/docs/trusted-publishing), and
 [official crates.io authentication action](https://github.com/rust-lang/crates-io-auth-action).
 
+## v0.1.4 release notes
+
+Fix credential-context false positives in generic API assignment matching,
+LinkedIn client-ID capture across JSON fields, and unquoted `config.*` references.
+The three pinned public snapshots drop all 56 reviewed non-secret spans;
+intentional fixtures and evaluation-artifact matches remain. Two unresolved
+reviewer-note tokens also drop and remain explicitly unresolved.
+
+The three existing synthetic regression sets retain 1,234 labelled positives
+with zero candidate false negatives. Twenty alternating native performance
+pairs show less than 0.3% wall-median change on the 16/128 MiB synthetic workloads.
+[Raw results, comparison and limits](../bench/results/v7/README.md) are recorded.
+No universal accuracy or speed claim follows from these samples.
+
+**Baseline change:** engine configuration identity is v4. Review findings and
+create a new baseline file; older identities are rejected and cannot be
+overwritten by `--write-baseline`. Report schemas and CLI
+exits 0/1/2 remain unchanged. The npm package includes the updated first-use and
+agent setup documentation.
+
+```sh
+npm install -g keyspoor@0.1.4
+# Or: cargo install keyspoor --version 0.1.4 --locked
+# Or: brew upgrade keyspoor
+```
+
 ## v0.1.3 release notes
 
 Keyspoor now has a complete first-use path: a pinned npm demo with expected

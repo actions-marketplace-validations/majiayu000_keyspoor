@@ -1136,7 +1136,7 @@ fn merged_utf16_findings_retain_exact_source_coordinates() {
 }
 
 #[test]
-fn merging_semantics_change_configuration_identity_from_v2() {
+fn engine_semantics_change_configuration_identity_from_previous_versions() {
     let (_dir, engine) = custom_engine(RULE, None);
     let value: serde_json::Value = serde_json::from_str(RULE).unwrap();
     let rules: Vec<keyspoor::rules::RuleSpec> =
@@ -1149,13 +1149,18 @@ fn merging_semantics_change_configuration_identity_from_v2() {
         config.min_confidence,
     ))
     .unwrap();
-    let mut old = blake3::Hasher::new();
-    old.update(b"secret-scan/configuration/v2\0");
-    old.update(env!("CARGO_PKG_VERSION").as_bytes());
-    old.update(&(serialized.len() as u64).to_le_bytes());
-    old.update(&serialized);
-    old.update(b"unkeyed\0");
-    assert_ne!(engine.configuration_id(), old.finalize().to_hex().as_str());
+    for previous in [
+        b"secret-scan/configuration/v2\0",
+        b"secret-scan/configuration/v3\0",
+    ] {
+        let mut old = blake3::Hasher::new();
+        old.update(previous);
+        old.update(env!("CARGO_PKG_VERSION").as_bytes());
+        old.update(&(serialized.len() as u64).to_le_bytes());
+        old.update(&serialized);
+        old.update(b"unkeyed\0");
+        assert_ne!(engine.configuration_id(), old.finalize().to_hex().as_str());
+    }
 }
 
 #[test]
@@ -1385,4 +1390,122 @@ fn findings_share_paths_and_encoding_specific_explanations_without_changing_json
             ));
         }
     }
+}
+
+#[test]
+fn generic_assignment_context_rejects_metadata_and_prose() {
+    let engine = Engine::new(EngineConfig::default()).unwrap();
+    for input in [
+        format!("\"topic_key\": \"{TOKEN}\"\n"),
+        format!("CONTEXT_TOKEN_ESTIMATOR_VERSION = \"{TOKEN}\"\n"),
+        format!("alternate authority/key, {TOKEN} receipt/proof;\n"),
+        format!("key, {TOKEN}\n"),
+    ] {
+        assert!(
+            engine
+                .scan_bytes("metadata.txt", input.as_bytes())
+                .unwrap()
+                .is_empty(),
+            "non-credential context was reported"
+        );
+    }
+}
+
+#[test]
+fn assignment_capture_does_not_treat_a_json_property_as_a_value() {
+    let engine = Engine::new(EngineConfig::default()).unwrap();
+    let metadata = br#"{"path":"skills/linkedin-tool","sourceBlobSha1":"unused"}"#;
+    assert!(
+        engine
+            .scan_bytes("records.jsonl", metadata)
+            .unwrap()
+            .is_empty()
+    );
+    let metadata = format!("{{\"label\":\"key\",\"{TOKEN}\":\"unused\"}}\n");
+    assert!(
+        engine
+            .scan_bytes("records.jsonl", metadata.as_bytes())
+            .unwrap()
+            .is_empty()
+    );
+    // Credential-shaped standalone provider tokens remain findings, even as keys.
+    let provider = format!("ghp_{TOKEN}Ab3dEf7hIj9k");
+    let input = format!("{{\"{provider}\": \"value\"}}\n");
+    assert!(
+        engine
+            .scan_bytes("records.json", input.as_bytes())
+            .unwrap()
+            .iter()
+            .any(|finding| finding.rule_id == "github-pat")
+    );
+}
+
+#[test]
+fn unquoted_configuration_references_do_not_hide_quoted_or_dotted_literals() {
+    let engine = Engine::new(EngineConfig::default()).unwrap();
+    let reference = b"api_key=config.effective_anthropic_key\n";
+    assert!(
+        engine
+            .scan_bytes("reviewer.csv", reference)
+            .unwrap()
+            .is_empty()
+    );
+    for input in [
+        "api_key='config.effective_anthropic_key'\n",
+        "api_key=\"config.effective_anthropic_key\"\n",
+        "password=spruce.wren.26\n",
+        "password='spruce.wren.26'\n",
+        "password=password123\n",
+    ] {
+        assert!(
+            !engine
+                .scan_bytes("settings.conf", input.as_bytes())
+                .unwrap()
+                .is_empty(),
+            "a literal credential was lost"
+        );
+    }
+}
+
+#[test]
+fn generic_context_corrections_preserve_custom_names_and_quoted_tuples() {
+    let engine = Engine::new(EngineConfig::default()).unwrap();
+    for key in [
+        "SERVICE_KEY",
+        "CUSTOM_SERVICE_KEY",
+        "myApiKey",
+        "access_token",
+        "clientSecret",
+        "key",
+    ] {
+        let input = format!("{key}=\"{TOKEN}\"\n");
+        assert!(
+            !engine
+                .scan_bytes("settings.conf", input.as_bytes())
+                .unwrap()
+                .is_empty(),
+            "credential field {key} was lost"
+        );
+    }
+    for input in [
+        format!("(\"key\", \"{TOKEN}\")\n"),
+        "('linkedin', 'a1b2c3d4e5f6g7')\n".into(),
+    ] {
+        assert!(
+            !engine
+                .scan_bytes("settings.conf", input.as_bytes())
+                .unwrap()
+                .is_empty(),
+            "a quoted tuple was lost"
+        );
+    }
+    // Metadata suppression applies to the generic rule, not provider formats.
+    let input = format!("\"topic_key\": \"ghp_{TOKEN}Ab3dEf7hIj9k\"\n");
+    assert!(
+        engine
+            .scan_bytes("settings.json", input.as_bytes())
+            .unwrap()
+            .iter()
+            .any(|finding| finding.rule_id == "github-pat")
+    );
 }
