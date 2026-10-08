@@ -115,6 +115,29 @@ npm install -g keyspoor@0.1.4
 # Or: brew upgrade keyspoor
 ```
 
+### 0.1.4 publication verification — 2026-10-08
+
+[Release workflow](https://github.com/majiayu000/keyspoor/actions/runs/37753455879)
+passed all 20 jobs: three-platform tests/package checks, MSRV/lints, five native
+builds, npm assembly and publication, crates.io publication, fresh registry
+installation, GitHub release, MCP Registry metadata, maintained `v1` update and
+three public Action consumers. Release commit and `v1` are
+`5290c044fea2a0e3bb9d1295780dc28e6753cbcc`.
+
+The [GitHub release](https://github.com/majiayu000/keyspoor/releases/tag/v0.1.4),
+exact npm/crates.io version endpoints and public MCP Registry all confirm 0.1.4.
+An independent fresh npm install passed exits 0/1/2 and redaction locally; its
+three snapshot scans returned 33/0/28 findings, complete with zero errors, and
+exactly the candidate's source locations. The native demo and old-baseline
+rejection/new-baseline acceptance also passed.
+
+[Homebrew update](https://github.com/majiayu000/homebrew-tap/actions/runs/37754483344)
+passed installation, test and strict audit, and its public formula points to
+0.1.4 assets. [Pages deployment](https://github.com/majiayu000/keyspoor/actions/runs/37754494174)
+passed; the live homepage is byte-identical to the versioned site source and
+shows the new release and correction results. These checks do not establish
+new external users, search ranking or active credential validity.
+
 ## v0.1.3 release notes
 
 Keyspoor now has a complete first-use path: a pinned npm demo with expected

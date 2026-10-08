@@ -43,7 +43,7 @@ values or source snippets. Byte ranges are half-open source-byte offsets.
    it captures 38 `topic_key` values, one prose span and one estimator version
    constant. Narrowing it needs positive tests for custom credential names;
    deleting `key`/`token` globally or ignoring all documentation could hide real
-   leaks. The current release still reports these 40 findings.
+   leaks. At review time, 0.1.3 still reported these 40 findings.
 2. Fifteen argus CSV findings are unquoted qualified Python identifiers before
    `or` expressions. The independent unquoted assignment rule does not establish
    literal-vs-reference semantics for arbitrary qualified identifiers. Context
@@ -54,8 +54,8 @@ values or source snippets. Byte ranges are half-open source-byte offsets.
 4. Test fixtures and copied evaluation contexts need owner review before any
    baseline is accepted. Do not silently exclude every test or corpus directory.
 
-These are review results and a concrete correction backlog. This documentation
-change does **not** alter rule behavior or claim the false positives are fixed.
+The original review established a correction backlog without altering 0.1.3
+matching behavior. The verified 0.1.4 corrections are recorded separately below.
 Use the synthetic demo for onboarding; inspect real-repository findings locally.
 
 ## Correction verified in 0.1.4
