@@ -2,7 +2,7 @@
 # Run in a disposable repository; requires Git and an installed Keyspoor CLI.
 set -eu
 fail() { printf '%s\n' "$*" >&2; exit 2; }
-scanner=$(command -v keyspoor) || fail 'Install Keyspoor first: npm install -g keyspoor@0.1.3'
+scanner=$(command -v keyspoor) || fail 'Install Keyspoor first: npm install -g keyspoor@0.1.4'
 command -v git >/dev/null 2>&1 || fail 'Git is required for this demo.'
 case "$scanner" in /*) ;; *) fail 'Keyspoor must resolve to an absolute executable path.' ;; esac
 demo_dir=$(mktemp -d "${TMPDIR:-/tmp}/keyspoor-demo.XXXXXX")

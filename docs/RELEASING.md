@@ -89,6 +89,55 @@ Trusted publisher references: [npm](https://docs.npmjs.com/trusted-publishers/),
 [crates.io](https://crates.io/docs/trusted-publishing), and
 [official crates.io authentication action](https://github.com/rust-lang/crates-io-auth-action).
 
+## v0.1.4 release notes
+
+Fix credential-context false positives in generic API assignment matching,
+LinkedIn client-ID capture across JSON fields, and unquoted `config.*` references.
+The three pinned public snapshots drop all 56 reviewed non-secret spans;
+intentional fixtures and evaluation-artifact matches remain. Two unresolved
+reviewer-note tokens also drop and remain explicitly unresolved.
+
+The three existing synthetic regression sets retain 1,234 labelled positives
+with zero candidate false negatives. Twenty alternating native performance
+pairs show less than 0.3% wall-median change on the 16/128 MiB synthetic workloads.
+[Raw results, comparison and limits](../bench/results/v7/README.md) are recorded.
+No universal accuracy or speed claim follows from these samples.
+
+**Baseline change:** engine configuration identity is v4. Review findings and
+create a new baseline file; older identities are rejected and cannot be
+overwritten by `--write-baseline`. Report schemas and CLI
+exits 0/1/2 remain unchanged. The npm package includes the updated first-use and
+agent setup documentation.
+
+```sh
+npm install -g keyspoor@0.1.4
+# Or: cargo install keyspoor --version 0.1.4 --locked
+# Or: brew upgrade keyspoor
+```
+
+### 0.1.4 publication verification — 2026-10-08
+
+[Release workflow](https://github.com/majiayu000/keyspoor/actions/runs/37753455879)
+passed all 20 jobs: three-platform tests/package checks, MSRV/lints, five native
+builds, npm assembly and publication, crates.io publication, fresh registry
+installation, GitHub release, MCP Registry metadata, maintained `v1` update and
+three public Action consumers. Release commit and `v1` are
+`5290c044fea2a0e3bb9d1295780dc28e6753cbcc`.
+
+The [GitHub release](https://github.com/majiayu000/keyspoor/releases/tag/v0.1.4),
+exact npm/crates.io version endpoints and public MCP Registry all confirm 0.1.4.
+An independent fresh npm install passed exits 0/1/2 and redaction locally; its
+three snapshot scans returned 33/0/28 findings, complete with zero errors, and
+exactly the candidate's source locations. The native demo and old-baseline
+rejection/new-baseline acceptance also passed.
+
+[Homebrew update](https://github.com/majiayu000/homebrew-tap/actions/runs/37754483344)
+passed installation, test and strict audit, and its public formula points to
+0.1.4 assets. [Pages deployment](https://github.com/majiayu000/keyspoor/actions/runs/37754494174)
+passed; the live homepage is byte-identical to the versioned site source and
+shows the new release and correction results. These checks do not establish
+new external users, search ranking or active credential validity.
+
 ## v0.1.3 release notes
 
 Keyspoor now has a complete first-use path: a pinned npm demo with expected

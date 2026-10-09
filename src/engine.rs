@@ -314,6 +314,13 @@ impl Engine {
                 let value = secret.as_bytes();
                 if value.is_empty()
                     || is_placeholder(value)
+                    || (matches!(
+                        rule.spec.id.as_str(),
+                        "generic-api-key" | "linkedin-client-id"
+                    ) && assignment_capture_is_non_value(
+                        &bytes[full_match.start()..secret.start()],
+                        &bytes[secret.end()..],
+                    ))
                     || (self.min_entropy.unwrap_or(rule.spec.min_entropy) > 0.0
                         && entropy(value) <= self.min_entropy.unwrap_or(rule.spec.min_entropy))
                     || (rule.spec.id.starts_with("generic-credential-")
@@ -618,7 +625,7 @@ fn configuration_id(rules: &[CompiledRule], config: &EngineConfig) -> Result<Str
     let serialized =
         serde_json::to_vec(&settings).context("serializing rule configuration identity")?;
     let mut digest = blake3::Hasher::new();
-    digest.update(b"secret-scan/configuration/v3\0");
+    digest.update(b"secret-scan/configuration/v4\0");
     digest.update(env!("CARGO_PKG_VERSION").as_bytes());
     digest.update(&(serialized.len() as u64).to_le_bytes());
     digest.update(&serialized);
@@ -665,6 +672,28 @@ fn surrounding_lines(bytes: &[u8], start: usize, end: usize) -> &[u8] {
         .position(|&byte| byte == b'\n')
         .map_or(bytes.len(), |at| last + at);
     &bytes[line_start..line_end]
+}
+
+/// Reject non-value spans in the two contextual catalog rules. Standalone
+/// provider-format rules and custom rule IDs retain their matching behavior.
+fn assignment_capture_is_non_value(prefix: &[u8], suffix: &[u8]) -> bool {
+    let prefix = prefix.trim_ascii_end();
+    let quoted_value = matches!(prefix.last(), Some(b'\'' | b'"'));
+    if quoted_value
+        && suffix.first() == prefix.last()
+        && suffix[1..].trim_ascii_start().starts_with(b":")
+    {
+        // A previous contextual field matched across a comma into the next
+        // quoted property name. This span is not its assigned value.
+        return true;
+    }
+    if let Some(comma) = prefix.iter().position(|&byte| byte == b',') {
+        // Keep quoted key/value tuples, but do not interpret prose following
+        // an ordinary comma as a credential assignment.
+        return !quoted_value
+            || !matches!(prefix[..comma].trim_ascii_end().last(), Some(b'\'' | b'"'));
+    }
+    false
 }
 
 /// Narrow, heuristic context filter for token-like assignments only. Long prose

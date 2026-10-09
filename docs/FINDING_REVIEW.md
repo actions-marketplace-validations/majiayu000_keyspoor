@@ -43,7 +43,7 @@ values or source snippets. Byte ranges are half-open source-byte offsets.
    it captures 38 `topic_key` values, one prose span and one estimator version
    constant. Narrowing it needs positive tests for custom credential names;
    deleting `key`/`token` globally or ignoring all documentation could hide real
-   leaks. The current release still reports these 40 findings.
+   leaks. At review time, 0.1.3 still reported these 40 findings.
 2. Fifteen argus CSV findings are unquoted qualified Python identifiers before
    `or` expressions. The independent unquoted assignment rule does not establish
    literal-vs-reference semantics for arbitrary qualified identifiers. Context
@@ -54,9 +54,25 @@ values or source snippets. Byte ranges are half-open source-byte offsets.
 4. Test fixtures and copied evaluation contexts need owner review before any
    baseline is accepted. Do not silently exclude every test or corpus directory.
 
-These are review results and a concrete correction backlog. This documentation
-change does **not** alter rule behavior or claim the false positives are fixed.
+The original review established a correction backlog without altering 0.1.3
+matching behavior. The verified 0.1.4 corrections are recorded separately below.
 Use the synthetic demo for onboarding; inspect real-repository findings locally.
+
+## Correction verified in 0.1.4
+
+The [v7 regression and performance results](../bench/results/v7/README.md)
+record the fix against these exact snapshots. remem changes **73 → 33**, argus
+**46 → 28**, and rclean remains **0**. All 56 confirmed non-secret spans are
+removed; all 34 intentional fixtures and 24 evaluation-artifact occurrences
+remain. No new locations appear and all scans complete without errors.
+
+Two previously unresolved tokens in argus reviewer notes (argus-015 and
+argus-040) also disappear under the narrower generic context. Their unresolved
+classification is retained; removal does not establish that they were false
+positives or safe credentials. The three unresolved JWT-shaped values remain.
+The table below preserves the original 0.1.3 review rather than rewriting it
+as candidate output. Baselines must be reviewed and recreated for the new
+engine configuration identity; 0.1.3 reports remain historical evidence.
 
 ## Reproduce the review
 

@@ -96,12 +96,21 @@ def convert(config: dict) -> dict:
         # our null represents that behavior (our explicit zero means whole match).
         group = upstream.get("secretGroup") or None
         keywords = upstream.get("keywords", [])
+        pattern = rust_pattern(upstream["regex"])
+        if identity == "generic-api-key":
+            # A credential word must end the field name, rather than occur
+            # inside metadata such as TOKEN_ESTIMATOR_VERSION. Prefixes like
+            # SERVICE_KEY and camelCase apiKey remain supported.
+            pattern = pattern.replace(r"[ \t\w.-]{0,20}", r"[ \t]{0,20}")
+            groups.append({"condition": "or", "target": "match",
+                           "regexes": [r'''(?i)^topic[_-]key[ \t]*["']?[ \t]*[:=]'''],
+                           "paths": [], "stopwords": []})
         if identity == "airtable-personnal-access-token":
             # The token regex requires `pat`, not the contextual word `airtable`.
             # Keep this local correction reproducible when regenerating assets.
             keywords = ["pat"]
         rules.append({"id": identity, "name": upstream["description"],
-                      "pattern": rust_pattern(upstream["regex"]), "secret_group": group,
+                      "pattern": pattern, "secret_group": group,
                       "keywords": keywords,
                       "min_entropy": upstream.get("entropy", 0),
                       "confidence": "medium", "path": rust_pattern(upstream["path"]) if "path" in upstream else None,
