@@ -1152,6 +1152,8 @@ fn engine_semantics_change_configuration_identity_from_previous_versions() {
     for previous in [
         b"secret-scan/configuration/v2\0",
         b"secret-scan/configuration/v3\0",
+        b"secret-scan/configuration/v4\0",
+        b"secret-scan/configuration/v5\0",
     ] {
         let mut old = blake3::Hasher::new();
         old.update(previous);
@@ -1463,6 +1465,64 @@ fn unquoted_configuration_references_do_not_hide_quoted_or_dotted_literals() {
                 .unwrap()
                 .is_empty(),
             "a literal credential was lost"
+        );
+    }
+}
+
+#[test]
+fn custom_rule_with_builtin_id_keeps_rust_matches() {
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("rules.json");
+    std::fs::write(
+        &path,
+        r#"{"rules":[{"id":"generic-credential-unquoted","name":"Custom credential","pattern":"password: ([A-Za-z0-9]+)","secret_group":1,"confidence":"high"}]}"#,
+    )
+    .unwrap();
+    for builtin_rules in [false, true] {
+        let engine = Engine::new(EngineConfig {
+            builtin_rules,
+            custom_rule_paths: vec![path.clone()],
+            ..Default::default()
+        })
+        .unwrap();
+        let findings = engine
+            .scan_bytes("fixture.rs", b"pub password: SyntheticValueA93,\n")
+            .unwrap();
+        assert!(
+            findings
+                .iter()
+                .any(|f| f.rule_id == "generic-credential-unquoted"),
+            "custom rule must match with builtin_rules={builtin_rules}"
+        );
+    }
+}
+
+#[test]
+fn rust_public_field_types_are_not_literal_credentials() {
+    let engine = Engine::new(EngineConfig::default()).unwrap();
+    let declarations = b"struct Settings {\n    pub access_token: String,\n    pub client_secret: std::string::String,\n}\n";
+    assert!(
+        engine
+            .scan_bytes("settings.rs", declarations)
+            .unwrap()
+            .is_empty()
+    );
+    // Scope the correction to public Rust declarations, not type-like passwords
+    // in configuration, quoted literals, or another assignment on the same line.
+    for (path, input) in [
+        ("settings.yaml", "password: String\n"),
+        ("settings.rs", "password = String;\n"),
+        ("settings.rs", "let password = \"String\";\n"),
+        (
+            "settings.rs",
+            "pub access_token: String, password=synthetic987;\n",
+        ),
+    ] {
+        assert!(
+            !engine
+                .scan_bytes(path, input.as_bytes())
+                .unwrap()
+                .is_empty()
         );
     }
 }

@@ -314,6 +314,20 @@ impl Engine {
                 let value = secret.as_bytes();
                 if value.is_empty()
                     || is_placeholder(value)
+                    // A public Rust field's colon introduces a type, not a
+                    // credential value. Keep this local to the matched field.
+                    || (rule.builtin
+                        && rule.spec.id == "generic-credential-unquoted"
+                        && path.ends_with(".rs")
+                        && bytes[full_match.start()..secret.start()]
+                            .trim_ascii_end()
+                            .ends_with(b":")
+                        && bytes[..full_match.start()]
+                            .rsplit(|byte| *byte == b'\n')
+                            .next()
+                            .unwrap_or_default()
+                            .trim_ascii()
+                            == b"pub")
                     || (matches!(
                         rule.spec.id.as_str(),
                         "generic-api-key" | "linkedin-client-id"
@@ -615,7 +629,10 @@ fn logical_identity(path: &str) -> String {
 }
 
 fn configuration_id(rules: &[CompiledRule], config: &EngineConfig) -> Result<String> {
-    let actual_rules: Vec<_> = rules.iter().map(|rule| &rule.spec).collect();
+    let actual_rules: Vec<_> = rules
+        .iter()
+        .map(|rule| (&rule.spec, rule.builtin))
+        .collect();
     let settings = (
         &actual_rules,
         config.enable_base64,
@@ -625,7 +642,7 @@ fn configuration_id(rules: &[CompiledRule], config: &EngineConfig) -> Result<Str
     let serialized =
         serde_json::to_vec(&settings).context("serializing rule configuration identity")?;
     let mut digest = blake3::Hasher::new();
-    digest.update(b"secret-scan/configuration/v4\0");
+    digest.update(b"secret-scan/configuration/v6\0");
     digest.update(env!("CARGO_PKG_VERSION").as_bytes());
     digest.update(&(serialized.len() as u64).to_le_bytes());
     digest.update(&serialized);
