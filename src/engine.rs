@@ -105,6 +105,7 @@ pub struct Engine {
     keyword_rules: Vec<Vec<usize>>,
     unconditional: Vec<usize>,
     base64_candidates: Regex,
+    rust_visibility: Regex,
     enable_base64: bool,
     min_entropy: Option<f32>,
     fingerprint_key: Option<[u8; 32]>,
@@ -154,12 +155,19 @@ impl Engine {
                     .context("compiling keyword prefilter")?,
             )
         };
+        // A SimplePath has identifier segments separated by whole `::` tokens.
+        // Keep the match anchored to the current field's complete line prefix.
+        let path_segment = r"(?:(?:r#)?(?:\p{XID_Start}\p{XID_Continue}*|_\p{XID_Continue}+))";
+        let rust_visibility = Regex::new(&format!(
+            r"\Apub(?:[ \t]*\([ \t]*(?:crate|self|super|in(?:[ \t]+|[ \t]*(?P<global>::)[ \t]*)(?P<path>{path_segment}(?:[ \t]*::[ \t]*{path_segment})*))[ \t]*\))?\z"
+        ))?;
         Ok(Self {
             rules,
             keywords,
             keyword_rules: keyword_map.into_values().collect(),
             unconditional,
             base64_candidates: Regex::new(r"[A-Za-z0-9+/_-]{24,}={0,2}")?,
+            rust_visibility,
             enable_base64: config.enable_base64,
             min_entropy: config.min_entropy,
             fingerprint_key: config.fingerprint_key,
@@ -278,6 +286,7 @@ impl Engine {
             }
         }
         let single_candidate = candidates.iter().filter(|&&active| active).take(2).count() == 1;
+        let mut rust_context = None;
         for (id, rule) in self.rules.iter().enumerate() {
             if !candidates[id]
                 || rule
@@ -319,15 +328,15 @@ impl Engine {
                     || (rule.builtin
                         && rule.spec.id == "generic-credential-unquoted"
                         && path.ends_with(".rs")
+                        && container.is_none()
                         && bytes[full_match.start()..secret.start()]
                             .trim_ascii_end()
                             .ends_with(b":")
-                        && bytes[..full_match.start()]
-                            .rsplit(|byte| *byte == b'\n')
-                            .next()
-                            .unwrap_or_default()
-                            .trim_ascii()
-                            == b"pub")
+                        && rust_context
+                            .get_or_insert_with(|| std::str::from_utf8(bytes).ok().map(rust_visibility_context))
+                            .as_mut()
+                            .and_then(|context| context(full_match.start()))
+                            .is_some_and(|(start, field)| rust_field_visibility(&self.rust_visibility, bytes, start, field)))
                     || (matches!(
                         rule.spec.id.as_str(),
                         "generic-api-key" | "linkedin-client-id"
@@ -628,6 +637,225 @@ fn logical_identity(path: &str) -> String {
         .into_owned()
 }
 
+// Candidates from the builtin rule arrive in source order. Advance the lexer
+// once, retaining only the current visibility and nested macro context.
+fn rust_visibility_context(source: &str) -> impl FnMut(usize) -> Option<(usize, usize)> + '_ {
+    use ra_ap_rustc_lexer::{FrontmatterAllowed, TokenKind, tokenize};
+    let mut tokens = tokenize(source, FrontmatterAllowed::Yes);
+    let mut offset = 0;
+    let mut last_pub = None;
+    let mut groups = Vec::new();
+    let mut in_macro = false;
+    let mut macro_prefix = false;
+    let mut macro_definition = false;
+    let mut declaration_depth = None;
+    let mut previous_name: Option<&str> = None;
+    let mut context_exhausted = false;
+    move |candidate| {
+        if context_exhausted || candidate < offset {
+            return None;
+        }
+        for token in tokens.by_ref() {
+            let start = offset;
+            let end = start + token.len as usize;
+            let mut code_identifier = false;
+            match token.kind {
+                TokenKind::Whitespace
+                | TokenKind::LineComment { .. }
+                | TokenKind::BlockComment { .. } => {}
+                TokenKind::Bang => {
+                    macro_definition = previous_name == Some("macro_rules");
+                    macro_prefix |= previous_name.is_some_and(|name| {
+                        !rust_reserved_keyword(name) && !matches!(name, "crate" | "self" | "super")
+                    });
+                }
+                TokenKind::Pound => macro_prefix = true,
+                TokenKind::OpenParen | TokenKind::OpenBrace | TokenKind::OpenBracket => {
+                    // Context only suppresses false positives. Fall back to
+                    // retaining findings rather than growing with hostile nesting.
+                    if groups.len() == 8192 {
+                        context_exhausted = true;
+                        return None;
+                    }
+                    let declaration = declaration_depth == Some(groups.len());
+                    if declaration && token.kind == TokenKind::OpenBrace {
+                        declaration_depth = None;
+                    }
+                    groups.push((token.kind, in_macro));
+                    in_macro |= macro_prefix || declaration;
+                    macro_prefix = false;
+                }
+                TokenKind::CloseParen | TokenKind::CloseBrace | TokenKind::CloseBracket => {
+                    let matches = groups.last().is_some_and(|(opener, _)| {
+                        matches!(
+                            (opener, token.kind),
+                            (TokenKind::OpenParen, TokenKind::CloseParen)
+                                | (TokenKind::OpenBrace, TokenKind::CloseBrace)
+                                | (TokenKind::OpenBracket, TokenKind::CloseBracket)
+                        )
+                    });
+                    if matches {
+                        in_macro = groups.pop().expect("matching opener exists").1;
+                    } else {
+                        // Malformed delimiters cannot establish ordinary field context.
+                        in_macro = true;
+                    }
+                    macro_prefix = false;
+                }
+                TokenKind::Ident | TokenKind::RawIdent if macro_prefix => {
+                    macro_prefix = macro_definition;
+                    macro_definition = false;
+                }
+                _ => {
+                    code_identifier =
+                        !in_macro && matches!(token.kind, TokenKind::Ident | TokenKind::RawIdent);
+                    if code_identifier {
+                        match &source[start..end] {
+                            "pub" => last_pub = Some(start),
+                            "macro" => declaration_depth = Some(groups.len()),
+                            _ => {}
+                        }
+                    }
+                    if token.kind == TokenKind::Semi && declaration_depth == Some(groups.len()) {
+                        declaration_depth = None;
+                    }
+                    macro_prefix = false;
+                }
+            }
+            match token.kind {
+                TokenKind::Whitespace
+                | TokenKind::LineComment { .. }
+                | TokenKind::BlockComment { .. } => {}
+                TokenKind::Ident | TokenKind::RawIdent => previous_name = Some(&source[start..end]),
+                _ => previous_name = None,
+            }
+            offset = end;
+            if candidate < end {
+                let at_identifier = candidate == start
+                    || (token.kind == TokenKind::RawIdent && candidate == start + 2);
+                return if code_identifier && at_identifier {
+                    last_pub.take().map(|public| (public, start))
+                } else {
+                    None
+                };
+            }
+        }
+        None
+    }
+}
+
+fn rust_field_visibility(
+    visibility: &Regex,
+    bytes: &[u8],
+    start: usize,
+    field_start: usize,
+) -> bool {
+    use ra_ap_rustc_lexer::{FrontmatterAllowed, TokenKind, tokenize};
+    // Bound the temporary normalization buffer as well as the delimiter stack.
+    if field_start - start > 4096 {
+        return false;
+    }
+    let Ok(prefix) = std::str::from_utf8(&bytes[start..field_start]) else {
+        return false;
+    };
+    let mut normalized = String::new();
+    let mut offset = 0;
+    for token in tokenize(prefix, FrontmatterAllowed::Yes) {
+        let end = offset + token.len as usize;
+        match token.kind {
+            TokenKind::Whitespace
+            | TokenKind::LineComment { doc_style: None }
+            | TokenKind::BlockComment {
+                doc_style: None, ..
+            } => normalized.push(' '),
+            TokenKind::Ident
+            | TokenKind::RawIdent
+            | TokenKind::OpenParen
+            | TokenKind::CloseParen
+            | TokenKind::Colon => normalized.push_str(&prefix[offset..end]),
+            _ => return false,
+        }
+        offset = end;
+    }
+    let Some(captures) = visibility.captures(normalized.trim_end().as_bytes()) else {
+        return false;
+    };
+    let Some(path) = captures.name("path") else {
+        return true;
+    };
+    let Ok(path) = std::str::from_utf8(path.as_bytes()) else {
+        return false;
+    };
+    let global = captures.name("global").is_some();
+    let mut super_prefix = !global;
+    path.split("::").enumerate().all(|(index, segment)| {
+        let segment = segment.trim();
+        let root_position = match segment {
+            "crate" | "self" => index == 0 && !global,
+            "super" => super_prefix,
+            _ => true,
+        };
+        super_prefix &= segment == "super" || (index == 0 && segment == "self");
+        if !root_position {
+            return false;
+        }
+        if let Some(raw) = segment.strip_prefix("r#") {
+            return !matches!(raw, "crate" | "self" | "super" | "Self");
+        }
+        !rust_reserved_keyword(segment)
+    })
+}
+
+// The scanner has no edition setting; keep identifiers legal in Rust 2015.
+fn rust_reserved_keyword(segment: &str) -> bool {
+    matches!(
+        segment,
+        "as" | "break"
+            | "const"
+            | "continue"
+            | "else"
+            | "enum"
+            | "extern"
+            | "false"
+            | "fn"
+            | "for"
+            | "if"
+            | "impl"
+            | "in"
+            | "let"
+            | "loop"
+            | "match"
+            | "mod"
+            | "move"
+            | "mut"
+            | "pub"
+            | "ref"
+            | "return"
+            | "Self"
+            | "static"
+            | "struct"
+            | "trait"
+            | "true"
+            | "type"
+            | "unsafe"
+            | "use"
+            | "where"
+            | "while"
+            | "abstract"
+            | "become"
+            | "box"
+            | "do"
+            | "final"
+            | "macro"
+            | "override"
+            | "priv"
+            | "typeof"
+            | "unsized"
+            | "virtual"
+            | "yield"
+    )
+}
+
 fn configuration_id(rules: &[CompiledRule], config: &EngineConfig) -> Result<String> {
     let actual_rules: Vec<_> = rules
         .iter()
@@ -642,7 +870,7 @@ fn configuration_id(rules: &[CompiledRule], config: &EngineConfig) -> Result<Str
     let serialized =
         serde_json::to_vec(&settings).context("serializing rule configuration identity")?;
     let mut digest = blake3::Hasher::new();
-    digest.update(b"secret-scan/configuration/v6\0");
+    digest.update(b"secret-scan/configuration/v13\0");
     digest.update(env!("CARGO_PKG_VERSION").as_bytes());
     digest.update(&(serialized.len() as u64).to_le_bytes());
     digest.update(&serialized);
